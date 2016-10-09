@@ -1,0 +1,145 @@
+$primaryColor:#FFA726;
+$secondaryColor:#2196f3;
+$primaryAccent:#5482c9;
+$secondaryAccent:#FFB74D;
+$complementary:#B0BEC5;
+
+body ,html{
+  margin:0;
+  padding:0;
+  font-size: 14px;
+}
+*{
+  font-family: sans-serif;
+  text-decoration: none;
+//  color:#333;
+  list-style: none;
+  padding:0;
+  //transition: all .4s;
+  margin:0;
+  padding:0;
+}
+
+.scroll-top{
+  position: fixed;
+  bottom:0px;
+  right:0px;
+  opacity: 0;
+  visibility: hidden;
+  animation: scrolltopHide .4s;
+  animation-fill-mode: forwards;
+  &.open{
+    visibility: visible;
+    animation: scrolltopShow .4s;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes scrolltopShow{
+  0%{transform: scale(0);}
+  50%{transform: scale(1.1);}
+  100%{transform: scale(1);opacity:1}
+}
+
+@keyframes scrolltopHide{
+  0%{transform: scale(1); opacity: 1}
+  50%{transform: scale(1.1);}
+  100%{transform: scale(0);opacity:0}
+}
+.codepen-iframe{
+  width:100%;
+  height:900px;
+
+
+  outline:1px solid #e0e0e0;
+  //position: absolute;
+  //margin: 0 auto;
+  iframe{
+    //outline:1px solid red;
+      outline:none;
+    border: 0;
+    padding:5px;
+    width:inherit;
+    height:600 - 100px;
+
+  }
+
+}
+.source-item{
+  margin-top:10px;
+
+}
+
+.copy-textarea{
+  position: fixed;
+  top:0;
+  left:0;
+  width:2em;
+  height:2em;
+  padding: 0;
+  border:none;
+  outline:none;
+  box-shadow: none;
+  background: transparent;
+
+}
+.gallery-container{
+  position: relative;
+top:10px;
+height: 300px;
+//width:900px;
+//width:0px;
+//outline: 1px solid blue;
+
+
+  .arrow-back{
+  position: absolute;
+  top:30%;
+  left:0px;
+  }
+  .arrow-forward{
+  position: absolute;
+  top:30%;
+  right:0px;
+  }
+  .img-container{
+  //  outline:1px solid red;
+    box-shadow: 0px 0px 20px rgba(0,0,0,0.4);
+    height:300px;
+    width:600px;
+    transform: translateX(25%);
+    overflow: hidden;
+    .radio-group{
+      position: absolute;
+
+      width:101%;
+      height:50px;
+      background:  linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(0,0,0,0.8) 100%);
+      display: block;
+      bottom:0px;
+    ul{
+
+      text-align: center;
+      position: relative;
+      top:0px;
+    }
+    }
+  }
+}
+
+.keyboard-shortcuts{
+  margin:0;
+  padding:0;
+  div{
+    display: inline-block;
+    padding:25px;
+    text-align: center;
+    background:rgba(0,0,0,0.1);
+    transition: background .4s;
+    cursor: pointer;
+    &:hover{
+      background:rgba(0,0,0,0.0);
+    }
+    margin:5px;
+  }
+}

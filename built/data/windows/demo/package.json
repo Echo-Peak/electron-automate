@@ -1,0 +1,23 @@
+{
+  "id": "demo",
+    "mediaType":{
+    "type":"file",
+    "src":"index"
+
+  },
+  "dims":{
+    "auto":true,
+    "width": 600,
+    "height": 900
+  },
+  "center": true,
+  "timeout": 5000,
+  "alwaysOnTop": true,
+  "skipTaskbar": true,
+  "title": "demo only",
+  "hasShadow": true,
+  "frame": true,
+  "moveable": true,
+  "show": true
+
+}

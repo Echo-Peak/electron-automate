@@ -1,0 +1,1309 @@
+[
+  {
+    "general keyboard shortcuts": [
+      {
+        "cmd": "f1",
+        "descp": "display help"
+      },
+      {
+        "cmd": "control + c",
+        "descp": "copy the selected item"
+      },
+      {
+        "cmd": "control + x",
+        "descp": "cut the selected item"
+      },
+      {
+        "cmd": "control + v",
+        "descp": "paste the selected item "
+      },
+      {
+        "cmd": "control + z",
+        "descp": "undo an action"
+      },
+      {
+        "cmd": "control + y",
+        "descp": "redo an action"
+      },
+      {
+        "cmd": "control + d",
+        "descp": "delete the selected item and move it to the recycle bin"
+      },
+      {
+        "cmd": "shift + delete",
+        "descp": "delete the selected item without moving it to the recycle bin first"
+      },
+      {
+        "cmd": "f2",
+        "descp": "rename the selected item"
+      },
+      {
+        "cmd": "control + right",
+        "descp": "move the cursor to the beginning of the next word "
+      },
+      {
+        "cmd": "control + left",
+        "descp": "move the cursor to the beginning of the previous word"
+      },
+      {
+        "cmd": "control + down",
+        "descp": "move the cursor to the beginning of the next paragraph "
+      },
+      {
+        "cmd": "control + up",
+        "descp": "move the cursor to the beginning of the previous paragraph"
+      },
+      {
+        "cmd": "control + shift with an arrow key",
+        "descp": "select a block of text"
+      },
+      {
+        "cmd": "control + a",
+        "descp": "select all items in a document or window"
+      },
+      {
+        "cmd": "f3",
+        "descp": "search for a file or folder "
+      },
+      {
+        "cmd": "alt + enter",
+        "descp": "display properties for the selected item"
+      },
+      {
+        "cmd": "alt + f4",
+        "descp": "close the active item, or exit the active program"
+      },
+      {
+        "cmd": "alt + space",
+        "descp": "open the shortcut menu for the active window "
+      },
+      {
+        "cmd": "control + f4",
+        "descp": "close the active document (in programs that allow you to have multiple documents open simultaneously)"
+      },
+      {
+        "cmd": "alt + tab",
+        "descp": "switch between open items"
+      },
+      {
+        "cmd": "control + alt + tab",
+        "descp": "use the arrow keys to switch between open items"
+      },
+      {
+        "cmd": "command  + tab",
+        "descp": "cycle through programs on the taskbar by using aero flip 3-d"
+      },
+      {
+        "cmd": "control+command  + tab",
+        "descp": "use the arrow keys to cycle through programs on the taskbar by using aero flip 3-d"
+      },
+      {
+        "cmd": "alt + escape",
+        "descp": "cycle through items in the order in which they were opened"
+      },
+      {
+        "cmd": "f6",
+        "descp": "cycle through screen elements in a window or on the desktop "
+      },
+      {
+        "cmd": "f4",
+        "descp": "display the address bar list in windows explorer"
+      },
+      {
+        "cmd": "shift + f10",
+        "descp": "display the shortcut menu for the selected item"
+      },
+      {
+        "cmd": "control + escape",
+        "descp": "open the start menu"
+      },
+      {
+        "cmd": "f10",
+        "descp": "activate the menu bar in the active program"
+      },
+      {
+        "cmd": "right",
+        "descp": "open the next menu to the right, or open a submenu"
+      },
+      {
+        "cmd": "left",
+        "descp": "open the next menu to the left, or close a submenu"
+      },
+      {
+        "cmd": "f5",
+        "descp": "refresh the active window"
+      },
+      {
+        "cmd": "alt + up",
+        "descp": "view the folder one level up in windows explorer"
+      },
+      {
+        "cmd": "escape",
+        "descp": "cancel the current task"
+      },
+      {
+        "cmd": "control + shift + escape",
+        "descp": "open task manager"
+      },
+
+      {
+        "cmd": "left alt + shift",
+        "descp": "switch the input language when multiple input languages are enabled"
+      },
+      {
+        "cmd": "control+shift",
+        "descp": "switch the keyboard layout when multiple keyboard layouts are enabled"
+      },
+      {
+        "cmd": "control + shift",
+        "descp": "change the reading direction of text in right-to-left reading languages"
+      }
+    ]
+  },
+  {
+    "dialog box keyboard shortcuts": [
+      {
+        "cmd": "control + tab",
+        "descp": "move forward through tabs"
+      },
+      {
+        "cmd": "control + shift + tab",
+        "descp": "move back through tabs"
+      },
+      {
+        "cmd": "tab",
+        "descp": "move forward through options"
+      },
+      {
+        "cmd": "shift + tab",
+        "descp": "move back through options"
+      },
+      {
+        "cmd": "enter",
+        "descp": "replaces clicking the mouse for many selected controls"
+      },
+      {
+        "cmd": "space",
+        "descp": "select or clear the check box if the active option is a check box"
+      },
+      {
+        "cmd": "f1",
+        "descp": "display help"
+      },
+      {
+        "cmd": "f4",
+        "descp": "display the items in the active list"
+      },
+      {
+        "cmd": "backspace",
+        "descp": "open a folder one level up if a folder is selected in the save as or open dialog box"
+      }
+    ]
+  },
+  {
+    "windows logo key keyboard shortcuts": [
+      {
+        "cmd": "command ",
+        "descp": "open or close the start menu."
+      },
+      {
+        "cmd": "command  + pause",
+        "descp": "display the system properties dialog box."
+      },
+      {
+        "cmd": "command  + d",
+        "descp": "display the desktop."
+      },
+      {
+        "cmd": "command  + m",
+        "descp": "minimize all windows. "
+      },
+      {
+        "cmd": "command  + shift + m",
+        "descp": "restore minimized windows to the desktop."
+      },
+      {
+        "cmd": "command  + e",
+        "descp": "open computer."
+      },
+      {
+        "cmd": "command  + f",
+        "descp": "search for computers (if you're on a network)."
+      },
+      {
+        "cmd": "command  + l",
+        "descp": "lock your computer or switch users."
+      },
+      {
+        "cmd": "command  + r",
+        "descp": "open the run dialog box."
+      },
+      {
+        "cmd": "command  + t",
+        "descp": "cycle through programs on the taskbar."
+      },
+      {
+        "cmd": "command  + number",
+        "descp": "start the program pinned to the taskbar in the position indicated by the number. if the program is already running, switch to that program. "
+      },
+      {
+        "cmd": "shift+command  + number",
+        "descp": "start a new instance of the program pinned to the taskbar in the position indicated by the number."
+      },
+      {
+        "cmd": "control+command  + number",
+        "descp": "switch to the last active window of the program pinned to the taskbar in the position indicated by the number."
+      },
+      {
+        "cmd": "alt+command  + number",
+        "descp": "open the jump list for the program pinned to the taskbar in the position indicated by the number."
+      },
+      {
+        "cmd": "command  + tab",
+        "descp": "cycle through programs on the taskbar by using aero flip 3-d."
+      },
+      {
+        "cmd": "control + command  + tab",
+        "descp": "use the arrow keys to cycle through programs on the taskbar by using aero flip 3-d."
+      },
+      {
+        "cmd": "control+command  + b",
+        "descp": "switch to the program that displayed a message in the notification area."
+      },
+      {
+        "cmd": "command  + space",
+        "descp": "preview the desktop."
+      },
+      {
+        "cmd": "command  + up",
+        "descp": "maximize the window."
+      },
+      {
+        "cmd": "command  + left",
+        "descp": "maximize the window to the left side of the screen."
+      },
+      {
+        "cmd": "command  + right",
+        "descp": "maximize the window to the right side of the screen."
+      },
+      {
+        "cmd": "command  + down",
+        "descp": "minimize the window."
+      },
+      {
+        "cmd": "command  + home",
+        "descp": "minimize all but the active window."
+      },
+      {
+        "cmd": "command  + shift + up",
+        "descp": "stretch the window to the top and bottom of the screen."
+      },
+      {
+        "cmd": "command  + shift + left or right",
+        "descp": "move a window left one monitor to another."
+      },
+      {
+        "cmd": "command  + shift + right",
+        "descp": "move a window right one monitor to another."
+      },
+      {
+        "cmd": "command  + p",
+        "descp": "choose a presentation display mode."
+      },
+      {
+        "cmd": "command  + g",
+        "descp": "cycle through gadgets."
+      },
+      {
+        "cmd": "command  + u",
+        "descp": "open ease of access center."
+      },
+      {
+        "cmd": "command  + x",
+        "descp": "open windows mobility center."
+      }
+    ]
+  },
+  {
+    "windows explorer keyboard shortcuts": [
+      {
+        "cmd": "control + n",
+        "descp": "open a new window"
+      },
+      {
+        "cmd": "control + w",
+        "descp": "close the current window"
+      },
+      {
+        "cmd": "control + shift + n",
+        "descp": "create a new folder "
+      },
+      {
+        "cmd": "end",
+        "descp": "display the bottom of the active window "
+      },
+      {
+        "cmd": "home",
+        "descp": "display the top of the active window"
+      },
+      {
+        "cmd": "f11",
+        "descp": "maximize or minimize the active window"
+      },
+      {
+        "cmd": "control + .",
+        "descp": "rotate a picture clockwise"
+      },
+      {
+        "cmd": "control + ,",
+        "descp": "rotate a picture counter-clockwise "
+      },
+      {
+        "cmd": "left",
+        "descp": "collapse the current selection (if it's expanded), or select the parent folder "
+      },
+      {
+        "cmd": "alt + enter",
+        "descp": "open the properties dialog box for the selected item"
+      },
+      {
+        "cmd": "alt + p",
+        "descp": "display the preview pane"
+      },
+      {
+        "cmd": "alt + left",
+        "descp": "view the previous folder"
+      },
+      {
+        "cmd": "backspace",
+        "descp": "view the previous folder"
+      },
+      {
+        "cmd": "right",
+        "descp": "display the current selection (if it's collapsed), or select the first subfolder "
+      },
+      {
+        "cmd": "alt + right",
+        "descp": "view the next folder "
+      },
+      {
+        "cmd": "alt + up",
+        "descp": "view the parent folder "
+      },
+      {
+        "cmd": "control + shift + e",
+        "descp": "display all folders above the selected folder"
+      },
+      {
+        "cmd": "alt + d",
+        "descp": "select the address bar"
+      },
+      {
+        "cmd": " control + e",
+        "descp": " select the search box"
+      },
+      {
+        "cmd": " control + f",
+        "descp": " select the search box"
+      }
+    ]
+  },
+  {
+    "remote desktop connection on the desktop keyboard shortcuts": [
+      {
+        "cmd": "alt + pageup",
+        "descp": "move between apps from left to right"
+      },
+      {
+        "cmd": "alt + pagedown",
+        "descp": "move between apps from right to left"
+      },
+      {
+        "cmd": "alt + insert",
+        "descp": "cycle through programs in the order that they were started in."
+      },
+      {
+        "cmd": "alt + home",
+        "descp": "display the start menu."
+      },
+      {
+        "cmd": "control + alt + break",
+        "descp": "switch between a window and full screen "
+      },
+      {
+        "cmd": "control + alt + end",
+        "descp": "display the windows security dialog box"
+      },
+      {
+        "cmd": "alt + delete",
+        "descp": "display the system menu."
+      },
+      {
+        "cmd": "control + alt + -",
+        "descp": "place a copy of the active window, within the client, on the terminal server clipboard (provides the same functionality as pressing alt+prtscn on a local computer)."
+      },
+      {
+        "cmd": "control + alt + $plus",
+        "descp": "place a copy of the entire client window area on the terminal server clipboard (provides the same functionality as pressing prtscn on a local computer)."
+      },
+      {
+        "cmd": "control + alt + right",
+        "descp": "“tab” out of the remote desktop controls to a control in the host program (for example, a button or a text box). useful when the remote desktop controls are embedded in another (host) program."
+      },
+      {
+        "cmd": "control + alt + left",
+        "descp": "“tab” out of the remote desktop controls to a control in the host program (for example, a button or a text box). useful when the remote desktop controls are embedded in another (host) program."
+      }
+    ]
+  },
+  {
+    "paint keyboard shortcuts": [
+      {
+        "cmd": "control + n",
+        "descp": "create a new picture"
+      },
+      {
+        "cmd": "control + o",
+        "descp": "open an existing picture"
+      },
+      {
+        "cmd": "control + s",
+        "descp": "save changes to a picture"
+      },
+      {
+        "cmd": "f12",
+        "descp": "save the picture as a new file"
+      },
+      {
+        "cmd": "control + p",
+        "descp": "print a picture"
+      },
+      {
+        "cmd": "alt + f4",
+        "descp": "close a picture and its paint window"
+      },
+      {
+        "cmd": "control + z",
+        "descp": "undo a change"
+      },
+      {
+        "cmd": "control + y",
+        "descp": "redo a change"
+      },
+      {
+        "cmd": "control + a",
+        "descp": "select the entire picture"
+      },
+      {
+        "cmd": "control + x",
+        "descp": "cut a selection"
+      },
+      {
+        "cmd": "control + c",
+        "descp": "copy a selection to the clipboard"
+      },
+      {
+        "cmd": "control + v",
+        "descp": "paste a selection from the clipboard"
+      },
+      {
+        "cmd": "right",
+        "descp": "move the selection or active shape right by one pixel"
+      },
+      {
+        "cmd": "left",
+        "descp": "move the selection or active shape left by one pixel"
+      },
+      {
+        "cmd": "down",
+        "descp": "move the selection or active shape down by one pixel"
+      },
+      {
+        "cmd": "up",
+        "descp": "move the selection or active shape up by one pixel"
+      },
+      {
+        "cmd": "escape",
+        "descp": "cancel a selection"
+      },
+      {
+        "cmd": "delete",
+        "descp": "delete a selection"
+      },
+      {
+        "cmd": "control + b",
+        "descp": "bold selected text"
+      },
+      {
+        "cmd": "control + $plus",
+        "descp": "increase the width of a brush, line, or shape outline by one pixel"
+      },
+      {
+        "cmd": "control + -",
+        "descp": "decrease the width of a brush, line, or shape outline by one pixel"
+      },
+      {
+        "cmd": "control + u",
+        "descp": "underline selected text"
+      },
+      {
+        "cmd": "control + e",
+        "descp": "open the properties dialog box"
+      },
+      {
+        "cmd": "control + w",
+        "descp": "open the resize and skew dialog box"
+      },
+      {
+        "cmd": "control + pageup",
+        "descp": "zoom in"
+      },
+      {
+        "cmd": "control + pagedown",
+        "descp": "zoom out"
+      },
+      {
+        "cmd": "f11",
+        "descp": "view a picture in full-screen mode"
+      },
+      {
+        "cmd": "control + r",
+        "descp": "show or hide the ruler"
+      },
+      {
+        "cmd": "control + g",
+        "descp": "show or hide gridlines"
+      },
+      {
+        "cmd": " f10",
+        "descp": " display keytips"
+      },
+      {
+        "cmd": " shift + f10",
+        "descp": " show the current shortcut menu"
+      },
+      {
+        "cmd": " f1",
+        "descp": " open paint help"
+      }
+    ]
+  },
+  {
+    "wordpad keyboard shortcuts": [
+      {
+        "cmd": "control + n",
+        "descp": "create a new document"
+      },
+      {
+        "cmd": "control + o",
+        "descp": "open an existing document"
+      },
+      {
+        "cmd": "control + s",
+        "descp": "save changes to a document"
+      },
+      {
+        "cmd": "f12",
+        "descp": "save the document as a new file"
+      },
+      {
+        "cmd": "control + p",
+        "descp": "print a document"
+      },
+      {
+        "cmd": "alt + f4",
+        "descp": "close wordpad"
+      },
+      {
+        "cmd": "control + z",
+        "descp": "undo a change"
+      },
+      {
+        "cmd": "control + y",
+        "descp": "redo a change"
+      },
+      {
+        "cmd": "control + a",
+        "descp": "select the entire document"
+      },
+      {
+        "cmd": "control + x",
+        "descp": "cut a selection"
+      },
+      {
+        "cmd": "control + c",
+        "descp": "copy a selection to the clipboard"
+      },
+      {
+        "cmd": "control + v",
+        "descp": "paste a selection from the clipboard"
+      },
+      {
+        "cmd": "control + b",
+        "descp": "make selected text bold"
+      },
+      {
+        "cmd": "control + i",
+        "descp": "italicize selected text"
+      },
+      {
+        "cmd": "control + u",
+        "descp": "underline selected text"
+      },
+      {
+        "cmd": "control + =",
+        "descp": "make selected text subscript"
+      },
+      {
+        "cmd": "control + shift + =",
+        "descp": "make selected text superscript"
+      },
+      {
+        "cmd": "control + l",
+        "descp": "align text left"
+      },
+      {
+        "cmd": "control + e",
+        "descp": "align text center"
+      },
+      {
+        "cmd": "control + r",
+        "descp": "align text right"
+      },
+      {
+        "cmd": "control + j",
+        "descp": "justify text"
+      },
+      {
+        "cmd": "control + 1",
+        "descp": "set single line spacing"
+      },
+      {
+        "cmd": "control + 2",
+        "descp": "set double line spacing"
+      },
+      {
+        "cmd": "control + 5",
+        "descp": "set line spacing to 1.5"
+      },
+      {
+        "cmd": "control + shift + >",
+        "descp": "increase the font size"
+      },
+      {
+        "cmd": "control + shift + <",
+        "descp": "decrease the font size"
+      },
+      {
+        "cmd": "control + shift + a",
+        "descp": "change characters to all capitals"
+      },
+      {
+        "cmd": "control + shift + l",
+        "descp": "change the bullet style"
+      },
+      {
+        "cmd": "control + d",
+        "descp": "insert a microsoft paint drawing"
+      },
+      {
+        "cmd": "control + f",
+        "descp": "find text in a document"
+      },
+      {
+        "cmd": "f3",
+        "descp": "find the next instance of the text in the find dialog box"
+      },
+      {
+        "cmd": "control + h",
+        "descp": "replace text in a document"
+      },
+      {
+        "cmd": " control + left",
+        "descp": " move the cursor one word to the left"
+      },
+      {
+        "cmd": " control + right",
+        "descp": " move the cursor one word to the right"
+      },
+      {
+        "cmd": " control + up",
+        "descp": " move the cursor to the line above"
+      },
+      {
+        "cmd": " control + down",
+        "descp": " move the cursor to the line below"
+      },
+      {
+        "cmd": " control + home",
+        "descp": " move to the beginning of the document"
+      },
+      {
+        "cmd": " control + end",
+        "descp": " move to the end of the document"
+      },
+      {
+        "cmd": " control + pageup",
+        "descp": " move up one page"
+      },
+      {
+        "cmd": " control + pagedown",
+        "descp": " move down one page"
+      },
+      {
+        "cmd": " control + delete",
+        "descp": " delete the next word"
+      },
+      {
+        "cmd": " f10",
+        "descp": " display keytips"
+      },
+      {
+        "cmd": " shift + f10",
+        "descp": " show the current shortcut menu"
+      },
+      {
+        "cmd": " f1",
+        "descp": " open wordpad help"
+      }
+    ]
+  },
+  {
+    "calculator keyboard shortcuts": [
+      {
+        "cmd": "alt + 1",
+        "descp": "switch to standard mode"
+      },
+      {
+        "cmd": "alt + 2",
+        "descp": "switch to scientific mode"
+      },
+      {
+        "cmd": "alt + 3",
+        "descp": "switch to programmer mode"
+      },
+      {
+        "cmd": "alt + 4",
+        "descp": "switch to statistics mode"
+      },
+      {
+        "cmd": "control + e",
+        "descp": "open date calculations"
+      },
+      {
+        "cmd": "control + h",
+        "descp": "turn calculation history on or off"
+      },
+      {
+        "cmd": "control + u",
+        "descp": "open unit conversion"
+      },
+      {
+        "cmd": "alt + c",
+        "descp": "calculate or solve date calculations and worksheets"
+      },
+      {
+        "cmd": "f1",
+        "descp": "open calculator help"
+      },
+      {
+        "cmd": "control + q",
+        "descp": "press the m- button"
+      },
+      {
+        "cmd": "control + p",
+        "descp": "press the m+ button"
+      },
+      {
+        "cmd": "control + m",
+        "descp": "press the ms button"
+      },
+      {
+        "cmd": "control + r",
+        "descp": "press the mr button"
+      },
+      {
+        "cmd": "control + l",
+        "descp": "press the mc button"
+      },
+      {
+        "cmd": "%",
+        "descp": "press the % button"
+      },
+      {
+        "cmd": "f9",
+        "descp": "press the +/– button"
+      },
+      {
+        "cmd": "/",
+        "descp": "press the / button"
+      },
+      {
+        "cmd": "*",
+        "descp": "press the * button"
+      },
+      {
+        "cmd": "+",
+        "descp": "press the + button"
+      },
+      {
+        "cmd": "-",
+        "descp": "press the – button"
+      },
+      {
+        "cmd": "r",
+        "descp": "press the 1/× button"
+      },
+      {
+        "cmd": "@",
+        "descp": "press the square root button"
+      },
+
+      {
+        "cmd": "0",
+        "descp": "press the number 0 key"
+      },
+      {
+        "cmd": "1",
+        "descp": "press the number  1 key"
+      },
+      {
+        "cmd": "2",
+        "descp": "press the number 2 key"
+      },
+      {
+        "cmd": "3",
+        "descp": "press the number  3 key"
+      },
+      {
+        "cmd": "4",
+        "descp": "press the number 4 key"
+      },
+      {
+        "cmd": "5",
+        "descp": "press the number  5 key"
+      },
+      {
+        "cmd": "6",
+        "descp": "press the number 6 key"
+      },
+      {
+        "cmd": "7",
+        "descp": "press the number  7 key"
+      },
+      {
+        "cmd": "8",
+        "descp": "press the number 8 key"
+      },
+      {
+        "cmd": "9",
+        "descp": "press the number  9 key"
+      },
+
+      {
+        "cmd": "=",
+        "descp": "press the = button "
+      },
+      {
+        "cmd": ".",
+        "descp": "press the . (decimal point) button"
+      },
+      {
+        "cmd": "backspace",
+        "descp": "press the backspace button"
+      },
+      {
+        "cmd": "escape",
+        "descp": "press the c button"
+      },
+      {
+        "cmd": "del",
+        "descp": "press the ce button"
+      },
+      {
+        "cmd": "control + shift + d",
+        "descp": "clear the calculation history"
+      },
+      {
+        "cmd": "f2",
+        "descp": "edit the calculation history"
+      },
+      {
+        "cmd": "up",
+        "descp": "navigate up in the calculation history"
+      },
+      {
+        "cmd": "down",
+        "descp": "navigate down in the calculation history"
+      },
+      {
+        "cmd": "escape",
+        "descp": "cancel editing the calculation history"
+      },
+      {
+        "cmd": "enter",
+        "descp": "recalculate the calculation history after editing"
+      },
+      {
+        "cmd": "f3",
+        "descp": "select degrees in scientific mode"
+      },
+      {
+        "cmd": "f4",
+        "descp": "select radians in scientific mode"
+      },
+      {
+        "cmd": "f5",
+        "descp": "select grads in scientific mode"
+      },
+      {
+        "cmd": "i",
+        "descp": "press the inv button in scientific mode"
+      },
+      {
+        "cmd": "d",
+        "descp": "press the mod button in scientific mode"
+      },
+      {
+        "cmd": "control + s",
+        "descp": "press the sinh button in scientific mode"
+      },
+      {
+        "cmd": "control + o",
+        "descp": "press the cosh button in scientific mode"
+      },
+      {
+        "cmd": "control + t",
+        "descp": "press the tanh button in scientific mode"
+      },
+      {
+        "cmd": "(",
+        "descp": "press the ( button in scientific mode"
+      },
+      {
+        "cmd": ")",
+        "descp": "press the ) button in scientific mode"
+      },
+      {
+        "cmd": " n",
+        "descp": " press the ln button in scientific mode"
+      },
+      {
+        "cmd": " ;",
+        "descp": " press the int button in scientific mode"
+      },
+      {
+        "cmd": " s",
+        "descp": " press the sin button in scientific mode"
+      },
+      {
+        "cmd": " o",
+        "descp": " press the cos button in scientific mode"
+      },
+      {
+        "cmd": " t",
+        "descp": " press the tan button in scientific mode"
+      },
+      {
+        "cmd": " m",
+        "descp": " press the dms button in scientific mode"
+      },
+      {
+        "cmd": " p",
+        "descp": " press the pi button in scientific mode"
+      },
+      {
+        "cmd": " v",
+        "descp": " press the f-e button in scientific mode"
+      },
+      {
+        "cmd": " x",
+        "descp": " press the exp button in scientific mode"
+      },
+      {
+        "cmd": " q",
+        "descp": " press the x^2 button in scientific mode"
+      },
+      {
+        "cmd": " y",
+        "descp": " press the x^y button in scientific mode"
+      },
+      {
+        "cmd": " #",
+        "descp": " press the x^3 button in scientific mode"
+      },
+      {
+        "cmd": " l",
+        "descp": " press the log button in scientific mode"
+      },
+      {
+        "cmd": " !",
+        "descp": " press the n! button in scientific mode"
+      },
+      {
+        "cmd": " control + y",
+        "descp": " press the y√x button in scientific mode"
+      },
+      {
+        "cmd": " control + b",
+        "descp": " press the 3√x button in scientific mode"
+      },
+      {
+        "cmd": " control + g",
+        "descp": " press the 10x button in scientific mode"
+      },
+      {
+        "cmd": " f5",
+        "descp": " select hex in programmer mode"
+      },
+      {
+        "cmd": " f6",
+        "descp": " select dec in programmer mode"
+      },
+      {
+        "cmd": " f7",
+        "descp": " select oct in programmer mode"
+      },
+      {
+        "cmd": " f8",
+        "descp": " select bin in programmer mode"
+      },
+      {
+        "cmd": " f12",
+        "descp": " select qword in programmer mode"
+      },
+      {
+        "cmd": " f2",
+        "descp": "select dword in programmer mode "
+      },
+      {
+        "cmd": " f3",
+        "descp": " select word in programmer mode"
+      },
+      {
+        "cmd": " f4",
+        "descp": " select byte in programmer mode"
+      },
+      {
+        "cmd": " k",
+        "descp": " press the ror button in programmer mode"
+      },
+      {
+        "cmd": " j",
+        "descp": " press the rol button in programmer mode"
+      },
+      {
+        "cmd": " <",
+        "descp": " press the lsh button in programmer mode"
+      },
+      {
+        "cmd": " >",
+        "descp": " press the rsh button in programmer mode"
+      },
+      {
+        "cmd": " %",
+        "descp": " press the mod button in programmer mode"
+      },
+      {
+        "cmd": " (",
+        "descp": "press the ( button in programmer mode"
+      },
+      {
+        "cmd": ") ",
+        "descp": " press the ) button in programmer mode"
+      },
+      {
+        "cmd": " |",
+        "descp": " press the or button in programmer mode"
+      },
+      {
+        "cmd": " ^",
+        "descp": " press the xor button in programmer mode"
+      },
+      {
+        "cmd": " ~",
+        "descp": " press the not button in programmer mode"
+      },
+      {
+        "cmd": " &",
+        "descp": " press the and button in programmer mode"
+      },
+      {
+        "cmd": " space",
+        "descp": " toggles the bit value in programmer mode"
+      },
+      {
+        "cmd": " a",
+        "descp": " press the average button in statistics mode"
+      },
+      {
+        "cmd": " control + a",
+        "descp": " press the average sq button in statistics mode"
+      },
+      {
+        "cmd": " s",
+        "descp": "  press the sum button in statistics mode"
+      },
+      {
+        "cmd": "control+s ",
+        "descp": " press the sum sq button in statistics mode"
+      },
+      {
+        "cmd": " t",
+        "descp": "  press the s.d. button in statistics mode"
+      },
+      {
+        "cmd": " control+t",
+        "descp": "  press the inv s.d. button in statistics mode"
+      },
+      {
+        "cmd": " d",
+        "descp": " press the cad button in statistics mode"
+      }
+    ]
+  },
+  {
+    "windows journal keyboard shortcuts": [
+      {
+        "cmd": "control + n",
+        "descp": "start a new note "
+      },
+      {
+        "cmd": "control + o",
+        "descp": "open a recently used note"
+      },
+      {
+        "cmd": "control + s",
+        "descp": "save changes to a note "
+      },
+      {
+        "cmd": "control + shift + v",
+        "descp": "move a note to a specific folder"
+      },
+      {
+        "cmd": "control + p",
+        "descp": "print a note"
+      },
+      {
+        "cmd": "alt + f4",
+        "descp": "close a note and its journal window"
+      },
+      {
+        "cmd": "control + z",
+        "descp": "undo a change"
+      },
+      {
+        "cmd": "control + y",
+        "descp": "redo a change"
+      },
+      {
+        "cmd": "control + a",
+        "descp": "select all items on a page"
+      },
+      {
+        "cmd": "control + x",
+        "descp": "cut a selection"
+      },
+      {
+        "cmd": "control + c",
+        "descp": "copy a selection to the clipboard"
+      },
+      {
+        "cmd": " control + v",
+        "descp": " paste a selection from the clipboard"
+      },
+      {
+        "cmd": " escape",
+        "descp": " cancel a selection"
+      },
+      {
+        "cmd": " delete",
+        "descp": " delete a selection"
+      },
+      {
+        "cmd": " control + f",
+        "descp": " start a basic find"
+      },
+      {
+        "cmd": " control + g",
+        "descp": " go to a page"
+      },
+      {
+        "cmd": " f5",
+        "descp": " refresh find results"
+      },
+      {
+        "cmd": " f5",
+        "descp": " refresh the note list"
+      },
+      {
+        "cmd": " f6",
+        "descp": " toggle between a note list and a note"
+      },
+      {
+        "cmd": " control + shift + c",
+        "descp": " display a shortcut menu for column headings in a note list"
+      },
+      {
+        "cmd": "f11 ",
+        "descp": " view a note in full-screen mode"
+      },
+      {
+        "cmd": " f1",
+        "descp": " open journal help"
+      }
+    ]
+  },
+  {
+    "windows help viewer keyboard shortcuts": [
+      {
+        "cmd": "alt + c",
+        "descp": "display the table of contents"
+      },
+      {
+        "cmd": "alt + n",
+        "descp": "display the connection settings menu"
+      },
+      {
+        "cmd": "f10",
+        "descp": "display the options menu"
+      },
+      {
+        "cmd": "alt + left",
+        "descp": "move back to the previously viewed topic"
+      },
+      {
+        "cmd": "alt + right",
+        "descp": "move forward to the next (previously viewed) topic"
+      },
+      {
+        "cmd": "alt + a",
+        "descp": "display the customer support page"
+      },
+      {
+        "cmd": "alt + home",
+        "descp": "display the help and support home page"
+      },
+      {
+        "cmd": "home",
+        "descp": "move to the beginning of a topic"
+      },
+      {
+        "cmd": "end",
+        "descp": "move to the end of a topic"
+      },
+      {
+        "cmd": "control + f",
+        "descp": "search the current topic"
+      },
+      {
+        "cmd": "control + p",
+        "descp": "print a topic"
+      },
+      {
+        "cmd": " f3",
+        "descp": " move the cursor to the search box"
+      }
+    ]
+  }
+]

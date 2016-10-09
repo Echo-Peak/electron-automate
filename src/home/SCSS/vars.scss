@@ -1,0 +1,90 @@
+//colors
+$primary:#E91E63;
+$secondary:#EC407A;
+$accent1:#AB47BC;
+$accent2:#EF5350;
+$ripples1:rgb(255, 143, 208);
+$about1:#d54cff;
+$about2:#e556ff;
+$work1:#4cafff;
+$header:rgba(0,0,0,0.8);
+
+
+@mixin rippleColor($type, $color) {
+  @if $type == 'flat-button' {
+      button > div > span > div{
+      background: $color !important;
+    }
+  }
+  @if $type == 'list-item' {
+     div > span > div > span > div {
+      background: $color !important;
+    }
+  }
+  @if $type == 'icon-button' {
+     button > div > span > div {
+      background: $color !important;
+    }
+  }
+}
+
+@mixin dynamicGradient($start , $end , $transTime){
+background-size: 100%;
+background-image: -webkit-linear-gradient($start, $end);
+background-image: linear-gradient($start, $end);
+position: relative;
+z-index: 100;
+&:before {
+  border-radius: inherit;
+  background-image: -webkit-linear-gradient($end, $start);
+  background-image: linear-gradient($end, $start);
+  content: '';
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  opacity: 0;
+  z-index: -100;
+  -moz-transition: opacity $transTime ease-in-out;
+  -webkit-transition: opacity $transTime ease-in-out;
+  transition: opacity $transTime ease-in-out;
+}
+&:hover {
+   &:before {
+     opacity: 1;
+   }
+}
+
+}
+
+//type , min-width , max-width , font-size
+//THIS IS AT DEVICE SCALE 1:1;
+
+
+$breakpoints: (
+  ('xs', 0px, 360px, 16px),
+  ('sm', 361px, 420px, 16px),
+  ('md', 421px, 600px, 18px),
+  ('lg', 601px, 1280px, 18px),
+  ('xlg', 1281px, 1920px ,20px),
+  ('xxlg', 1921px, 4096px ,20px)
+);
+
+@function getScreenFor($target){
+  @each $width in $breakpoints{
+    @if nth($width ,1) == $target {
+      @return $width;
+    }
+  }
+  @return null;
+}
+
+
+@mixin mq($targetScreen) {
+  $getScreen:getScreenFor($targetScreen);
+
+  @media screen and (min-width:nth($getScreen ,2)) and (max-width:nth($getScreen ,3)){
+    @content;
+  }
+}

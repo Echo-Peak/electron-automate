@@ -1,0 +1,88 @@
+[
+  {
+    "title": "sine-wave-horizontal",
+    "call-function": "sineX",
+    "vars": {
+      "angle": 0.002,
+      "timeout": 5000
+    },
+    "desp": "horzontal sine wave"
+  },
+  {
+    "title": "sine-wave-vertical",
+    "call-function": "sineX",
+    "vars": {
+      "angle": 0.002,
+      "timeout": 8000
+    },
+    "desp": "vertical sine wave"
+  },
+  {
+    "title": "freeze-mouse 3s",
+    "call-function": "freeze",
+    "vars": {
+      "poll": "200",
+      "delay": 3000
+    },
+    "desp": "freezes mouse at center of screen for n amount of time"
+  },
+  {
+    "title": "freeze-mouse 10s",
+    "call-function": "freeze",
+    "vars": {
+      "poll": "80",
+      "delay": 10000
+    },
+    "desp": "freezes mouse at center of screen for n amount of time"
+  },
+  {
+    "title": "300px circle",
+    "call-function": "circle",
+    "vars": {
+      "poll": "80",
+      "radius":300,
+      "delay": 8000
+    },
+    "desp": "moves cursor around center of screen"
+  },
+  {
+    "title": "left edge slider",
+    "call-function": "leftEdgeSliding",
+    "vars": {
+      "poll": "80",
+      "radius":500,
+      "delay": 10000
+    },
+    "desp": "moves cursor from left ege of screen in z pattern (tan)"
+  },
+  {
+    "title": "taskbar slider",
+    "call-function": "taskbarSliding",
+    "vars": {
+      "poll": "80",
+      "radius":300,
+      "delay": 6000
+    },
+    "desp": "moves cursor around taskbar"
+  },
+  {
+    "title": "bouncy mouse",
+    "call-function": "bounce",
+    "vars": {
+      "poll": "80",
+      "radius":10,
+      "delay": 20000
+    },
+    "desp": "bounces mouse around screen"
+  },
+  {
+    "title": "random directions",
+    "call-function": "randomVector",
+    "vars": {
+      "poll": "80",
+      "radius":10,
+      "delay": 20000
+    },
+    "desp": "moves mouse in a random direction"
+  }
+]

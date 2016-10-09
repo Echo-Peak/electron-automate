@@ -1,0 +1,44 @@
+html
+  head
+
+    script(src='https://cdn.socket.io/socket.io-1.4.5.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js')
+    link(rel="stylesheet", href="user/styles.css")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    .container(id='app')
+            
+    script.
+        window.LOG = [];
+        window.shellHistory = [];
+        window.sockets = {
+          System:io.connect('http://#{ip_adress}:#{port}/system'),
+          Logger:io.connect('http://#{ip_adress}:#{port}/logger' ),
+          fs:io.connect('http://#{ip_adress}:#{port}/file-system'),
+          Robot:io.connect('http://#{ip_adress}:#{port}/robot'),
+          Electron:io.connect('http://#{ip_adress}:#{port}/electron')
+        }
+        sockets.System.on('disconnect' ,function(){
+          let o = window.location.href.split(/\//g);
+          //window.location.href = o[2] +'/home';
+        });
+        sockets.System.on('reload' ,function(){
+          console.log('reloading');
+          window.location.reload();
+        });
+        sockets.System.on('shell-output' ,function(output){
+          window.shellHistory.push(output)
+        });
+        sockets.Logger.on('log' ,function(msg){
+          console.log(msg)
+          window.LOG.push(['log' ,msg]);
+        });
+        sockets.Logger.on('fail' ,function(msg){
+          console.log(msg)
+          window.LOG.push(['error',msg]);
+        });
+        window.onbeforeunload = function(){
+          sockets.System.emit('destroy-route' ,'#{route_id}');
+        }
+    script(src='user/Vendors.js')
+    script(src='user/bundle.js')

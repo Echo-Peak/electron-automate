@@ -1,0 +1,39 @@
+html
+  head
+
+    script(src='https://cdn.socket.io/socket.io-1.4.5.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js')
+    link(rel="stylesheet", href="styles.css")
+    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous")
+    
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+  body
+    ._container(id='app' style='width:100%')
+
+    script.
+        window.host = {
+          ip:'#{ip_adress}',
+          port:'#{port}',
+          internal:`#{internal_address}`,
+          roles:'#{roles}'
+        };
+        window.sockets = {
+          System:io.connect(`http://#{ip_adress}:#{port}/system` ,{reconnect:true}),
+          Logger:io.connect(`http://#{ip_adress}:#{port}/logger` ,{reconnect:true}),
+          Chat:io.connect(`http://#{ip_adress}:#{port}/chat` ,{reconnect:true}),
+          Crypto:io.connect(`http://#{ip_adress}:#{port}/crypto` ,{reconnect:true})
+        }
+        window.internalAddress =  `#{internal_address}`;
+        sockets.System.on('reload' ,function(){
+          console.log('reloading');
+          window.location.reload();
+        });
+        sockets.Logger.on('log' ,function(msg){
+          console.log(msg)
+        });
+        sockets.Logger.on('fail' ,function(msg){
+          console.log(msg)
+        });
+        
+    script(src='Vendors.js')
+    script(src='bundle.js')

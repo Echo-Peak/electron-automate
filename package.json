@@ -1,0 +1,67 @@
+{
+    "name": "electron-automate",
+    "version": "0.0.1",
+    "github":"",
+    "scripts": {
+        "start": "gulp init",
+        "packager": "node scripts/packager.js",
+        "installer": "node scripts/installer.js",
+        "test": "mocha ./tests/index.js",
+        "interface": "node ./command-interface.js",
+        "inject-node":"node ./scripts/inject-node.js",
+        "rename-node-alias":"node ./scripts/rename-node.js",
+        "generate-keys":"node ./scripts/generate-keys.js --self",
+
+        "post-install":"concurrently \"npm run inject-node\" \"npm run generate-keys\"",
+        "postinstall":"npm run post-install",
+        "postuninstall":"node ./scripts/remove-alias.js"
+    },
+    "author": "michael wheeler",
+    "license": "MIT",
+    "dependencies":{
+      "electron-packager":"*"
+    },
+    "devDependencies": {
+        "gulp":"*",
+        "gulp-concat":"*",
+        "gulp-jade":"*",
+        "gulp-sass":"*",
+        "gulp-watch":"*",
+        "gulp-rename":"*",
+        "gulp-plumber":"*",
+        "browser-sync":"*",
+        "socket.io":"*",
+        "socket.io-client":"*",
+        "electron-packager":"*",
+        "electron-prebuilt":"*",
+        "electron-windows-installer":"*",
+        "webpack":"*",
+        "mocha":"*",
+        "chai":"*",
+        "ps-node":"*",
+        "colors":"*",
+        "concurrently":"*",
+        "mkdirp":"*"
+    },
+
+    "electron_packager":{
+      "dir":"./built",
+      "out":"./releases/packages",
+       "name":"electron-automate",
+       "version":"1.3.5",
+       "prune":true,
+       "overwrite":true,
+       "asar":false,
+       "icon":"./built/icon.ico",
+       "win32metadata":{
+         "FileDescription":"automate windows through the web",
+         "CompanyName":"echo-peak",
+         "OriginalFilename":"electron-automate",
+         "InternalName":"echo-peak"
+       }
+    },
+    "electron_installer":{
+      "src":"./releases/packages",
+      "out":"./installers"
+    }
+}

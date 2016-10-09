@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>test file</title>
+  </head>
+  <body>
+  <h2>loadd</h2>
+  <script>
+  let deps = [
+    'http://code.jquery.com/jquery-3.1.1.js'
+  ];
+  //let generateDeps = deps.
+  let userScripts = [
+    'console.log(3237 ,window.jQuery)'
+  ];
+
+  function loadNext(callback ,arr){
+
+    let ajax = new XMLHttpRequest();
+    let url = arr.shift();
+    ajax.onload = function(res){
+    console.log('got' ,url)
+
+      let script = document.createElement('script');
+
+      let id = url.match(/[a-z\.\-\d]+$/g);
+      script.setAttribute('id' ,id[0]);
+
+      let data = res.target.responseText;
+      let buffer = new Uint8Array(data.length);
+
+          buffer.forEach(function(i ,index){
+         buffer[index] = data[index].charCodeAt();
+      });
+
+      let blob = new Blob([buffer] ,{type:'text/plain'});
+
+      script.src = URL.createObjectURL(blob);
+      document.head.appendChild(script);
+        script.onload = function(){
+          if(arr.length < 1){
+          window.runScripts();
+          return
+        }
+      }
+
+
+
+      loadNext(loadNext ,arr);
+
+    }
+    ajax.open('GET' ,url);
+    ajax.send();
+  }
+
+  loadNext(loadNext ,deps);
+
+
+  </script>
+  <script>
+    window.runScripts = function(){
+      userScripts.forEach(function(code , index){
+        let script = document.createElement('script');
+        script.innerHTML = code;
+        script.id = `custom-script-${index}`;
+        document.body.appendChild(script);
+      });
+    }
+  </script>
+  </body>
+</html>

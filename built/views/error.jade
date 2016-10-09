@@ -1,0 +1,40 @@
+html
+  head
+    link(rel="stylesheet", href="error/styles.css" , type='text/css')
+  body
+    .vapor
+      .sky
+          h1 Error finding '#{route}'
+          |     
+          .sun   
+        .ground
+          .haze
+          |     
+          img.palm(src='https://66.media.tumblr.com/f091c3890383aa8d8d3129145d9e267d/tumblr_octcvgAWVb1u1vzz5o4_250.png', alt='A palm tree.')
+          |     
+          img.palmrev(src='https://66.media.tumblr.com/f091c3890383aa8d8d3129145d9e267d/tumblr_octcvgAWVb1u1vzz5o4_250.png', alt='Another palm tree.')
+          |     
+          .car
+            img(src='https://67.media.tumblr.com/fbfbdef0ea71a4a42fb73a29c14b1c85/tumblr_octcvgAWVb1u1vzz5o1_250.gif', alt='spooky skeleton')
+          |     
+          .grid-container
+            #grid.grid
+    script.
+        //codepen by Andrew Alsante
+            /**
+        * Grid by Pavlovsk, some edits made.
+        * http://codepen.io/pavlovsk/pen/AXGYYv
+        **/
+        // Instead of writing HAML
+        function nJoin(n, fn) {
+        return new Array(n)
+          .join(' ')
+          .split(' ')
+          .map(typeof fn === 'function' ?
+            fn : e => fn)
+          .join('')
+        }
+
+        // Create <div></div> 320 times
+        var cells = nJoin(320, '<div></div>')
+        grid.innerHTML = cells      

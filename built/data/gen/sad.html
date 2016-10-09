@@ -1,0 +1,35 @@
+<html>
+<head>
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+</head>
+<body>
+  <audio id="audioSrc"></audio>
+  <script>
+    let elm = document.getElementById('audioSrc');
+    let electron = io.connect('http://192.168.1.7:7200/electron');
+
+      let src  = "C:/WEB PROJECTS/Gulp POWERED Apps/Electron/express-hybrid/built/data/audio/captin sparkelz - find the pieces.mp3.mp3";
+      elm.src = src;
+      elm.onloadeddata = function(){
+        elm.volume = 1;
+        elm.play();
+      }
+
+    electron.on('seek-audio' ,function(seekTo){
+      elm.currentTime = seekTo;
+    });
+    electron.on('audio-action' ,function(action){
+      switch(action){
+        case 'pause':elm.pause();break;
+        case 'play':elm.play();break;
+
+      }
+     });
+     electron.on('change-volume' ,function(volume){
+       elm.volume = volume;
+      });
+
+
+  </script>
+</body>
+</html>
