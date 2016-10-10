@@ -41,14 +41,10 @@ const electronApp = electron.app;
 
 let System = socketIOClient.connect(`http://localhost:${config.ports.main}/system` ,{reconnect:true});
 System.emit('who' ,{pid:process.pid , name:'electron-app' ,id:'electron'});
-//start restart service
-// let nodejsPath = path.resolve(__dirname ,`exec/n/${config.alias.nodejs}.exe`);
-// let restartPath = path.resolve(__dirname ,`core/restart.js`);
-// child_process.exec(`${nodejsPath} ${restartPath} --restart`)
 
 console.log('running')
 app.use(cookieParser());
-//app.use(logger('dev'));
+~process.argv.indexOf('--dev') && app.use(logger('dev'));
 
 app.use(express.static(__dirname+'/static'));
 app.set('views', __dirname+ '/views');
