@@ -61,7 +61,7 @@ module.exports = class socket_electron{
     let data = '';
     let stream = fs.createReadStream(`${audioPath}/${filename}`);
     Sockets.logger.broadcast.emit('log',{event:'creating audio buffer' ,value:filename ,dir:`${this.audioPath}/${filename}`});
-    stream.setEncoding('base64');
+    stream.setEncoding('binary');
     stream.on('data', e => (data += e));
     stream.on('error', e =>{
       Sockets.logger.broadcast.emit('fail',{event:'error creating audio buffer' ,value:e.toString()});
