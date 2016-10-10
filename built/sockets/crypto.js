@@ -36,11 +36,11 @@ module.exports = class socket_crypto{
         let keys = Object.keys(roles);
 
         keys.forEach((role)=>{
-          let _key = roles[role];
+          let _key = roles[role].key;
           if(decrypted === _key){
 
             this.users[who.name].role = role;
-            socket.emit('status' ,{status:true ,role , who});
+            socket.emit('status' ,{status:true ,role , who ,permissions:roles[role].permissions});
             Sockets.emit('spawn-app' ,{who ,role ,config:this.users[who.name]});
             Sockets.getSockets().logger.emit('log',{event:'crypto check success!',who ,role});
             Sockets.getSockets().logger.broadcast.emit('log',{event:'crypto check success!',who ,role});
