@@ -41,7 +41,7 @@ let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
 const electronApp = electron.app;
 
 let System = socketIOClient.connect(`http://localhost:${config.ports.main}/system` ,{reconnect:true});
-let Electron = socketIOClient.connect(`http://localhost:${config.ports.main}/electron` ,{reconnect:true});
+let Dynamic = socketIOClient.connect(`http://localhost:${config.ports.main}/dynamic` ,{reconnect:true});
 System.emit('who' ,{pid:process.pid , name:'electron-app' ,id:'electron'});
 
 console.log('running')
@@ -82,9 +82,9 @@ app.get('/' ,function(req ,res){
 
   BrowserWindow_delagate.on('close' ,function(){
     BrowserWindow_delagate.hide();
-    Electron.emit('browser-window-closed');
+    Dynamic.emit('browser-window-closed');
   });
-  Electron.on('update-browser-window' ,browserWindowConfig);
+  Dynamic.on('update-browser-window' ,browserWindowConfig.bind(this,BrowserWindow_delagate)); //this configures BrowserWindow_delagate
 
 if(~process.argv.indexOf('--dev')){
       let win = new electron.BrowserWindow({width:1900,height:950 ,show:true});

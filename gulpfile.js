@@ -38,7 +38,16 @@ System.on('who',function(who){
 })
 
 logger.on('log' ,function(msg){
-  console.log(msg)
+let value;
+if(typeof msg.value === 'string'){
+  value = msg.value
+}else{
+  value = JSON.stringify(msg.value)
+}
+  console.log(`
+    ${'Event'.cyan.bold} : ${msg.event}
+    ${'value'.yellow.bold} : ${value}
+    `)
 });
 
 logger.on('fail' ,function(msg){

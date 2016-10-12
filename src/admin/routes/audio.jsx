@@ -14,7 +14,10 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatInput from '../ui/flat-input';
 import Slider from 'material-ui/Slider';
-import SeekBar from '../ui/seek-bar';
+//import SeekBar from '../ui/seek-bar';
+import Player from '../player';
+import X_audio from '../store/audio';
+import {observer} from 'mobx-react';
 
 const styles = {
   errorStyle: {
@@ -33,16 +36,17 @@ const styles = {
     height:900
   },
   button:{
-    position:'absolute',
-    top:0,
-    right:0
+    position:'relative',
+    top:-40,
+    float:'right',
+    marginRight:10
   },
   seek:{
     width:'80%',
     margin:'0 auto'
   }
 };
-
+@observer
 export default class Audio extends Component{
   constructor(props){
     super();
@@ -58,77 +62,27 @@ export default class Audio extends Component{
         action:false,
         seek:0,
         seeking:false,
-        duration:{
-          mins:0,
-          secs:0,
-          total:1
-        },
-        audioObj:{
-          "id": null,
-          "dims":{
-            "auto":false,
-            "width": 600,
-            "height": 900
-          },
-          "mediaType":{
-            "src":"generated",
-            "type":"audio"
-          },
-          "center": true,
-          "timeout": 1000,
-          volume:1,
-          "alwaysOnTop": true,
-          "skipTaskbar": true,
-          "title": "audio",
-          "hasShadow": true,
-          "frame": false,
-          "moveable": false,
-          "show": false
-        }
+        elm:null
+
     };
+
+
+    this.x_audio = new X_audio();
     this.interval = null;
-    this.config = {}
+    this.config = {};
+    window.xStore = this.x_audio
   }
 
   componentDidMount(){
-        let self = this;
+    let self = this;
+    let element = this.refs.audio;
+    self.x_audio.setElementREF(element);
     sockets.fs.on('audio-list' ,(files)=>{ //arr of browser window objs
 
       console.log(files)
       this.setState({audio:files.file , dir:files.dir})
     });
     sockets.fs.emit('get-audio-list');
-
-    sockets.Electron.on('audio-buffer' ,function(chunk){
-
-      let o = document.createElement('audio');
-      o.src = `data:audio/mp3;base64,${chunk}`;
-
-      o.onloadeddata  = function(e){
-        let mins = o.duration / 60;
-        let secs = o.duration % 60;
-        let dur = self.state.duration;
-        console.log(self.state.current, o.duration ,Math.floor(o.duration * 1000))
-        self.config = Object.assign(self.state.audioObj ,{
-          id:uuid(),
-          timeout:Math.floor(o.duration * 1000)
-        });
-        dur.mins = mins.toFixed(0);
-        dur.secs = secs.toFixed(0);
-        dur.total = o.duration.toFixed(1);
-          //console.log(dur)
-        sockets.Electron.emit('create-browser-window' ,self.state.current , 'audio' ,self.config);
-
-         self.setState({duration:dur})
-         self.clock();
-      }
-
-    });
-
-    sockets.fs.on('audio-status' ,function(status){
-      let {timeLeft ,currentFile} = status;
-      console.log(status)
-    });
   }
 
   componentWillUnmount(){
@@ -142,42 +96,13 @@ export default class Audio extends Component{
   }
   spawnAudioProcess(filename){
     console.log('creating');
-
-    if(!this.state.current){
-        this.state.current = filename;
-        this.setState({isPlaying:true});
-        sockets.Electron.emit('create-audio-buffer' ,filename);
-
-    }
-
+    this.x_audio.createAudioBuffer(filename);
   }
-  clock(){
 
-    clearInterval(this.interval);
-
-    let self = this;
-     this.interval = setInterval(function(){
-       if(self.state.elasped >= self.state.duration.total){
-         self.setState({elasped:0 ,current:false});
-         self.closeInstance();
-
-         clearInterval(self.interval);
-         return
-       }
-       self.setState({elasped:self.state.elasped+1});
-
-     },1000)
-  }
   handleChange(value) {
     this.setState({slideIndex: value})
   }
-  closeInstance(){
-    clearInterval(this.interval);
-    console.log('killing' ,this.state.current , this.config.id);
-    this.setState({elasped:0, current:false ,isPlaying:false});
-    sockets.Electron.emit('destroy-browser-window' ,this.config.id);
 
-  }
   prepAudio(ev){
       let file = ev.target.files[0];
       let reader = new FileReader();
@@ -203,86 +128,53 @@ export default class Audio extends Component{
     sockets.fs.emit('delete-audio',name);
   }
 
-  seekTo(){
-    let value  = parseInt(this.refs.slider.refs.slider.refs.input.value);
-
-    if(this.state.elasped === value){
-      return
-    }
-
-    this.setState({elasped:value});
-    sockets.Electron.emit('seek-audio',value);
-
-  }
-  playPause(){
-this.state.action  = !this.state.action;
-        if(this.state.action){
-
-      clearInterval(this.interval);
-      sockets.Electron.emit('audio-action','pause');
-    }else{
-      this.clock();
-      sockets.Electron.emit('audio-action','play');
-    }
-
-    this.setState({action:this.state.action});
-    console.log('playPause' ,this.state.action)
-  }
-  setVolume(e ,value){
-    let audio = this.state.audioObj;
-    audio.volume = value;
-    this.setState({audioObj:audio});
-    sockets.Electron.emit('change-volume' ,value);
+  queue(filename){
+    let store = this.x_audio;
+    this.x_audio.queue(filename);
   }
   render(){
 
-
+  //  let isCurrent = this.x_audio.current
     return (  <div className='intros'>
         <div>
           <Tabs onChange={this.handleChange.bind(this)} value={this.state.slideIndex}>
-            <Tab label="presets" value={0}/>
+            <Tab label="files" value={0}/>
             <Tab label="create" value={1}/>
 
           </Tabs>
           <SwipeableViews index={this.state.slideIndex} onChangeIndex={this.handleChange.bind(this)}>
             <div style={styles.slide}>
-              <span>Time: {this.state.elasped} of {this.state.duration.total} - {this.state.duration.mins}:{this.state.duration.secs}</span>
 
-              <h4>Playing {this.state.current || 'Nothing'}</h4>
-              <span>Volume: {this.state.audioObj.volume*100}%</span>
-
-              <Slider
-                style={{width:'20%' ,margin:20}}
-                step={0.1} min={0} max={1}
-                value={this.state.audioObj.volume}
-                 onChange={this.setVolume.bind(this)}/>
-
-              <SeekBar
-                label='Seek audio'
-                ref='slider'
-                name={this.state.current}
-                seek={this.state.elasped}
+              <Player
+                element={this.state.elm}
+                xStore={this.x_audio}
                 isPlaying={this.state.isPlaying}
+                current={this.state.current}
                 duration={this.state.duration}
-                seekEnd={this.seekTo.bind(this,'end')}
-                seekStart={this.seekTo.bind(this ,'start')}>
-              </SeekBar>
+                settings={this.state.settings}
+                seek={this.state.seek}>
+              </Player>
+
+                <List>
+                  {this.state.audio.map((e ,index) => (
+                    <div key={uuid()} style={{position:'relative'}}>
+                    <ListItem
+                      style={{background:e === this.x_audio.current ? 'rgba(64, 173, 237, 0.18)' : 'transparent'}}
+                      primaryText={e}
+                      onTouchTap={this.spawnAudioProcess.bind(this,e)}>
+
+                </ListItem>
+
+                <RaisedButton disabled={this.state.isPlaying} label='delete' onTouchTap={this.deleteAudio.bind(this,e)} primary={true} style={styles.button}></RaisedButton>
+                <RaisedButton
+                  disabled={this.x_audio.current === e}
+                  label='queue'
+                  onTouchTap={this.queue.bind(this,e)} secondary={true} style={styles.button}></RaisedButton>
 
 
-              { this.state.isPlaying && <FlatButton label='kill' primary={true} onTouchTap={this.closeInstance.bind(this)}></FlatButton> }
-              {this.state.isPlaying && <FlatButton label={this.state.action ? 'play' : 'pause'} primary={true} onTouchTap={this.playPause.bind(this)}></FlatButton>}
-              <List>
-                {this.state.audio.map((e ,index) => (
-                  <div key={uuid()} style={{position:'relative'}}>
-                  <ListItem
-                    primaryText={e}
-                    onTouchTap={this.spawnAudioProcess.bind(this,e)}>
-
-              </ListItem>
-              <RaisedButton disabled={this.state.isPlaying} label='delete' onTouchTap={this.deleteAudio.bind(this,e)} primary={true} style={styles.button}></RaisedButton>
-            </div>
-            ))}
-            </List>
+              </div>
+              ))}
+              </List>
             </div>
             <div style={styles.slide}>
             <span>Will be added ({(this.state.totalSize /1024 /1024).toFixed(1)}MB)</span>
@@ -298,7 +190,7 @@ this.state.action  = !this.state.action;
 
           </SwipeableViews>
         </div>
-
+      <audio src={this.x_audio.blob_url} ref='audio'></audio>
       </div>)
   }
 }

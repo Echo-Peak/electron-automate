@@ -59,10 +59,24 @@ module.exports = class socket_electron{
   createAudioBuffer(filename){
     let {socket ,Sockets ,audioPath} = this;
     let data = '';
+    fs.stat(`${audioPath}/${filename}` ,function(err ,stats){
+      if(err){
+        Sockets.logger.broadcast.emit('fail',{event:`getting statistics for ${audioPath}/${filename}` ,value:err.toString()});
+      }else{
+        socket.emit('byte-transfer' ,{total:stats.size});
+      Sockets.logger.broadcast.emit('log',{event:`getting statistics for ${audioPath}/${filename}` ,value:JSON.stringify(stats)});
+      }
+    });
+
     let stream = fs.createReadStream(`${audioPath}/${filename}`);
     Sockets.logger.broadcast.emit('log',{event:'creating audio buffer' ,value:filename ,dir:`${this.audioPath}/${filename}`});
     stream.setEncoding('binary');
-    stream.on('data', e => (data += e));
+
+    stream.on('data', e =>{
+      data += e;
+      socket.emit('byte-transfer', {sent:data.length});
+
+    });
     stream.on('error', e =>{
       Sockets.logger.broadcast.emit('fail',{event:'error creating audio buffer' ,value:e.toString()});
     });

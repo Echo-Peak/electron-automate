@@ -203,7 +203,7 @@ function kill(done){
     let flags = ['webpack' ,'electron' ,'mocha','MAIN' ,'robot'];
     let regex = flags.map(e => `\\b(${e})\\b`).join('|');
 
-    ps.lookup({command:'cmd' , arguments:regex} ,(err ,list) =>{
+    ps.lookup({command:/cmd|node/gi , arguments:regex} ,(err ,list) =>{
 
       list.forEach(function(item){
         try{
@@ -216,7 +216,7 @@ function kill(done){
       done();
     });
 
-    return
+    //return
   }
   killElectron();
   killWebpack();

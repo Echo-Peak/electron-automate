@@ -67,7 +67,7 @@ let ServerSockets = new Sockets();
 server.listen(port);
 
 
-let socketNameSpaces = ['system' ,'electron' ,'robot','logger' ,'crypto' ,'file-system' ,'chat'];
+let socketNameSpaces = ['system' ,'electron' ,'robot','logger' ,'crypto' ,'file-system' ,'chat' ,'dynamic'];
 socketNameSpaces.forEach(function(namespace){
   io.of('/'+namespace).on('connection', (socket)=>{
     ServerSockets[namespace] = socket;
