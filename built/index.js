@@ -12,7 +12,7 @@ let logger = require('morgan');
 const os = require('os');
 let child_process = require('child_process');
 let fs = require('fs');
-
+let browserWindowConfig = require('./core/browser-window');
 //let nodePath = path.resolve(__dirname ,'exec/n');
 // try{
 //
@@ -26,6 +26,7 @@ let fs = require('fs');
 //   console.log(err)
 // }
 
+let dynamicWindow = `file:///${__dirname}/data/gen/dynamic-window.html`;
 let connectionType = require('./core/connection-types');
 let app = require('./core/server')(config , config.ports.main);
 
@@ -40,6 +41,7 @@ let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
 const electronApp = electron.app;
 
 let System = socketIOClient.connect(`http://localhost:${config.ports.main}/system` ,{reconnect:true});
+let Electron = socketIOClient.connect(`http://localhost:${config.ports.main}/electron` ,{reconnect:true});
 System.emit('who' ,{pid:process.pid , name:'electron-app' ,id:'electron'});
 
 console.log('running')
@@ -74,6 +76,15 @@ app.get('/' ,function(req ,res){
 ~process.argv.indexOf('--electron') && killDupes();
 
 ~process.argv.indexOf('--electron') && electronApp.on('ready' ,function(){
+  //use one instance of BrowserWindow & keep it running to handle audio/video /pics ect...
+  let BrowserWindow_delagate =  new electron.BrowserWindow({show:false})
+  .loadURL(dynamicWindow);
+
+  BrowserWindow_delagate.on('close' ,function(){
+    BrowserWindow_delagate.hide();
+    Electron.emit('browser-window-closed');
+  });
+  Electron.on('update-browser-window' ,browserWindowConfig);
 
 if(~process.argv.indexOf('--dev')){
       let win = new electron.BrowserWindow({width:1900,height:950 ,show:true});
