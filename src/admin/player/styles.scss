@@ -1,0 +1,102 @@
+@import "../SCSS/vars";
+
+.audio-player{
+  width:100%;
+  height:300px;
+  outline:1px solid red;
+  position: relative;
+  .audio-player-top{
+    display: flex;
+    flex-direction: row;
+    width:80%;
+    height:50px;
+    margin:0 auto;
+    outline: 1px solid green;
+    overflow:hidden;
+    text-align: center;
+    line-height: 50px;
+
+    @include mq('md'){
+      width:100%
+    };
+    .title{
+      flex:1;
+      order:1;
+      margin:0;
+      padding:0;
+      h4{
+        line-height: 50px;
+        margin:0;
+
+      }
+    }
+    .flex{
+      flex:5;
+      order:2;
+      @include mq('md'){
+          flex:0
+      };
+      @include mq('lg'){
+          flex:0
+      };
+      @include mq('xlg'){
+          flex:0
+      };
+
+    }
+    .stats{
+      flex:1;
+      order:3;
+      margin-right:5px;
+    }
+  }
+}
+
+.seekbar-container{
+  width:80%;
+  height:30px;
+  margin:0 auto;
+  //outline:1px solid green;
+  display:flex;
+  flex-direction: row;
+  background:#f2f2f2;
+  //padding:5px;
+  .elasped{
+    flex:1;
+    order:1;
+  }
+  .seekbar{
+    //width:75%;
+
+    flex:8;
+    order:2;
+    position: relative;
+    margin:10px;
+  }
+  .length{
+    flex:1;
+    order:3;
+  }
+  .volume{
+    .icon{
+      width:100;
+    }
+    flex:2;
+    order:4;
+    padding-left:20px;
+    position: relative;
+    margin:10px;
+  }
+}
+
+.audio-controls{
+width:100%;
+margin: 0 auto;
+text-align:center;
+outline:1px solid green;
+
+}
+
+.svg-adjust{
+
+}
