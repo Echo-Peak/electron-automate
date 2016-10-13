@@ -21,6 +21,8 @@ import NpmUI from '../routes/npm-ui';
 import Tasker from '../routes/tasker';
 import AppActions from '../routes/app';
 
+import WindowPreview from '../routes/browser-window-preview';
+
 class App extends React.Component{
     constructor(props){
       super();
@@ -53,6 +55,7 @@ class App extends React.Component{
                 <Route path ='scripts' component={Scripts}></Route>
                 <Route path ='npm' component={NpmUI}></Route>
                 <Route path ='app' component={AppActions}></Route>
+                <Route path ='preview' component={WindowPreview}></Route>
             </Route>
 
           </Router>
