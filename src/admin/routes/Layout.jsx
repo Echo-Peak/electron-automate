@@ -7,16 +7,17 @@ import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import Computer from 'material-ui/svg-icons/hardware/computer';
 
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import Memory from 'material-ui/svg-icons/hardware/memory';
 import History from 'material-ui/svg-icons/action/history';
 import File from 'material-ui/svg-icons/file/file-download';
-
 import Paper from 'material-ui/Paper';
 import {withRouter} from 'react-router';
-
+import WindowSettings from '../browser-window';
 
 const styles = {
 
@@ -25,6 +26,13 @@ const styles = {
     bottom:0,
     left:0,
     width:'100%'
+  },
+  button:{
+    margin:10,
+    position:'fixed',
+    bottom:0,
+    zIndex:8000,
+    right:0
   }
 };
 
@@ -36,6 +44,7 @@ class Layout extends Component {
       open: false,
       msg: '',
       selectedIndex:2,
+      settings:false
     };
   }
   componentDidMount() {
@@ -60,7 +69,8 @@ class Layout extends Component {
     this.props.router.push('admin');
   }
   render() {
-    let {state, props} = this;
+    let {state} = this;
+    let props = this.props._props;
     return (
       <div className='Layout'>
 
@@ -93,8 +103,13 @@ class Layout extends Component {
           />
         </BottomNavigation>
         </Paper>
-      {this.props.children}
 
+      {props.children}
+
+      <FloatingActionButton secondary={true} style={styles.button} title='window settings' onTouchTap={e => this.setState({settings:true})}>
+      <Computer />
+    </FloatingActionButton>
+    <WindowSettings store={this.props.stores.browserWindow} show={this.state.settings} close={e => this.setState({settings:false})}></WindowSettings>
       </div>
     )
   }
