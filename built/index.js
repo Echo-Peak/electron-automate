@@ -13,6 +13,7 @@ const os = require('os');
 let child_process = require('child_process');
 let fs = require('fs');
 let browserWindowConfig = require('./core/browser-window');
+
 //let nodePath = path.resolve(__dirname ,'exec/n');
 // try{
 //
@@ -88,7 +89,7 @@ app.get('/' ,function(req ,res){
 
 if(~process.argv.indexOf('--dev')){
       let win = new electron.BrowserWindow({width:1900,height:950 ,show:true});
-    win.loadURL(`http://localhost:${config.ports.main}/home`);
+    win.loadURL(`http://localhost:${config.ports.main}/home#ip=${IP}&#port=${config.ports.main}`);
     win.on('closed' ,function(){
       System.emit('quit');
     })
