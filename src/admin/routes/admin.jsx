@@ -94,7 +94,6 @@ class Admin extends Component {
       if(switchTextColor >= 460){
         textColor = 'black';
       }
-      console.log(switchTextColor ,color );
       return (<li key={uuid()}  className='action'>
       <div style={{margin:5 ,background:color}}>
         <IconButton iconStyle={{...styles.largeIcon, color:textColor}} style={styles.large}>
