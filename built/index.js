@@ -78,18 +78,17 @@ app.get('/' ,function(req ,res){
 
 ~process.argv.indexOf('--electron') && electronApp.on('ready' ,function(){
   //use one instance of BrowserWindow & keep it running to handle audio/video /pics ect...
-  let BrowserWindow_delagate =  new electron.BrowserWindow({show:false})
-  .loadURL(dynamicWindow);
+  let BrowserWindow_delagate =  new electron.BrowserWindow({show:false}).loadURL(dynamicWindow);
 
   BrowserWindow_delagate.on('close' ,function(){
     BrowserWindow_delagate.hide();
     Dynamic.emit('browser-window-closed');
   });
-  Dynamic.on('update-browser-window' ,browserWindowConfig.bind(this,BrowserWindow_delagate)); //this configures BrowserWindow_delagate
+  Dynamic.on('update-browser-window' ,browserWindowConfig.bind(this,BrowserWindow_delagate ,Dynamic)); //this configures BrowserWindow_delagate
 
 if(~process.argv.indexOf('--dev')){
       let win = new electron.BrowserWindow({width:1900,height:950 ,show:true});
-    win.loadURL(`http://localhost:${config.ports.main}/home#ip=${IP}&#port=${config.ports.main}`);
+    win.loadURL(`http://localhost:${config.ports.main}/home?ip=${IP}&port=${config.ports.main}`);
     win.on('closed' ,function(){
       System.emit('quit');
     })

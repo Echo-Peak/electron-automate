@@ -9,7 +9,7 @@ import Snackbar from 'material-ui/Snackbar';
 import Admin from '../routes/admin';
 import System from '../routes/system';
 import BrowserWindows from '../routes/browser-windows';
-import Shell from '../routes/shell';
+import Shell from '../shell';
 import Keyboard from '../routes/keyboard';
 import Logs from '../routes/logs';
 import Audio from '../routes/audio';
@@ -24,7 +24,7 @@ import {Stores} from '../store';
 import uuid from '../util/uuid';
 import WindowPreview from '../routes/browser-window-preview';
 
-Router.thing = 982;
+
 class App extends React.Component{
     constructor(props){
       super();

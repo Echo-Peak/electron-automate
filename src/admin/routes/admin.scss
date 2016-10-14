@@ -1,56 +1,47 @@
+@import "../SCSS/vars";
+
 .admin-route{
   width:100%;
-  height: 100%;
+  height:auto;
   background:white;
-  //outline:1px solid red;
   position: relative;
-  header{
-    height:50px;
-    background:#222;
-    width: 100%;
-  }
-  .actions-container{
-    width:100%;
-    margin:0 auto;
-    text-align: center;
-    line-height: 250px;
-    ul > li{
-      width:250px;
-      height:250px;
-      display: inline-block;
-      transform: scale(0.95);
+  margin:0 auto;
+  .admin-container{
 
-      //background:#777;
-      box-shadow: 0px 0px 50px rgba(0,0,0,0.3);
-      margin:25px;
-      &:active , &:hover{
-        transform: scale(1);
-      }
-      color:white;
-       > .button {
-        height:100px
+    ul{
+      margin:0;
+      padding:0;
+      display: flex;
+      flex-direction: row;
+      position: absolute;
+      width:100%;
+      flex-wrap: wrap;
+
+      @for $i from 1 through 11{
+        > .action:nth-child(#{$i}){
+          div{
+            display: block;
+            text-align: center;
+          }
+          @include mq('xxlg'){
+            width:calc(100% /8);
+          };
+          @include mq('xlg'){
+            width:calc(100% /6);
+          };
+          @include mq('lg'){
+            width:calc(100% /4);
+          };
+          @include mq('md'){
+            width:calc(100%);
+          };
+          @include mq('sm'){
+            width:calc(100%);
+          };
+
+
+        }
       }
     }
-  }
-}
-
-.apps{
-  width:100%;
-  height:200px;
-  //background:#999;
-
-  position: absolute;
-  top:0px;
-  left:0px;
-  display: flex;
-  flex-direction: row;
-  .active{
-    flex:1;
-    order:1;
-  }
-  .recent{
-    flex:10;
-    order:2;
-    overflow-y:scroll;
   }
 }

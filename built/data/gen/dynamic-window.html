@@ -3,9 +3,128 @@
   <head>
     <meta charset="utf-8">
     <title></title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <style media="screen">
+    body,html{
+      margin:0;
+      padding:0;
+    }
+    body,html{
+      margin:0;
+      padding:0;
+      overflow: hidden;
+    }
+    iframe{
+      overflow: hidden;
+      padding:0;
+      margin:0;
+    }
+    </style>
   </head>
   <body>
+    <div id="youtube-player"></div>
+    <img id='picture-viewer'></img>
+    <video id='video-player' src=''></video>
+    <audio src="" id='audio-player'></audio>
 
-    <script></script>
+    <script>
+      function getHashData(){
+        window.location.search.substring(1).split('&')
+        .reduce(function(start, item){
+          let keyValue = item.split('=');
+          start[keyValue[0]] = keyValue[1];
+          return start;
+        },{})
+
+      }
+      let externalData = getHashData();
+      let dataPath = ['audio' ,'pictures'].reduce(function(start ,item){
+        start[item] = getHashData.path + '\\' + item;
+        return start
+      },{});
+      let socket = io.connect(`http://${externalData.ip}:${externalData.port}` ,{reconnect:true});
+
+      let elms = function (){
+        return ['youtube-player' ,'video-player' ,'audio-player' ,'picture-viewer'].reduce(function(start ,item){
+            start[item.split('-')[0]] = document.getElementById(item);
+            return start
+          },{});
+      }
+
+    socket.on('connect' ,function(){
+      socket.emit('connected' ,Date.now());
+    });
+
+    socket.on('audio-file' ,(filename)=>{
+      elms().audio.src = dataPath.audio +'\\' +filename;
+    });
+    socket.on('youtube-url' ,(data)=>{
+      elms().youtube.loadVideoById(data.id , data.startAt , data.quality || 'default');
+    });
+    socket.on('volume-change' ,function(volume){
+      elms().audio.volume = volume;
+      elms().youtube.setVolume(volume * 100);
+    });
+    socket.on('playback-toggle' ,(playing)=>{
+      if(playing){
+        elms().audio.pause();
+        elms().youtube.pauseVideo();
+      }else{
+        elms().audio.play();
+        elms().youtube.playVideo();
+      }
+    });
+    socket.on('playback-stop',()=>{
+      elms().audio.stop();
+      elms().youtube.stopVideo();
+    });
+    socket.on('picture-file',(file)=>{
+      elms().audio.src = dataPath.pictures +'\\' +filename;
+
+    });
+    socket.on('seek',(seekTo)=>{
+      elms().audio.currentTime = seekTo;
+      elms().youtube.seekTo(seekTo);
+    });
+    socket.on('audio-mute',(muted)=>{
+      if(muted){
+        elms().youtube.unMute();
+          elms().audio.muted = false;
+      }else{
+        elms().audio.muted = true;
+      elms().youtube.mute();
+      }
+
+    });
+    function onYouTubeIframeAPIReady() {
+      elms().youtube = new YT.Player('player', {
+        height: 0,
+        width: 0,
+        playerVars:{
+          autoplay:1,
+          controls:0,
+          rel:0,
+          showinfo:0,
+          iv_load_policy:3
+        },
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+    function onPlayerStateChange(event) {
+
+      if (event.data == YT.PlayerState.PLAYING && !done) {
+        setTimeout(function(){
+          elms().youtube.stopVideo();
+        },6009);
+        elms().youtube.setVolume(100);
+        done = true;
+
+      }
+     }
+    </script>
   </body>
 </html>

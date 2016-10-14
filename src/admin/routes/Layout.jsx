@@ -19,6 +19,13 @@ import Paper from 'material-ui/Paper';
 import {withRouter} from 'react-router';
 import WindowSettings from '../browser-window';
 
+
+
+class Wrapper extends Component{
+  render(){
+    return this.props.children;
+  }
+}
 const styles = {
 
   bottomBar:{
@@ -104,12 +111,12 @@ class Layout extends Component {
         </BottomNavigation>
         </Paper>
 
-      {props.children}
+      <Wrapper store={this.props.stores}>{props.children}</Wrapper>
 
       <FloatingActionButton secondary={true} style={styles.button} title='window settings' onTouchTap={e => this.setState({settings:true})}>
       <Computer />
     </FloatingActionButton>
-    <WindowSettings store={this.props.stores.browserWindow} show={this.state.settings} close={e => this.setState({settings:false})}></WindowSettings>
+    <WindowSettings store={this.props.store} show={this.state.settings} close={e => this.setState({settings:false})}></WindowSettings>
       </div>
     )
   }

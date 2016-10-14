@@ -37,7 +37,7 @@ const styles = {
   largeIcon: {
     width: 60,
     height: 60,
-
+    display:'inline-block'
   },
 
   large: {
@@ -95,14 +95,15 @@ class Admin extends Component {
         textColor = 'black';
       }
       console.log(switchTextColor ,color );
-      return (<li key={uuid()} style={{background:color ,display:'inline-block',margin:'0 auto'}} id='actions' className='col-md-2 col-xs-12 text-center'>
-      <div>
+      return (<li key={uuid()}  className='action'>
+      <div style={{margin:5 ,background:color}}>
         <IconButton iconStyle={{...styles.largeIcon, color:textColor}} style={styles.large}>
                 <Icon />
               </IconButton>
+
+              <FlatButton label={e} style={{...styles.button ,color:textColor}} onTouchTap={this.goto.bind(this,e)}/>
       </div>
 
-          <FlatButton label={e} style={{...styles.button ,color:textColor}} onTouchTap={this.goto.bind(this,e)}/>
           </li>)
     });
 
@@ -119,14 +120,11 @@ class Admin extends Component {
 
     return (
       <div className='admin-route'>
-
-        <div >
-          <div className='container-fluid row'>
-            <ul className='row'>
+          <div className='admin-container'>
+            <ul>
               {this.state.actions}
             </ul>
           </div>
-        </div>
       </div>
     )
   }

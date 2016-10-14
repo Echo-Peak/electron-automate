@@ -6,6 +6,7 @@ module.exports = function(opts ,IP , port){
 <html>
 <head>
   <script src="https://cdn.socket.io/socket.io-1.4.5.js"><\/script>
+
   <style media="screen">
     body,html{
       margin:0;

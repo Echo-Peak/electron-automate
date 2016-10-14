@@ -14,9 +14,8 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatInput from '../ui/flat-input';
 import Slider from 'material-ui/Slider';
-//import SeekBar from '../ui/seek-bar';
 import Player from '../player';
-import X_audio from '../store/audio';
+
 import {observer} from 'mobx-react';
 
 const styles = {
@@ -67,10 +66,10 @@ export default class Audio extends Component{
     };
 
 
-    this.x_audio = new X_audio();
+    this.x_audio = props.store;
     this.interval = null;
     this.config = {};
-    window.xStore = this.x_audio
+    window.xStore = this.x_audio;
   }
 
   componentDidMount(){
@@ -133,8 +132,10 @@ export default class Audio extends Component{
     this.x_audio.queue(filename);
   }
   render(){
+    let props = this.props._props;
 
   //  let isCurrent = this.x_audio.current
+
     return (  <div className='intros'>
         <div>
           <Tabs onChange={this.handleChange.bind(this)} value={this.state.slideIndex}>

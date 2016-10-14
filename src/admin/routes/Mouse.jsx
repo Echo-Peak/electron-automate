@@ -58,29 +58,29 @@ export default class Mouse extends Component{
   componentDidMount(){
     let self =this;
 
-
-        sockets.Robot.on('robot-screen' ,(msg)=>{
-
-          console.log('screen!!3!!!!!' ,msg)
-          if(msg){
-        self.setState({
-          screen:{
-            width:msg.width *0.5,
-            height:msg.height * 0.5,
-            orig:msg
-          }
-        });
-        console.error('fix screen here')
-      // self.refs.screen.style.width = this.state.screen.width;
-      // self.refs.screen.style.height = this.state.screen.height;
-      // self.refs.screen.style.background = '#999';
-      // console.warn(msg , self.refs.screen);
-      //
-      // this.elm = new Hammer(self.refs.screen);
-      // this.elm.on('pan' ,this.mover.bind(this));
-      // this.elm.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-    }
-    });
+    console.error('currently disabled. moving robot-screen events to x_window for global consumption')
+    //     sockets.Robot.on('robot-screen' ,(msg)=>{
+    //
+    //       console.log('screen!!3!!!!!' ,msg)
+    //       if(msg){
+    //     self.setState({
+    //       screen:{
+    //         width:msg.width *0.5,
+    //         height:msg.height * 0.5,
+    //         orig:msg
+    //       }
+    //     });
+    //     console.error('fix screen here')
+    //   // self.refs.screen.style.width = this.state.screen.width;
+    //   // self.refs.screen.style.height = this.state.screen.height;
+    //   // self.refs.screen.style.background = '#999';
+    //   // console.warn(msg , self.refs.screen);
+    //   //
+    //   // this.elm = new Hammer(self.refs.screen);
+    //   // this.elm.on('pan' ,this.mover.bind(this));
+    //   // this.elm.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+    // }
+    // });
 
     sockets.Robot.on('mouse-functions' ,(fn)=>{
       console.log(JSON.parse(fn))
@@ -90,7 +90,7 @@ export default class Mouse extends Component{
 
 
       sockets.Robot.emit('get-mouse-functions');
-      sockets.Robot.emit('get-robot-screen');
+    //  sockets.Robot.emit('get-robot-screen');
 
 
   }

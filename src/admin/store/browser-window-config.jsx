@@ -2,8 +2,8 @@ import {observable , action ,computed} from 'mobx';
 import uuid from '../util/uuid';
 
 export default class BrowserWindowConfig{
-  @observable width = 0;
-  @observable height = 0;
+  @observable width = 1;
+  @observable height = 1;
   @observable auto = true;
   @observable scale = 1;
   @observable center = true;
@@ -17,11 +17,12 @@ export default class BrowserWindowConfig{
   @observable timeout = 1000;
   @observable ignoreTimeout = false;
   @observable type = '';
-  @observable x = null;
-  @observable y = null;
+  @observable x = 0;
+  @observable y = 0;
   @observable id = '';
   @observable src = '';
-
+  @observable screenWidth = 50;
+  @observable screenHeight = 50;
   @action build(mediaType){
     let built = {
       id:uuid(),
@@ -48,6 +49,13 @@ export default class BrowserWindowConfig{
       }
     }
     return built
+  }
+  @action setProp(prop ,value){
+    this[prop] = value;
+  }
+  @action setScreen(width ,height){
+    this.screenWidth = width;
+    this.screenHeight = height;
   }
   constructor(){
 
