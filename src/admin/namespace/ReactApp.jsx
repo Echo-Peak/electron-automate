@@ -24,6 +24,8 @@ import {Stores} from '../store';
 import uuid from '../util/uuid';
 import WindowPreview from '../routes/browser-window-preview';
 
+//debugging purposes
+window.STORES = Stores;
 
 class App extends React.Component{
     constructor(props){
@@ -41,7 +43,7 @@ class App extends React.Component{
         {route:'logs',store:null, elm:Logs},
         {route:'system',store:null, elm:System},
         {route:'windows',store:null, elm:BrowserWindows},
-        {route:'shell',store:null, elm:Shell},
+        {route:'shell',store:Stores.shell, elm:Shell},
         {route:'audio',store:Stores.audio, elm:Audio},
         {route:'keyboard',store:null, elm:Keyboard},
         {route:'mouse',store:null, elm:Mouse},
