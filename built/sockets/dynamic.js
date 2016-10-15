@@ -15,11 +15,28 @@ module.exports = class socket_dynamic{
       socket.broadcast.emit('volume-change' ,volume);
     });
 
-    socket.on('youtube-url' ,(videoID)=>{
-      Sockets.logger.emit('log' ,{event:'changing youtube video id' ,value:videoID});
-      socket.emit('youtube-url' ,videoID);
-      socket.broadcast.emit('youtube-url' ,videoID);
+    socket.on('media-change' ,(mediaType)=>{
+      socket.emit('media-change' ,mediaType);
+      socket.broadcast.emit('media-change' ,mediaType);
     });
+    socket.on('update-browser-window' , (prop ,settings)=>{
+      socket.emit('update-browser-window' ,prop ,settings);
+      socket.broadcast.emit('update-browser-window' ,prop ,settings);
+    })
+    socket.on('media-error' ,(msg)=>{
+      Sockets.logger.emit('log' ,msg);
+      Sockets.logger.broadcast.emit('log' ,msg);
+    });
+    socket.on('connected' ,()=>{
+      Sockets.logger.emit('log' ,{event:'browser-window connected' ,value:''});
+      Sockets.logger.broadcast.emit('log' ,{event:'browser-window connected' ,value:''});
+    });
+
+    // socket.on('youtube-url' ,(videoID)=>{
+    //   Sockets.logger.emit('log' ,{event:'changing youtube video id' ,value:videoID});
+    //   socket.emit('youtube-url' ,videoID);
+    //   socket.broadcast.emit('youtube-url' ,videoID);
+    // });
 
     socket.on('seek' ,(seekTo)=>{
       Sockets.logger.emit('log' ,{event:'seeking' ,value:seekTo});
@@ -27,11 +44,11 @@ module.exports = class socket_dynamic{
       socket.broadcast.emit('seek' ,seekTo);
     });
 
-    socket.on('audio-file' ,(filename)=>{
-      Sockets.logger.emit('log' ,{event:'changeing audio file' ,value:filename});
-      socket.emit('audio-file' ,filename);
-      socket.broadcast.emit('audio-file' ,filename);
-    });
+    // socket.on('audio-file' ,(filename)=>{
+    //   Sockets.logger.emit('log' ,{event:'changeing audio file' ,value:filename});
+    //   socket.emit('audio-file' ,filename);
+    //   socket.broadcast.emit('audio-file' ,filename);
+    // });
     socket.on('audio-mute' ,(bool)=>{
       Sockets.logger.emit('log' ,{event:'changeing volume mute' ,value:bool});
       socket.emit('audio-mute' ,bool);
@@ -48,11 +65,11 @@ module.exports = class socket_dynamic{
       socket.broadcast.emit('playback-stop');
     });
 
-    socket.on('picture-file',(filename)=>{
-      Sockets.logger.emit('log' ,{event:'changing picture' ,value:filename});
-      socket.emit('picture-file' ,filename);
-      socket.broadcast.emit('picture-file' ,filename);
-    });
+    // socket.on('picture-file',(filename)=>{
+    //   Sockets.logger.emit('log' ,{event:'changing picture' ,value:filename});
+    //   socket.emit('picture-file' ,filename);
+    //   socket.broadcast.emit('picture-file' ,filename);
+    // });
 
     socket.on('window-pos',(pos)=>{
       Sockets.logger.emit('log' ,{event:'setting browser window positions' ,value:pos});
