@@ -10,10 +10,10 @@ module.exports = class socket_logger{
       socket.emit('fail',msg);
       socket.broadcast.emit('fail',msg);
     });
-    socket.on('warn',(msg)=>{
-      console.log('WARNING:',msg);
-      socket.emit('warn', msg);
-      socket.broadcast.emit('warn', msg);
+    socket.on('fatal',(error)=>{
+      console.log('FATAL:',error);
+      socket.emit('fatal', error);
+      socket.broadcast.emit('warn', error);
     });
   }
 }
