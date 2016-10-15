@@ -24,6 +24,9 @@ module.exports = class socket_electron{
     this.audioPath = path.resolve(__dirname , '../data/audio');
     this.windowsPath = path.resolve(__dirname , '../data/windows');
     this.self = this;
+    socket.on('error' ,function(e){
+      Sockets.logger.broadcast.emit('fatal' ,{error:e.toString()});
+    });
     socket.on('create-browser-window',this.createBrowserWindow.bind(this));
     socket.on('destroy-browser-window',this.destroyBrowserWindow.bind(this));
     socket.on('create-audio-buffer', this.createAudioBuffer.bind(this));
@@ -39,6 +42,19 @@ module.exports = class socket_electron{
       socket.emit('audio-action' ,action);
       socket.broadcast.emit('audio-action' ,action);
       Sockets.logger.broadcast.emit('log',{event:'audio-action' ,value:action});
+    });
+
+    socket.on('shell-url' ,function(url){
+      try{
+        let x = electron.openExternal(url);
+        Sockets.logger.broadcast.emit('log',{event:'opening exteranl url' ,value:url});
+        Sockets.system.emit('shell-output' ,x);
+        Sockets.system.broadcast.emit('shell-output' ,x);
+      }catch(err){
+        Sockets.system.emit('shell-output' ,err.toString());
+        Sockets.system.broadcast.emit('shell-output' ,err.toString());
+      }
+
     });
 
     socket.on('change-volume' ,function(volume){
