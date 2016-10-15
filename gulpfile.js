@@ -37,7 +37,7 @@ logger.on('log' ,function(msg){
   if(typeof msg.value === 'string'){
     value = msg.value
   }else{
-    value = JSON.stringify(msg.value)
+    value = JSON.stringify(msg.value);
   }
     console.log(`
       ${'Event'.cyan.bold} : ${msg.event}
@@ -97,19 +97,19 @@ function startApp(done){
   if(electron){
     appClients['main'] = child_process.execFile('electron' ,['./built/index.js' ,'--electron' ,`${devMode && devMode}`]);
     appClients['main'].stdout.on('data',function(msg){
-      console.log('electron out',msg.toString());
+      console.log('[electron]'.cyan.bold, msg.toString());
     });
     appClients['main'].stderr.on('data',function(msg){
-      console.log('electron error',msg.toString());
+      console.log('[electron]'.red.bold, msg.toString());
     })
     done()
   }else{
       appClients['main'] = child_process.fork('./built/index.js' ,['--express' ,`${devMode && devMode}`],{stdio:'pipe' ,silent:true});
   appClients['main'].stdout.on('data',function(msg){
-    console.log('express out',msg.toString());
+    console.log('[MAIN]'.cyan.bold, msg.toString());
   });
   appClients['main'].stderr.on('data',function(msg){
-    console.log('express error',msg.toString());
+    console.log('[MAIN]'.red.bold, msg.toString());
   })
   done()
   }
