@@ -31,28 +31,22 @@ child_process.execFile(chrome_path ,[`http://localhost:${config.ports.main}`]);
 let electron = !!~process.argv.indexOf('--electron');
 let devMode = !!~process.argv.indexOf('--dev') ? '--dev' : '';
 
-System.on('who',function(who){
-  who && console.log(`
-    ${who.name} - ${who.pid}
-    `);
-})
 
 logger.on('log' ,function(msg){
-let value;
-if(typeof msg.value === 'string'){
-  value = msg.value
-}else{
-  value = JSON.stringify(msg.value)
-}
-  console.log(`
-    ${'Event'.cyan.bold} : ${msg.event}
-    ${'value'.yellow.bold} : ${value}
-    `)
+  let value;
+  if(typeof msg.value === 'string'){
+    value = msg.value
+  }else{
+    value = JSON.stringify(msg.value)
+  }
+    console.log(`
+      ${'Event'.cyan.bold} : ${msg.event}
+      ${'value'.yellow.bold} : ${value}
+      `)
 });
 
 logger.on('fail' ,function(msg){
   console.log('Error'.red.bold)
-  console.log(msg)
 });
 
 function consoleBeep(msg){
@@ -129,13 +123,13 @@ function scss(done){
     done();
     return
   }
- gulp.src(`./src/**/**/*.scss`)
+ gulp.src(`./src/${scss.basename}/**/*.scss`)
   .pipe(plumber(plumberHandler(done)))
   .pipe(sassify())
   .pipe(concat('styles.css'))
   .pipe(gulp.dest(`./built/static/${scss.basename}`))
   .on('end' ,function(){
-    //nodemon.emit('restart');
+
     System.emit('reload');
     done()
     })
@@ -143,18 +137,18 @@ function scss(done){
 }
 
 function _jadeify(done){
-  console.log('>>' ,_jadeify.basename )
+
 if(!_jadeify.basename){
   done();
   return
 }
-  console.log("starting jade" );
+  //console.log("starting jade" );
     gulp.src(`./src/${_jadeify.basename}/index.jade`)
     .pipe(plumber(plumberHandler(done)))
     .pipe(rename(`${_jadeify.basename}.jade`))
     .pipe(gulp.dest(`./built/views`))
     .on('end' ,function(_done){
-      //nodemon.emit('restart');
+
       System.emit('reload');
       done()
   })
@@ -174,7 +168,7 @@ function watches(){
   watch('./src/**/index.jade' , (e) =>{
     let basename = e.relative.split(/\\/g)
     _jadeify.basename = basename.shift();
-    console.log('got',basename , e.relative);
+    //console.log('got',basename , e.relative);
    gulp.start('jadeify');
   });
 
