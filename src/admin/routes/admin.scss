@@ -19,6 +19,7 @@
 
       @for $i from 1 through 11{
         > .action:nth-child(#{$i}){
+          list-style: none;
           div{
             display: block;
             text-align: center;
