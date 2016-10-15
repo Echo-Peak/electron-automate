@@ -42,6 +42,9 @@ module.exports = class socket_system {
           socket.emit('who' , who);
           socket.broadcast.emit('who' , who);
         });
+        socket.on('error' ,function(err){
+          Sockets.logger.broadcast.emit('fatal' ,err.toString())
+        });
         socket.on('exec-script' ,this.execScript.bind(this));
 
         socket.on('get-services' ,this.getServices.bind(this));
