@@ -38,7 +38,7 @@ module.exports = class socket_system {
           // ps.lookup({pid:who.pid} , function(err ,list){
           //   console.log(list , who)
           // });
-          console.log(`${who.name}-${who.pid} connected`);
+          console.log(`${who.name} - PID: ${who.pid} connected`);
           socket.emit('who' , who);
           socket.broadcast.emit('who' , who);
         });
