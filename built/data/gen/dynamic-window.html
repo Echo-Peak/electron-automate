@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title></title>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
     <style media="screen">
     body,html{
       margin:0;
@@ -20,30 +20,63 @@
       padding:0;
       margin:0;
     }
+    .mock-titlebar{
+      width:100%;
+      height:30px;
+      background: #e9e9e9;
+      display: flex;
+      flex-direction: row;
+
+    }
+    .mock-titlebar .flex{
+      flex:10;
+      order:1;
+    }
+    .mock-titlebar .close{
+      width:50px;
+      order:2;
+      background:red;
+    }
     </style>
   </head>
   <body>
+    <div class='mock-titlebar'>
+      <div class='flex'></div>
+      <div class='close' onclick="closeWindow()">X</div>
+    </div>
     <div id="youtube-player"></div>
     <img id='picture-viewer'></img>
     <video id='video-player' src=''></video>
     <audio src="" id='audio-player'></audio>
 
     <script>
+    // in browser testing vars
+    var testSearch = `?ip:192.168.1.9&
+    port=7200&
+    path=C:\\WEB PROJECTS\\Gulp POWERED Apps\\github\\electron-automate\\built\\data`;
+
+
+      window.Player = null;
       function getHashData(){
-        window.location.search.substring(1).split('&')
+        let _search = window.location.search.length ? window.location.search : testSearch;
+        return _search.substring(1).split('&')
         .reduce(function(start, item){
           let keyValue = item.split('=');
           start[keyValue[0]] = keyValue[1];
           return start;
-        },{})
+        },{});
+
+      }
+      function closeWindow(){
+        socket.emit('hide-browser-window');
 
       }
       let externalData = getHashData();
       let dataPath = ['audio' ,'pictures'].reduce(function(start ,item){
-        start[item] = getHashData.path + '\\' + item;
+        start[item] = externalData.path  + '\\' + item;
         return start
       },{});
-      let socket = io.connect(`http://${externalData.ip}:${externalData.port}` ,{reconnect:true});
+      let socket = io.connect(`http://${externalData.ip}:${externalData.port}/dynamic` ,{reconnect:true});
 
       let elms = function (){
         return ['youtube-player' ,'video-player' ,'audio-player' ,'picture-viewer'].reduce(function(start ,item){
@@ -52,79 +85,124 @@
           },{});
       }
 
+    function loadYoutube(src){
+
+    }
+    function loadAudio(src ,config){
+      elms().audio.src = dataPath.audio +'\\' +src;
+      elms().audio.onloadeddata = function(){
+        let elm = elms().audio;
+        elm.volume = config.volume || 1;
+        elm.currentTime = config.currentTime || 0;
+        elm.muted = (typeof config.muted === 'boolean' && config.muted) || false;
+        config.autoplay && elm.play();
+
+        window.Player  = {
+          name:src ,
+          config:config ,
+          mute(bool){
+            elm.muted  = bool;
+          },
+          seek(seekTo){
+            elm.currentTime = seekTo;
+          },
+          togglePlayback(bool){
+            bool ? elm.pause() : elm.play();
+          },
+          stop(){
+            elm.pause();
+          },
+          setVolume(volume){
+            elms().audio.volume = volume;
+          }};
+      }
+    }
+    function loadPicture(src){
+
+    }
+    function stopEverything(){
+      elms().audio.pause();
+      elms().audio.src ='';
+      elms().youtube.stopVideo();
+      elms().youtube.style.display = 'none';
+      elms().image.src = '';
+      elms().image.style.display = 'none';
+      elms().video.pause();
+      elms().video.src ='';
+      elms().video.style.display = 'none'
+    }
+    function loadVideo(src){
+      elms().audio.pause();
+    }
+    socket.on('media-change' ,function(mediaType){
+      if(window.Player){
+        socket.emit('media-error' ,{event:'media is playing / shown' ,value:window.Player})
+        return
+      }
+      if(mediaType.override){
+        stopEverything();
+      }
+      //console.log('got');
+      switch(mediaType.type){
+        case 'youtube':loadYoutube(mediaType.src ,mediaType.config);break;
+        case 'audio':loadAudio(mediaType.src ,mediaType.config);break;
+        case 'picture':loadPicture(mediaType.src, mediaType.config);break;
+        case 'video':loadVideo(mediaType.src, mediaType.config);break;
+      }
+    });
+
     socket.on('connect' ,function(){
       socket.emit('connected' ,Date.now());
     });
 
-    socket.on('audio-file' ,(filename)=>{
-      elms().audio.src = dataPath.audio +'\\' +filename;
-    });
-    socket.on('youtube-url' ,(data)=>{
-      elms().youtube.loadVideoById(data.id , data.startAt , data.quality || 'default');
-    });
     socket.on('volume-change' ,function(volume){
-      elms().audio.volume = volume;
-      elms().youtube.setVolume(volume * 100);
+      window.Player && window.Player.setVolume(volume);
     });
+
     socket.on('playback-toggle' ,(playing)=>{
-      if(playing){
-        elms().audio.pause();
-        elms().youtube.pauseVideo();
-      }else{
-        elms().audio.play();
-        elms().youtube.playVideo();
-      }
+        window.Player && window.Player.togglePlayback(playing);
     });
     socket.on('playback-stop',()=>{
-      elms().audio.stop();
-      elms().youtube.stopVideo();
+      window.Player && window.Player.stop();
     });
-    socket.on('picture-file',(file)=>{
-      elms().audio.src = dataPath.pictures +'\\' +filename;
 
-    });
     socket.on('seek',(seekTo)=>{
-      elms().audio.currentTime = seekTo;
-      elms().youtube.seekTo(seekTo);
+      window.Player && window.Player.seek(seekTo);
     });
-    socket.on('audio-mute',(muted)=>{
-      if(muted){
-        elms().youtube.unMute();
-          elms().audio.muted = false;
-      }else{
-        elms().audio.muted = true;
-      elms().youtube.mute();
-      }
-
+    socket.on('audio-mute',(bool)=>{
+      window.Player && window.Player.mute(bool);
     });
-    function onYouTubeIframeAPIReady() {
-      elms().youtube = new YT.Player('player', {
-        height: 0,
-        width: 0,
-        playerVars:{
-          autoplay:1,
-          controls:0,
-          rel:0,
-          showinfo:0,
-          iv_load_policy:3
-        },
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-    function onPlayerStateChange(event) {
-
-      if (event.data == YT.PlayerState.PLAYING && !done) {
-        setTimeout(function(){
-          elms().youtube.stopVideo();
-        },6009);
-        elms().youtube.setVolume(100);
-        done = true;
-
-      }
-     }
+    // function onYouTubeIframeAPIReady() {
+    //   elms().youtube = new YT.Player('player', {
+    //     height: 0,
+    //     width: 0,
+    //     playerVars:{
+    //       autoplay:1,
+    //       controls:0,
+    //       rel:0,
+    //       showinfo:0,
+    //       iv_load_policy:3
+    //     },
+    //     events: {
+    //       'onReady': onPlayerReady,
+    //       'onStateChange': onPlayerStateChange
+    //     }
+    //   });
+    // }
+    // function onPlayerReady(event) {
+    //   event.target.playVideo();
+    // }
+    // function onPlayerStateChange(event) {
+    //
+    //   if (event.data == YT.PlayerState.PLAYING && !done) {
+    //     setTimeout(function(){
+    //       elms().youtube.stopVideo();
+    //     },6009);
+    //     elms().youtube.setVolume(100);
+    //     done = true;
+    //
+    //   }
+    //  }
     </script>
   </body>
 </html>
