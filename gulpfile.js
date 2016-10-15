@@ -45,8 +45,8 @@ logger.on('log' ,function(msg){
       `)
 });
 
-logger.on('fail' ,function(msg){
-  console.log('Error'.red.bold)
+logger.on('fatal' ,function(error){
+  console.log('Error'.red.bold ,error)
 });
 
 function consoleBeep(msg){
