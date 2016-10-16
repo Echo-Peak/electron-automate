@@ -15,6 +15,9 @@ import FlatButton from 'material-ui/FlatButton';
 import Delay from '../ui/delay';
 import CallbackAction from '../ui/callback-action';
 import RecordPad from '../ui/record-pad';
+import {observer} from 'mobx-react';
+
+import Cancel from 'material-ui/svg-icons/navigation/cancel';
 
 const styles = {
   errorStyle: {
@@ -31,67 +34,42 @@ const styles = {
   },
   slide:{
     height:900
-  }
-};
+  },
+    fab:{
+      marginRight: 20
+    },
+    controls:{
+      position:'fixed',
+      bottom:0,
+      right:50,
+      margin:10,
+      zIndex:8200
+    }
 
+};
+@observer
 export default class Mouse extends Component{
   constructor(props){
     super();
     this.state = {
         slideIndex:0,
         mouseFunctions:[],
-        waiting:true,
-        screen:{
-          width:0,
-          height:0,
-          orig:null
-        }
+        waiting:true
 
     };
-
-
-
   }
   componentDidMount(){
 
   }
   componentDidMount(){
-    let self =this;
-
-    console.error('currently disabled. moving robot-screen events to x_window for global consumption')
-    //     sockets.Robot.on('robot-screen' ,(msg)=>{
-    //
-    //       console.log('screen!!3!!!!!' ,msg)
-    //       if(msg){
-    //     self.setState({
-    //       screen:{
-    //         width:msg.width *0.5,
-    //         height:msg.height * 0.5,
-    //         orig:msg
-    //       }
-    //     });
-    //     console.error('fix screen here')
-    //   // self.refs.screen.style.width = this.state.screen.width;
-    //   // self.refs.screen.style.height = this.state.screen.height;
-    //   // self.refs.screen.style.background = '#999';
-    //   // console.warn(msg , self.refs.screen);
-    //   //
-    //   // this.elm = new Hammer(self.refs.screen);
-    //   // this.elm.on('pan' ,this.mover.bind(this));
-    //   // this.elm.get('pan').set({ direction: Hammer.DIRECTION_ALL });
-    // }
-    // });
+    let self = this;
 
     sockets.Robot.on('mouse-functions' ,(fn)=>{
       console.log(JSON.parse(fn))
       this.setState({mouseFunctions:JSON.parse(fn)});
     });
 
-
-
-      sockets.Robot.emit('get-mouse-functions');
-    //  sockets.Robot.emit('get-robot-screen');
-
+    sockets.Robot.emit('get-mouse-functions');
 
   }
   mover(ev){
@@ -101,10 +79,10 @@ export default class Mouse extends Component{
     let x = cx / 0.5;
     let y = cy / 0.5;
     if(x <= this.state.screen.orig.width && y <= this.state.screen.orig.height){
-      console.log(x ,y);
+      //console.log(x ,y);
       sockets.Robot.emit('move-mouse' ,{x,y})
     }
-    //console.log("asd");
+
   }
   componentWillUnmount(){
 
@@ -117,20 +95,31 @@ export default class Mouse extends Component{
     this.setState({slideIndex: value})
   }
   execCommand(item){
-    console.log(item);
+    //console.log(item);
     sockets.Robot.emit('execute-mouse-function' ,item);
   }
   mouseClick(leftRight){
-    console.log('clicked')
-      sockets.Robot.emit('mouse-click' ,leftRight)
+
+    sockets.Robot.emit('mouse-click' ,leftRight)
 
   }
-  done(){}
+  done(){
+
+  }
+  kill(){
+    sockets.Robot.emit('stop');
+  }
   render(){
 
 
     return (  <div className='mouse'>
         <div>
+          <div style={styles.controls}>
+             <FloatingActionButton style={styles.fab} onTouchTap={this.kill.bind(this)}>
+              <Cancel />
+            </FloatingActionButton>
+          </div>
+
           <Tabs onChange={this.handleChange.bind(this)} value={this.state.slideIndex}>
             <Tab label="functions" value={0}/>
             <Tab label="record input" value={1}/>
@@ -143,14 +132,13 @@ export default class Mouse extends Component{
                   <ListItem key={uuid()}
                     primaryText={e.title}
                     secondaryText={e.desp}
-                    onTouchTap={this.execCommand.bind(this ,e)}
-                    >
+                    onTouchTap={this.execCommand.bind(this ,e)}>
 
               </ListItem>))}
             </List>
             </div>
             <div style={styles.slide}>
-              <RecordPad length={10} onDone={this.done.bind(this)} size={this.state.screen}></RecordPad>
+              <RecordPad store={this.props.store}></RecordPad>
 
             </div>
             <div style={styles.slide}>
