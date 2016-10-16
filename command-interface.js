@@ -64,7 +64,7 @@ console.log('mocha' ,err);
 function killElectron(){
   console.log("killing electron".red.bold);
   let getClients = subProcess.filter(e => e.name ==='electron-app');
-  console.log(getClients);
+  //console.log(getClients);
   getClients.forEach(function(ps){
     try{
       child_process.exec(`taskkill /pid ${ps.pid} /f`);
