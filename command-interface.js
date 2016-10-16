@@ -122,7 +122,7 @@ function loadElectron(args){
   let startWith = args.shell ? 'start cmd /k electron' : 'electron';
   let _args = args.args && args.args.split(',').join(' ') || '';
 
-  let x = child_process.exec(`${startWith} ./built/index.js --electron ${_args}`);
+  let x = child_process.exec(`${startWith} ./core/electron.js --electron ${_args}`);
   args.stdout  && !args.shell && x.stdout.on('data' , function(data){
     console.log('electron',data)
   });
@@ -258,7 +258,7 @@ stdin.setEncoding('utf8');
 
 stdin.resume();
 
-let regex = /(([a-z0-9]+)\:(\[?([a-z0-9,"']+\b))\]?)/gi;
+let regex = /(([a-z0-9]+)\:(\[?([a-z0-9\-,"']+\b))\]?)/gi;
 stdin.on('data',function(key){
 
 let extraArgs = key.match(regex);
