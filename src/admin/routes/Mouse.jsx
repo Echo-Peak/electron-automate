@@ -58,9 +58,7 @@ export default class Mouse extends Component{
 
     };
   }
-  componentDidMount(){
 
-  }
   componentDidMount(){
     let self = this;
 
