@@ -82,7 +82,7 @@ function restartElectron(){
 }
 
 function loadWebpack(args){
-
+  let _args = args.args && args.args.split(',').join(' ') || '';
   if(!args.use || !~webpackApps.indexOf(args.use)){
     console.log(`${args.use} not found. [${webpackApps}]`);
     return
@@ -90,7 +90,7 @@ function loadWebpack(args){
   console.log("starting webpack".green.bold);
   let startWith = args.shell ? 'start cmd /c webpack' : 'webpack';
 
-  let x = child_process.exec(`${startWith} --use ${args.use} --webpack`);
+  let x = child_process.exec(`${startWith} --use ${args.use} --webpack ${_args}`);
   args.stdout && !args.shell && x.stdout.on('data' , function(data){
     console.log(data)
   });
@@ -101,13 +101,14 @@ function loadWebpack(args){
 }
 function loadMocha(args){
   console.log("starting mocha".green.bold);
+  let _args = args.args && args.args.split(',').join(' ') || '';
 
   let useExternalShell = args.shell ? 'start cmd /k mocha' : 'mocha';
   let watch  = args.watch ? '-w' : '';
   let reporter  = args.reporter ? `--reporter ${args.reporter}` : '';
   args.watch && console.log('Mocha watching'.cyan.bold);
 
-  let x = child_process.exec(`${useExternalShell} ./tests/index.js --mocha ${watch} -c ${reporter}`);
+  let x = child_process.exec(`${useExternalShell} ./tests/index.js --mocha ${watch} -c ${reporter} ${_args}`);
   args.stdout && !args.shell && x.stdout.on('data' , function(data){
     console.log('mocha' , data)
   });
@@ -119,8 +120,9 @@ function loadMocha(args){
 function loadElectron(args){
   console.log("starting electron".green.bold);
   let startWith = args.shell ? 'start cmd /k electron' : 'electron';
+  let _args = args.args && args.args.split(',').join(' ') || '';
 
-  let x = child_process.exec(`${startWith} ./built/index.js --electron`);
+  let x = child_process.exec(`${startWith} ./built/index.js --electron ${_args}`);
   args.stdout  && !args.shell && x.stdout.on('data' , function(data){
     console.log('electron',data)
   });
@@ -256,15 +258,19 @@ stdin.setEncoding('utf8');
 
 stdin.resume();
 
+let regex = /(([a-z0-9]+)\:(\[?([a-z0-9,"']+\b))\]?)/gi;
 stdin.on('data',function(key){
 
-let extraArgs = key.match(/(([a-z0-9]+)\:([a-z0-9]+))/gi);
+let extraArgs = key.match(regex);
 
   extraArgs = extraArgs && extraArgs.reduce(function(start ,item){
   let i = item.split(':');
 
   if(i[1] === 'true' || i[1] === 'false'){
     start[i[0]] = JSON.parse(i[1]);
+  }
+  if(i[1].match(/,/g)){
+    start[i[0]] = i[1].split(',');
   }
   if(i[1].match(/\d+/g)){
     start[i[0]] = parseInt(i[1]);
@@ -276,13 +282,13 @@ let extraArgs = key.match(/(([a-z0-9]+)\:([a-z0-9]+))/gi);
 },{});
 
 
-help();
-let command = key.replace(/(([a-z0-9]+)\:([a-z0-9]+))/gi , '').trim();
+
+let command = key.replace(regex , '').trim();
 
   switch(command){
     case 'webpack':loadWebpack(extraArgs);break;
     case 'restart':restartElectron();break;
-    case 'electron':loadElectron();break;
+    case 'electron':loadElectron(extraArgs);break;
     case 'kill':killScript(command);break;
     case 'test':loadMocha(extraArgs);break;
     case 'build':build(extraArgs);break;
