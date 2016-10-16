@@ -95,7 +95,7 @@ function server(done){
 function startApp(done){
 
   if(electron){
-    appClients['main'] = child_process.execFile('electron' ,['./built/index.js' ,'--electron' ,`${devMode && devMode}`]);
+    appClients['main'] = child_process.execFile('electron' ,process.argv.slice(2));
     appClients['main'].stdout.setEncoding('utf8');
     appClients['main'].stdout.on('data',function(msg){
       console.log('[electron]'.cyan.bold, msg.toString());
@@ -105,7 +105,7 @@ function startApp(done){
     })
     done()
   }else{
-      appClients['main'] = child_process.fork('./built/index.js' ,['--express' ,`${devMode && devMode}`],{stdio:'pipe' ,silent:true});
+      appClients['main'] = child_process.fork('./built/index.js' ,process.argv.slice(2),{stdio:'pipe' ,silent:true});
       appClients['main'].stdout.setEncoding('utf8');
       appClients['main'].stderr.setEncoding('utf8');
   appClients['main'].stdout.on('data',function(msg){
