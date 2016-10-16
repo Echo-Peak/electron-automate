@@ -16,6 +16,12 @@ module.exports = class socket_robot{
       socket.broadcast.emit('mouse-record' ,record);
       socket.emit('mouse-record', record);
     });
+    socket.on('stop' ,function(){
+      Sockets.logger.emit('log' ,{event:'stopping current mouse action' ,value:''})
+      socket.broadcast.emit('stop');
+      socket.emit('stop');
+    });
+
     socket.on('get-robot-screen' ,function(){
       Sockets.logger.emit('log' ,{event:'get-robot-screen' ,value:''})
       socket.broadcast.emit('get-robot-screen');
