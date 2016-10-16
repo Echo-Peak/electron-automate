@@ -5,7 +5,7 @@ let browserWindowConfig = require('./browser-window');
 let dynamicWindow = path.resolve(__dirname,`../data/gen/dynamic-window.html`);
 dynamicWindow = `file:///${dynamicWindow}`;
 
-let config = require('./config');
+let config = require('../config');
 
 let flags = {
   electron:!!~process.argv.indexOf('--electron'),
