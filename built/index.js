@@ -71,10 +71,14 @@ function expressApp(){
 
   });
 }
+function spawnElectron(){
+
+}
 //to only use electron without spawning another instance of express used in development
 
 flags.electron_only ? electronApp(app , Dynamic , System) : expressApp();
 flags.express_only && expressApp();
-(flags.dev || flags.production) && !expressApp() && !electronApp(app , Dynamic , System);
+flags.dev && !expressApp();
+flags.production && !expressApp() && !electronApp(app , Dynamic , System);
 
 !flags.logging && console.log('logging is disabled!');
