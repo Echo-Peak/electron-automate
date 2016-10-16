@@ -114,22 +114,6 @@ function startApp(done){
     });
 
     done()
-
-  // if(electron){
-  //   appClients['main'] = child_process.execFile('electron' ,process.argv.slice(2));
-  //   appClients['main'].stdout.setEncoding('utf8');
-  //   appClients['main'].stdout.on('data',function(msg){
-  //     console.log('[electron]'.cyan.bold, msg.toString());
-  //   });
-  //   appClients['main'].stderr.on('data',function(msg){
-  //     console.log('[electron]'.red.bold, msg.toString());
-  //   })
-  //   done()
-  // }else{
-  //
-  // }
-  //placeholder
-
 }
 
 
