@@ -47,7 +47,7 @@ process.on('uncaughtException' ,function(err){
 
 try {
    mouseFunctions = require('./mouse');
-  Mouse = new mouseFunctions();
+  Mouse = new mouseFunctions(Robot);
 } catch (err){
   Logger.emit('fail' ,{event:'ROBOT client ERROR loading' ,val:err.toString()});
 }
