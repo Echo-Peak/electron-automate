@@ -8,7 +8,7 @@ import Layout from '../routes/layout';
 import Snackbar from 'material-ui/Snackbar';
 import Admin from '../routes/admin';
 import System from '../routes/system';
-import BrowserWindows from '../routes/browser-windows';
+import BrowserWindows from '../create-window';
 import Shell from '../shell';
 import Keyboard from '../routes/keyboard';
 import Logs from '../routes/logs';
@@ -42,11 +42,11 @@ class App extends React.Component{
       let routes = [
         {route:'logs',store:null, elm:Logs},
         {route:'system',store:null, elm:System},
-        {route:'windows',store:null, elm:BrowserWindows},
+        {route:'windows',store:Stores.window, elm:BrowserWindows},
         {route:'shell',store:Stores.shell, elm:Shell},
         {route:'audio',store:Stores.audio, elm:Audio},
         {route:'keyboard',store:null, elm:Keyboard},
-        {route:'mouse',store:null, elm:Mouse},
+        {route:'mouse',store:Stores.browserWindow, elm:Mouse},
         {route:'tasker',store:null, elm:Tasker},
         {route:'file-system',store:null, elm:FileSystem},
         {route:'info',store:null, elm:Info},
