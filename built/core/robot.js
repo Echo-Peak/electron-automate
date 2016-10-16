@@ -108,8 +108,8 @@ Robot.on('robot-typeString' ,function(data){
 //
 Robot.on('execute-mouse-function',function(fn){
   try{
-  Mouse[fn['call-function']](fn.vars);
-
+  //Mouse[fn['call-function']](fn.vars);
+  throw 'Mouse functions disabled.'
   Logger.emit('log' ,{event:'mouse-function executing' ,val:fn});
 }catch(err){
   Logger.emit('log' ,{event:'mouse-function ERROR' ,val:err.toString() , got:fn});
