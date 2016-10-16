@@ -94,29 +94,31 @@ function server(done){
 
 function startApp(done){
 
-  if(electron){
-    appClients['main'] = child_process.execFile('electron' ,process.argv.slice(2));
+    appClients['main'] = child_process.fork('./built/index.js' ,process.argv.slice(2),{stdio:'pipe' ,silent:true});
     appClients['main'].stdout.setEncoding('utf8');
+    appClients['main'].stderr.setEncoding('utf8');
     appClients['main'].stdout.on('data',function(msg){
-      console.log('[electron]'.cyan.bold, msg.toString());
+      console.log('[MAIN]'.cyan.bold, msg);
+      process.stdout.write(msg)
     });
     appClients['main'].stderr.on('data',function(msg){
-      console.log('[electron]'.red.bold, msg.toString());
+      console.log('[MAIN]'.red.bold, msg);
     })
     done()
-  }else{
-      appClients['main'] = child_process.fork('./built/index.js' ,process.argv.slice(2),{stdio:'pipe' ,silent:true});
-      appClients['main'].stdout.setEncoding('utf8');
-      appClients['main'].stderr.setEncoding('utf8');
-  appClients['main'].stdout.on('data',function(msg){
-    console.log('[MAIN]'.cyan.bold, msg);
-    process.stdout.write(msg)
-  });
-  appClients['main'].stderr.on('data',function(msg){
-    console.log('[MAIN]'.red.bold, msg);
-  })
-  done()
-  }
+
+  // if(electron){
+  //   appClients['main'] = child_process.execFile('electron' ,process.argv.slice(2));
+  //   appClients['main'].stdout.setEncoding('utf8');
+  //   appClients['main'].stdout.on('data',function(msg){
+  //     console.log('[electron]'.cyan.bold, msg.toString());
+  //   });
+  //   appClients['main'].stderr.on('data',function(msg){
+  //     console.log('[electron]'.red.bold, msg.toString());
+  //   })
+  //   done()
+  // }else{
+  //
+  // }
   //placeholder
 
 }
