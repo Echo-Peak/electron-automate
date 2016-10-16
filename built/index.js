@@ -5,58 +5,40 @@ let config = require('./config');
 let http = require('http');
 let socketIO = require('socket.io');
 let socketIOClient = require('socket.io-client');
-const JsonDB = require('node-json-db');
+let electronApp = require('./core/electron');
 var cookieParser = require('cookie-parser');
 let ps = require('ps-node');
 let logger = require('morgan');
 const os = require('os');
+let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
 let child_process = require('child_process');
 let fs = require('fs');
-let browserWindowConfig = require('./core/browser-window');
-
-//let nodePath = path.resolve(__dirname ,'exec/n');
-// try{
-//
-//   let dirlist = fs.readdirSync(nodePath);
-//   let getExec = dirlist.filter(e => /\.exe$/.test(e));
-//
-//   if(!~dirlist.indexOf(config.alias.nodejs.name)){
-//     fs.renameSync(`${nodePath}\\${getExec}` ,`${nodePath}\\${config.alias.nodejs.name}.exe` );
-//   }
-// }catch(err){
-//   console.log(err)
-// }
-
-let dynamicWindow = `file:///${__dirname}/data/gen/dynamic-window.html`;
 let connectionType = require('./core/connection-types');
 let app = require('./core/server')(config , config.ports.main);
-let ELECTRON_ONLY = ~process.argv.indexOf('electron-only')  ? true : false;
-
 let History = require('./core/history')(app);
 
-
-const electron = require('electron');
-
-
-let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
-const electronApp = electron.app;
+let flags = {
+  electron:!!~process.argv.indexOf('--electron'),
+  dev:!!~process.argv.indexOf('--dev'),
+  electron_only:!!~process.argv.indexOf('--electron-only'),
+  logging:!!~process.argv.indexOf('--logging'),
+  express_only:!!~process.argv.indexOf('--express-only'),
+  production:!!~process.argv.indexOf('--production')
+}
 
 let System = socketIOClient.connect(`http://localhost:${config.ports.main}/system` ,{reconnect:true});
 let Dynamic = socketIOClient.connect(`http://localhost:${config.ports.main}/dynamic` ,{reconnect:true});
 let Logger = socketIOClient.connect(`http://localhost:${config.ports.main}/logger` ,{reconnect:true});
-System.emit('who' ,{pid:process.pid , name:'electron-app' ,id:'electron'});
 
 
-//to only use electron without spawning another instance of express used in development
-if(!ELECTRON_ONLY){
-  app.use(cookieParser());
-  ~process.argv.indexOf('--dev') && app.use(logger('dev'));
+System.emit('who' ,{pid:process.pid , name:'express-app' ,id:'express'});
+
+function expressApp(){
+  flags.logging && app.use(logger('dev'));
 
   app.use(express.static(__dirname+'/static'));
   app.set('views', __dirname+ '/views');
   app.set('view engine', 'jade');
-
-
 
 
   app.get('/home' ,function(req , res){
@@ -76,62 +58,23 @@ if(!ELECTRON_ONLY){
   app.get('/' ,function(req ,res){
     res.redirect('/home')
   });
+
+  app.use(function(req, res, done){
+
+
+    let badRoute = History.find(req.path);
+    if(badRoute){
+        res.status(404).render('error' ,{route:req.path});
+    }else{
+      done()
+    }
+
+  });
 }
+//to only use electron without spawning another instance of express used in development
 
-~process.argv.indexOf('--electron') && killDupes();
+flags.electron_only ? electronApp(app , Dynamic , System) : expressApp();
+flags.express_only && expressApp();
+(flags.dev || flags.production) && !expressApp() && !electronApp(app , Dynamic , System);
 
-~process.argv.indexOf('--electron') && electronApp.on('ready' ,function(){
-  //use one instance of BrowserWindow & keep it running to handle audio/video /pics ect...
-  let BrowserWindow_delagate =  new electron.BrowserWindow({show:false}).loadURL(dynamicWindow);
-
-  BrowserWindow_delagate.on('close' ,function(){
-    Logger.emit('log' ,{event:'browser-window closed' ,value:''});
-    BrowserWindow_delagate.hide();
-  });
-
-  //this configures BrowserWindow at runtime. ect postion & size
-  Dynamic.on('update-browser-window' ,function(prop ,settings){
-    Logger.emit('log' ,{event:'updateing browser window' ,prop ,settings});
-    BrowserWindow_delagate[prop] && BrowserWindow_delagate[props](...settings);
-  });
-  Dynamic.on('close-browser-window' ,function(){
-    Logger.emit('log' ,{event:'browser-window closeing' ,value:''});
-    BrowserWindow_delagate.hide();
-  });
-
-if(~process.argv.indexOf('--dev')){
-      let win = new electron.BrowserWindow({width:1900,height:950 ,show:true});
-    win.loadURL(`http://localhost:${config.ports.main}/home?ip=${IP}&port=${config.ports.main}`);
-    win.on('closed' ,function(){
-      System.emit('quit');
-    })
-}
-
-
-
-
-});
-~process.argv.indexOf('--electron') && electronApp.on('window-all-closed', function (e) {
-  ~process.argv.indexOf('--dev') && electronApp.quit();
-});
-~process.argv.indexOf('--electron') && electronApp.on('will-quit',function(e){
-  ~process.argv.indexOf('--dev') && electronApp.quit()
-});
-
-app.use(function(req, res, done){
-
-
-  let badRoute = History.find(req.path);
-  let o = History.get();
-  if(badRoute){
-      res.status(404).render('error' ,{route:req.path});
-  }else{
-    // if(req.path === '/home'){
-    //     done()
-    // }else if(o.length < 1){
-    //   res.status(404).render('error' ,{route:req.path});
-    // }
-    done()
-  }
-
-});
+!flags.logging && console.log('logging is disabled!');

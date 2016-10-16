@@ -296,6 +296,7 @@ let command = key.replace(/(([a-z0-9]+)\:([a-z0-9]+))/gi , '').trim();
 
 let isKilling = false;
 process.on('SIGINT', function(){
+
   console.log("killing build process".red.bold);
   if(isKilling){
 

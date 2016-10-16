@@ -34,7 +34,7 @@ html
           console.log(msg)
           window.LOG.push(msg);
         });
-        sockets.Logger.on('fail' ,function(msg){
+        sockets.Logger.on('fatal' ,function(msg){
           console.log(msg)
           window.LOG.push(msg);
         });
