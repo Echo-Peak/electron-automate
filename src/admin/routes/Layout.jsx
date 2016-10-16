@@ -17,7 +17,7 @@ import History from 'material-ui/svg-icons/action/history';
 import File from 'material-ui/svg-icons/file/file-download';
 import Paper from 'material-ui/Paper';
 import {withRouter} from 'react-router';
-import WindowSettings from '../browser-window';
+import WindowSettings from '../ui/browser-window';
 
 
 
