@@ -1,7 +1,7 @@
 let robot = require('robotjs');
 
 class MouseFunctions{
-  constructor(){
+  constructor(Robot){
     // this.pollrate = poll; //50ms
     // this.duration = dur; //100s
     // this.options = options;
