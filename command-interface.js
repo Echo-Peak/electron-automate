@@ -43,7 +43,7 @@ function killWebpack(){
       console.log('webpack' ,err)
     }
   });
-    console.log("killed webpack clients");
+    console.log("killed webpack clients".green.bold);
 
 }
 
@@ -58,20 +58,21 @@ function killMocha(){
 console.log('mocha' ,err);
     }
   });
-    console.log("killed mocha");
+    console.log("killed mocha".green.bold);
 
 }
 function killElectron(){
   console.log("killing electron".red.bold);
   let getClients = subProcess.filter(e => e.name ==='electron-app');
+  console.log(getClients);
   getClients.forEach(function(ps){
     try{
       child_process.exec(`taskkill /pid ${ps.pid} /f`);
     }catch(err){
-      console.log('electron' ,err);
+
     }
   });
-    console.log("killed electron");
+    console.log("killed electron".green.bold);
 }
 
 
@@ -122,7 +123,8 @@ function loadElectron(args){
   let startWith = args.shell ? 'start cmd /k electron' : 'electron';
   let _args = args.args && args.args.split(',').join(' ') || '';
 
-  let x = child_process.exec(`${startWith} ./core/electron.js --electron ${_args}`);
+  !args.dev && console.log('did you mean to pass dev:true?.');
+  let x = child_process.exec(`${startWith} ./built/core/electron.js --electron ${_args}`);
   args.stdout  && !args.shell && x.stdout.on('data' , function(data){
     console.log('electron',data)
   });
@@ -171,12 +173,6 @@ function build(args) {
 }
 
 
-function gatherSubprocess(args, done){
-    ps.lookup({command:'cmd' , arguments:/\b(mocha)\b|\b(webpack)\b/} ,(err ,list) =>{
-      console.log(list);
-      done()
-    });
-}
 
 function killRobotClient(){
   let alias = config.alias.nodejs;
@@ -195,7 +191,7 @@ function killRobotClient(){
     }catch(err){
 
     }
-    console.log("killed robot client");
+    console.log("killed robot client".green.bold);
   }
 }
 function kill(done){
@@ -204,10 +200,13 @@ function kill(done){
 
     let flags = ['webpack' ,'electron' ,'mocha','MAIN' ,'robot'];
     let regex = flags.map(e => `\\b(${e})\\b`).join('|');
+    let command = ['cmd' ,'node' ,'electron' ,config.alias.nodejs];
+    command = command.map(e => `(\\b${e}\\b)`).join('|');
 
-    ps.lookup({command:/cmd|node/gi , arguments:regex} ,(err ,list) =>{
-
+    ps.lookup({command:new RegExp(command, 'ig') , arguments:regex} ,(err ,list) =>{
+      console.log("lokking");
       list.forEach(function(item){
+        console.log('killing' ,item.pid)
         try{
 
           child_process.execSync(`taskkill /pid ${item.pid} /f`)
@@ -228,13 +227,15 @@ function kill(done){
 }
 
 function killScript(args){
+
   if(args && args.script){
+    console.log('got it' ,args);
     switch(args.script){
-    case 'mocha':killMocha();break;
-    case 'webpack':killWebpack();
-    case 'electron':killElectron();
-    case 'robot':killRobotClient();
-    case 'main':kill();
+      case 'mocha':killMocha();break;
+      case 'webpack':killWebpack();break;
+      case 'electron':killElectron();break;
+      case 'robot':killRobotClient();break;
+      case 'main':kill();break;
     }
   }
 
@@ -248,9 +249,9 @@ function help(){
     reporter:(optional(string | 'spec'))
     ${'build'.green} -   out:<optional(string | ./)>  msi:<optional(boolean | false)>
     ${'restart'.green} -   no args
-    ${'kill webpack'.green} - no args
+    ${'kill'.green} - script:<script-name>
     ${'electron'.green} - no args
-    ${'kill tests'.green} - no args
+
     `);
 }
 let stdin = process.stdin;
@@ -283,13 +284,13 @@ let extraArgs = key.match(regex);
 
 
 
-let command = key.replace(regex , '').trim();
+  let command = key.replace(regex , '').trim();
 
   switch(command){
     case 'webpack':loadWebpack(extraArgs);break;
     case 'restart':restartElectron();break;
     case 'electron':loadElectron(extraArgs);break;
-    case 'kill':killScript(command);break;
+    case 'kill':killScript(extraArgs);break;
     case 'test':loadMocha(extraArgs);break;
     case 'build':build(extraArgs);break;
     case 'help':help();break;
