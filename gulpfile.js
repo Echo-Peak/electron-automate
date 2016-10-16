@@ -75,10 +75,15 @@ gulp.task('restart',restart);
 
 
 function restart(done){
+  if(!appClients['main'].connected){
+    startApp(done);
+    return
+  }
   appClients['main'].kill();
   appClients['main'].on('close' ,function(){
     startApp(done)
-  })
+  });
+  //console.log(appClients['main'])
 }
 
 function server(done){
@@ -99,11 +104,15 @@ function startApp(done){
     appClients['main'].stderr.setEncoding('utf8');
     appClients['main'].stdout.on('data',function(msg){
       console.log('[MAIN]'.cyan.bold, msg);
-      process.stdout.write(msg)
+
     });
     appClients['main'].stderr.on('data',function(msg){
       console.log('[MAIN]'.red.bold, msg);
-    })
+      console.log("[MAIN]".red.bold ,'has been terminated');
+      appClients['main'].kill();
+
+    });
+
     done()
 
   // if(electron){
