@@ -296,7 +296,7 @@ module.exports = class socket_fileSystem{
   }
   deleteTask(filename){
     let {Sockets , taskPath} = this;
-    fs.unlink(`${taskPath}\\${filename}` ,function(err){
+    fs.unlink(`${taskPath}\\${filename}` ,(err)=>{
       if(err){
         Sockets.logger.broadcast.emit('fatal',{event:`failed to delete ${filename}` ,value:err.toString()});
         return

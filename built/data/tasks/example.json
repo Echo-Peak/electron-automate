@@ -1,9 +1,11 @@
 {
+  "id":"example",
+  "descp":"example description!",
 
   "timeline":[
     {"task":"moveMouse" ,"cords":[92 , 32]},
     {"task":"wait" ,"value":2000},
-    {"task":"keyTap" ,"value":"space" ,"mod":["command" ,"ctrl"]},
+    {"task":"keyTap" ,"value":"space" ,"mod":["command" ,"ctrl"]}
   ]
 
 

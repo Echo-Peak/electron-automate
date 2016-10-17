@@ -18,7 +18,7 @@ import Mouse from '../routes/Mouse';
 import FileSystem from '../routes/file-system';
 import Info from '../routes/Info';
 import NpmUI from '../routes/npm-ui';
-import Tasker from '../routes/tasker';
+import Tasker from '../tasker';
 import AppActions from '../routes/app';
 import {Stores} from '../store';
 import uuid from '../util/uuid';

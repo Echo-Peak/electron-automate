@@ -5,11 +5,30 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import {List, ListItem} from 'material-ui/List';
 import uuid from '../util/uuid';
+import RaisedButton from 'material-ui/RaisedButton';
 
 let styles = {
   slide:{
     height:900
+  },
+  button:{
+    margin:12
+  },
+  controls:{
+    position:'relative',
+    width:'80%',
+    margin:'0 auto'
+  },
+  delete:{
+    position:'absolute',
+    top:0,
+    right:0,
+    transform:'translateY(50%)'
+  },
+  listItem:{
+    position:'relative'
   }
+
 }
 
 export default class Tasker extends Component{
@@ -21,7 +40,10 @@ export default class Tasker extends Component{
     };
   }
   componentDidMount(){
-
+    sockets.fs.on('tasker-list' ,(tasks)=>{
+      this.setState({tasks})
+    });
+    sockets.fs.emit('get-tasker-list');
   }
   componentWillUnmount(){
 
@@ -35,6 +57,12 @@ export default class Tasker extends Component{
   execTask(task){
 
   }
+  deleteItem(filename ,item){
+    console.log('deleteing' ,filename);
+    let confirm = window.confirm(`delete ${item.id}?`);
+
+    confirm && sockets.fs.emit('delete-task' ,filename)
+  }
   render(){
     return (
       <div>
@@ -45,10 +73,25 @@ export default class Tasker extends Component{
         </Tabs>
         <SwipeableViews index={this.state.slideIndex} onChangeIndex={this.handleChange.bind(this)}>
           <div style={styles.slide}>
-            <List>
-              {this.state.tasks.map(e => (<ListItem key={uuid()} primaryText={e} onTouchTap={this.execTask.bind(this,e)}>
 
-            </ListItem>))}
+            <div style={styles.controls}>
+              <RaisedButton label="end" style={styles.button} />
+              <RaisedButton label="preview" style={styles.button} />
+            </div>
+
+            <List>
+              {this.state.tasks.map(e => (
+                <div key={uuid()} style={styles.listItem}>
+              <ListItem
+              primaryText={e.id}
+              secondaryText={e.descp}
+              onTouchTap={this.execTask.bind(this,e)}>
+
+            </ListItem>
+            <RaisedButton secondary={true} label="delete" style={styles.delete} onTouchTap={this.deleteItem.bind(this, e.filename ,e)}/>
+                </div>
+
+          ))}
           </List>
           </div>
           <div style={styles.slide}>

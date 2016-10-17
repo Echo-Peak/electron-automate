@@ -71,9 +71,7 @@ function expressApp(){
 
   });
 }
-function spawnElectron(){
 
-}
 //to only use electron without spawning another instance of express used in development
 
 flags.electron_only ? electronApp(app , Dynamic , System) : expressApp();
