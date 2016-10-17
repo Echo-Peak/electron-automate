@@ -30,6 +30,7 @@ module.exports = class socket_fileSystem{
     this.scriptsPath = path.resolve(__dirname ,'../data/scripts');
     this.audioPath = path.resolve(__dirname ,'../data/audio');
     this.windowsPath = path.resolve(__dirname ,'../data/windows');
+    this.taskPath = path.resolve(__dirname ,'../data/tasks');
     let self = this;
 
     this.self = this;
@@ -40,6 +41,7 @@ module.exports = class socket_fileSystem{
     socket.on('delete-audio' ,this.deleteAudio.bind(this));
     socket.on('get-window-list' ,this.windowList.bind(this));
     socket.on('save-window' , this.saveWindow.bind(this));
+    socket.on('get-tasker-list' , this.taskerList.bind(this));
 
     socket.on('get-root-dir' ,function(){
       fs.readdir(process.cwd() ,function(err ,dirlist){
@@ -257,32 +259,16 @@ module.exports = class socket_fileSystem{
       }
     });
   }
-  // saveWindow(_package){
-  //   let {socket , Sockets ,windowsPath ,self} = this;
-  //   let files = Object.keys(_package);
-  //   let packageJSON = JSON.parse(_package.package.value);
-  //   let count = 0;
-  //   try{
-  //     fs.accessSync(`${windowsPath}\\${packageJSON.id}` ,fs.F_OK)
-  //   }catch(e){
-  //     Sockets.logger.broadcast.emit('fail' ,{event:'saving intor error' ,value:e.toString()});
-  //     fs.mkdirsSync(`${windowsPath}\\${packageJSON.id}`);
-  //   }
-  //
-  //   files.forEach(function(file ,index ,arr){
-  //
-  //     fs.writeFile(`${windowsPath}\\${packageJSON.id}\\${file}.${_package[file].ext}` ,_package[file].value , function(err){
-  //       count += 1;
-  //       if(err){
-  //         Sockets.logger.broadcast.emit('fail' ,{event:'saving intro error' ,value:err.toString()});
-  //       }
-  //       if(count === arr.length){
-  //         self.windowList();
-  //         Sockets.logger.broadcast.emit('log' ,{event:'saving intro success' ,value:_package});
-  //       }
-  //     });
-  //   });
-  // }
+  taskerList(){
+    let {socket ,Sockets , taskPath ,self} = this;
+    fs.readdir(taskPath ,function(err ,dirlist){
+      if(err){
+        Sockets.logger.broadcast.emit('fatal',{event:`getting tasks list` ,value:err.toString()});
+        return
+      }
+      socket.emit('tasker-list' ,dirlist);
+    });
+  }
 
   saveWindow(config){
     let {socket ,Sockets , windowsPath ,self} = this;
@@ -293,7 +279,7 @@ module.exports = class socket_fileSystem{
     fs.readdir(`${windowsPath}\\${complete.id}` ,function(err ,dirlist){
         if(!err){
           console.log('err' ,err)
-          Sockets.logger.broadcast.emit('log',{event:`'${complete.id}' already exist in ${windowsPath}` ,value:''});
+          Sockets.logger.broadcast.emit('log',{event:`'${complete.id}' already exist in ${windowsPath}` ,value:err.toString()});
           return
         }
           mkdirp.sync(`${windowsPath}\\${complete.id}`);
