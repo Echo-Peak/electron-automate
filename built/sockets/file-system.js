@@ -42,6 +42,7 @@ module.exports = class socket_fileSystem{
     socket.on('get-window-list' ,this.windowList.bind(this));
     socket.on('save-window' , this.saveWindow.bind(this));
     socket.on('get-tasker-list' , this.taskerList.bind(this));
+    socket.on('delete-task' , this.deleteTask.bind(this));
 
     socket.on('get-root-dir' ,function(){
       fs.readdir(process.cwd() ,function(err ,dirlist){
@@ -260,16 +261,49 @@ module.exports = class socket_fileSystem{
     });
   }
   taskerList(){
-    let {socket ,Sockets , taskPath ,self} = this;
+    let {socket ,Sockets , taskPath} = this;
+    let done = 0;
+    let ready = [];
+
     fs.readdir(taskPath ,function(err ,dirlist){
       if(err){
         Sockets.logger.broadcast.emit('fatal',{event:`getting tasks list` ,value:err.toString()});
         return
       }
-      socket.emit('tasker-list' ,dirlist);
+      //sync
+      let parsify = dirlist.map((filePath ,index ,arr) => {
+        let fromJSON = fs.readFile(`${taskPath}\\${filePath}` ,function(err2 ,data){
+          done += 1;
+          if(err2){
+            Sockets.logger.broadcast.emit('fatal',{event:`failed to read ${filePath}` ,value:err2.toString()});
+            return
+          }
+          try{
+            let x = JSON.parse(data);
+            x.filename = filePath;
+            ready.push(x);
+          }catch(err3){
+            Sockets.logger.broadcast.emit('fatal',{event:`failed to parse json` ,value:err3.toString()});
+          }
+
+          if(done === arr.length){
+            Sockets.logger.broadcast.emit('log',{event:`tasker-list ready` ,value:ready.length});
+            socket.emit('tasker-list' ,ready);
+          }
+        });
+      });
     });
   }
-
+  deleteTask(filename){
+    let {Sockets , taskPath} = this;
+    fs.unlink(`${taskPath}\\${filename}` ,function(err){
+      if(err){
+        Sockets.logger.broadcast.emit('fatal',{event:`failed to delete ${filename}` ,value:err.toString()});
+        return
+      }
+      this.taskerList();
+    });
+  }
   saveWindow(config){
     let {socket ,Sockets , windowsPath ,self} = this;
     let complete = Object.assign(baseWindowConfig , config);
