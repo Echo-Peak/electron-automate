@@ -140,9 +140,7 @@
           },{});
       }
 
-    function loadYoutube(src){
 
-    }
     function loadAudio(src ,config){
       elms().audio.src = dataPath.audio +'\\' +src;
       elms().audio.onerror = function(){
@@ -169,7 +167,7 @@
           },
           togglePlayback(bool){
             bool ? elm.pause() : elm.play();
-            window.Player.audio = bool;
+            window.Player.audio.playing = bool;
           },
           stop(){
             elm.pause();
@@ -243,7 +241,7 @@
           },
           togglePlayback(bool){
             bool ? elm.pause() : elm.play();
-            window.Player.video = bool;
+            window.Player.video.playing = bool;
           },
           stop(){
             elm.pause();
@@ -268,7 +266,7 @@
        if(mediaType.override){
         socket.emit('media-error' ,{event:'overridding!' ,mediaType})
         stopEverything();
-      }else if(window.Player[mediaType.type] && !mediaType.override){
+      }else if(window.Player[mediaType.type] && window.Player[mediaType.type].playing && !mediaType.override){
         console.log('nope')
         return
       }
