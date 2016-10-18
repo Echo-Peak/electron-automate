@@ -9,6 +9,9 @@ let stream = require('stream');
 module.exports = class socket_dynamic{
   constructor(socket ,db ,Sockets){
 
+    socket.on('error' ,function(err){
+      Sockets.logger.broadcast.emit('fatal' ,{event:'dynamic socket error' ,value:err.toString()});
+    });
     socket.on('volume-change' ,(volume)=>{
       Sockets.logger.emit('log' ,{event:'changing volume' ,value:volume});
       socket.emit('volume-change' ,volume);

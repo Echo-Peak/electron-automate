@@ -17,7 +17,8 @@ html
           Logger:io.connect('http://#{ip_address}:#{port}/logger' ),
           fs:io.connect('http://#{ip_address}:#{port}/file-system'),
           Robot:io.connect('http://#{ip_address}:#{port}/robot'),
-          Electron:io.connect('http://#{ip_address}:#{port}/electron')
+          Electron:io.connect('http://#{ip_address}:#{port}/electron'),
+          Dynamic:io.connect('http://#{ip_address}:#{port}/dynamic')
         }
         sockets.System.on('disconnect' ,function(){
           let o = window.location.href.split(/\//g);
