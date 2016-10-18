@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title></title>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <!-- <script src="https://www.youtube.com/iframe_api"></script> -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
     <style media="screen">
     body,html{
       margin:0;
@@ -20,29 +21,83 @@
       padding:0;
       margin:0;
     }
-    .mock-titlebar{
-      width:100%;
-      height:30px;
-      background: #e9e9e9;
+    .mock-frame {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2em;
+      background: white;
+      box-shadow: 1px 0px 4px;
+    }
+    .mock-frame .container {
+      position: relative;
+      width: 100%;
       display: flex;
       flex-direction: row;
+    }
+    .mock-frame .container .flex {
+      flex: 10;
+      order: 1;
+    }
+    .mock-frame .container .window-toggles {
+      flex: 1;
+      order: 2;
+      position: absolute;
+      right: 0;
+      height: 2em;
+    }
+    .mock-frame .container .window-toggles ul {
+      padding: 0;
+      margin: 0;
+      height: 2em;
+    }
+    .mock-frame .container .window-toggles ul li {
+      height: inherit;
+      list-style: none;
+      cursor: pointer;
+      line-height: 2em;
+      display: inline-block;
+    }
+    .mock-frame .container .window-toggles ul li:nth-child(1) {
+      transition: all .3s;
+    }
+    .mock-frame .container .window-toggles ul li:nth-child(1):hover {
+      background: #4abcff;
+    }
+    .mock-frame .container .window-toggles ul li:nth-child(2) {
+      transition: all .3s;
+    }
+    .mock-frame .container .window-toggles ul li:nth-child(2):hover {
+      background: #4abcff;
+    }
+    .mock-frame .container .window-toggles ul li:nth-child(3) {
+      transition: all .3s;
+    }
+    .mock-frame .container .window-toggles ul li:nth-child(3):hover {
+      background: #ff2d2d;
+    }
+    .mock-frame .container .window-toggles ul li i {
+      height: inherit;
+      padding: 0px 15px;
+    }
 
-    }
-    .mock-titlebar .flex{
-      flex:10;
-      order:1;
-    }
-    .mock-titlebar .close{
-      width:50px;
-      order:2;
-      background:red;
-    }
+
     </style>
+
   </head>
   <body>
-    <div class='mock-titlebar'>
-      <div class='flex'></div>
-      <div class='close' onclick="closeWindow()">X</div>
+    <div class="mock-frame">
+      <div class="container">
+        <div class="flex"></div>
+        <div class="window-toggles">
+          <ul>
+            <li title="Minimize" onclick='sendEvent("minimize")'><i class="fa fa-minus"></i></li>
+            <li title="Maximize" onclick='sendEvent("Maximize")'><i class="fa fa-clone"> </i></li>
+            <li title="Close" onclick='sendEvent("close")'><i class="fa fa-close"></i></li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div id="youtube-player"></div>
     <img id='picture-viewer'></img>
@@ -56,13 +111,13 @@
     path=C:\\WEB PROJECTS\\Gulp POWERED Apps\\github\\electron-automate\\built\\data`;
 
 
-      window.Player = null;
+      window.Player = {};
       function getHashData(){
         let _search = window.location.search.length ? window.location.search : testSearch;
         return _search.substring(1).split('&')
         .reduce(function(start, item){
           let keyValue = item.split('=');
-          start[keyValue[0]] = keyValue[1];
+          start[keyValue[0]] = decodeURIComponent(keyValue[1]);
           return start;
         },{});
 
@@ -72,8 +127,8 @@
 
       }
       let externalData = getHashData();
-      let dataPath = ['audio' ,'pictures'].reduce(function(start ,item){
-        start[item] = externalData.path  + '\\' + item;
+      let dataPath = ['audio' ,'pictures' ,'videos'].reduce(function(start ,item){
+        start[item] = externalData.path  + '\\built\\data\\' + item;
         return start
       },{});
       let socket = io.connect(`http://${externalData.ip}:${externalData.port}/dynamic` ,{reconnect:true});
@@ -90,6 +145,9 @@
     }
     function loadAudio(src ,config){
       elms().audio.src = dataPath.audio +'\\' +src;
+      elms().audio.onerror = function(){
+        socket.emit('media-error',{event:'audio' ,value:0});
+      }
       elms().audio.onloadeddata = function(){
         let elm = elms().audio;
         elm.volume = config.volume || 1;
@@ -97,7 +155,7 @@
         elm.muted = (typeof config.muted === 'boolean' && config.muted) || false;
         config.autoplay && elm.play();
 
-        window.Player  = {
+        window.Player.audio  = {
           name:src ,
           config:config ,
           mute(bool){
@@ -112,37 +170,98 @@
           stop(){
             elm.pause();
           },
-          setVolume(volume){
+          volume(volume){
             elms().audio.volume = volume;
-          }};
+          }
+        };
+
       }
     }
-    function loadPicture(src){
-
+    function loadPicture(file){
+      let elm = elms().picture;
+       elm.width = window.innerWidth;
+       elm.height = window.innerHeight;
+       elm.src = dataPath.pictures +'\\'+ file;
+       window.Player.picture = {
+         name:file,
+         load(filename){
+           elm.src = dataPath.picture +'\\'+ filename;
+         },
+         stop(){
+           elm.src = '';
+           elm.style.display = 'none';
+         },
+         togglePlayback(bool){
+           bool ? (elm.style.display = 'none') : (elm.style.display = 'block');
+         }
+       }
     }
     function stopEverything(){
-      elms().audio.pause();
-      elms().audio.src ='';
-      elms().youtube.stopVideo();
-      elms().youtube.style.display = 'none';
-      elms().image.src = '';
-      elms().image.style.display = 'none';
-      elms().video.pause();
-      elms().video.src ='';
-      elms().video.style.display = 'none'
+      let _elms = elms();
+      console.log('clearing');
+       _elms.audio.pause && _elms.audio.pause();
+      _elms && (_elms.audio.src ='');
+      _elms.youtube.stopVideo && _elms.youtube.stopVideo();
+      Player.YT && Player.YT.stopVideo();
+      _elms.youtube.style.display = 'none';
+
+      _elms.picture.src && (_elms.picture.src = '');
+      _elms.picture.style.display && (_elms.picture.style.display = 'none');
+      _elms.video.pause && _elms.video.pause();
+      _elms.video.src && (_elms.video.src ='');
+      _elms.video.style.display && (_elms.video.style.display = 'none');
+
     }
-    function loadVideo(src){
-      elms().audio.pause();
+    function loadVideo(src ,config){
+      elms().video.src = dataPath.videos +'\\' +src;
+      elms().video.onerror = function(){
+        socket.emit('media-error',{event:'video error'});
+      }
+      elms().video.onloadeddata = function(){
+        let elm = elms().video;
+        elm.volume = config.volume || 1;
+        elm.currentTime = config.currentTime || 0;
+        elm.muted = (typeof config.muted === 'boolean' && config.muted) || false;
+        config.autoplay && elm.play();
+        elm.controls = (typeof config.controls === 'boolean' && config.controls) || false;
+        window.Player.video  = {
+          name:src ,
+          config:config ,
+          mute(bool){
+            elm.muted  = bool;
+          },
+          seek(seekTo){
+            elm.currentTime = seekTo;
+          },
+          togglePlayback(bool){
+            bool ? elm.pause() : elm.play();
+          },
+          stop(){
+            elm.pause();
+            elm.style.display = 'none';
+          },
+          volume(volume){
+            elms().video.volume = volume;
+          }
+        };
+
+      }
     }
     socket.on('media-change' ,function(mediaType){
+      console.log(mediaType)
       if(window.Player){
-        socket.emit('media-error' ,{event:'media is playing / shown' ,value:window.Player})
+        socket.emit('media-error' ,{event:'media is playing / shown' })
+
+      }
+
+       if(mediaType.override){
+        socket.emit('media-error' ,{event:'overridding!' ,mediaType})
+        stopEverything();
+      }else if(window.Player && !mediaType.override){
         return
       }
-      if(mediaType.override){
-        stopEverything();
-      }
-      //console.log('got');
+
+      console.log('got');
       switch(mediaType.type){
         case 'youtube':loadYoutube(mediaType.src ,mediaType.config);break;
         case 'audio':loadAudio(mediaType.src ,mediaType.config);break;
@@ -156,53 +275,134 @@
     });
 
     socket.on('volume-change' ,function(volume){
-      window.Player && window.Player.setVolume(volume);
+      window.Player.YT && window.Player.YT._volume(volume);
+      window.Player.audio && window.Player.audio.volume(volume);
+      window.Player.video && window.Player.video.volume(volume);
     });
 
     socket.on('playback-toggle' ,(playing)=>{
-        window.Player && window.Player.togglePlayback(playing);
+        window.Player.YT && window.Player.YT.togglePlayback(playing);
+        window.Player.audio && window.Player.audio.togglePlayback(playing);
+        window.Player.video && window.Player.video.togglePlayback(playing);
     });
     socket.on('playback-stop',()=>{
-      window.Player && window.Player.stop();
+      window.Player.YT && window.Player.YT._stop();
+      window.Player.audio && window.Player.audio.stop();
+      window.Player.video && window.Player.video.stop();
     });
 
     socket.on('seek',(seekTo)=>{
-      window.Player && window.Player.seek(seekTo);
+      window.Player.YT && window.Player.YT._seek(seekTo);
+      window.Player.audio && window.Player.audio.seek(seekTo);
+      window.Player.video && window.Player.video.seek(seekTo);
     });
     socket.on('audio-mute',(bool)=>{
-      window.Player && window.Player.mute(bool);
+      window.Player.YT && window.Player.YT._mute(bool);
+      window.Player.audio && window.Player.audio.mute(bool);
+      window.Player.video && window.Player.video.mute(bool);
     });
-    // function onYouTubeIframeAPIReady() {
-    //   elms().youtube = new YT.Player('player', {
-    //     height: 0,
-    //     width: 0,
-    //     playerVars:{
-    //       autoplay:1,
-    //       controls:0,
-    //       rel:0,
-    //       showinfo:0,
-    //       iv_load_policy:3
-    //     },
-    //     events: {
-    //       'onReady': onPlayerReady,
-    //       'onStateChange': onPlayerStateChange
-    //     }
-    //   });
-    // }
-    // function onPlayerReady(event) {
-    //   event.target.playVideo();
-    // }
-    // function onPlayerStateChange(event) {
-    //
-    //   if (event.data == YT.PlayerState.PLAYING && !done) {
-    //     setTimeout(function(){
-    //       elms().youtube.stopVideo();
-    //     },6009);
-    //     elms().youtube.setVolume(100);
-    //     done = true;
-    //
-    //   }
-    //  }
+
+    let youtubePlayer = elms().youtube;
+    let timeout = null;
+    function loadYoutube(videoID , config){
+      elms().youtube.style.display = 'block';
+
+       let isItReady = false;
+      let interval = null;
+      clearTimeout(timeout);
+
+          if(config.timeout){
+            timeout = setTimeout(function(){
+
+              Player.YT.stopVideo();
+
+            },config.timeout);
+          }
+
+      interval = setInterval(function(){
+        if(isItReady){
+            elms().youtube.height = window.innerHeight;
+            elms().youtube.width = window.innerWidth;
+            Player.YT.loadVideoById(videoID);
+
+          clearInterval(interval);
+        }
+      },100);
+
+      if(window.Player.YT){
+        elms().youtube.height = window.innerHeight;
+        elms().youtube.width = window.innerWidth;
+        window.Player.YT.loadVideoById(videoID)
+        return
+      }
+      console.log(Player ,videoID )
+      window.Player.YT = new YT.Player(elms().youtube.id, {
+                height: window.innerHeight,
+                width: window.innerWidth,
+                playerVars:{
+                  autoplay:config.autoplay ? 1 : 0,
+                  controls:config.controls ? 1 : 0,
+                  rel:config.rel ? 1 : 0,
+                  showinfo:config.show_info ? 1 : 0,
+                  iv_load_policy:config.load_policy || 3
+                },
+                events: {
+                  onReady: onPlayerReady,
+                  onError:function(code){
+                    socket.emit('media-error' ,{event:'youtube-error' ,value:code});
+                  },
+                  onStateChange: onPlayerStateChange
+                }});
+
+
+
+      window.Player.YT._stop = function(){
+        Player.YT.stopVideo();
+        isItReady = false;
+        elms().youtube.style.display ='none';
+      }
+      window.Player.YT._seek = function(seekTo){
+        Player.YT.seekTo(seekTo)
+      }
+      window.Player.YT.togglePlayback = function(bool){
+        bool ? Player.YT.pauseVideo() : Player.YT.playVideo();
+      }
+      window.Player.YT._volume = function(volume){
+         Player.YT.setVolume(volume * 100)
+      }
+      window.Player.YT._mute = function(bool){
+         bool ? Player.YT.mute() : Player.YT.unMute();
+      }
+      let done = false;
+      function onPlayerReady(event) {
+
+        isItReady = true;
+
+        //event.target.playVideo();
+      }
+      function onPlayerStateChange(event) {
+
+        if (event.data == YT.PlayerState.PLAYING && !done) {
+          config.mute && Player.YT.mute();
+          config.autoplay && Player.YT.playVideo();
+          Player.YT.setVolume(config.volume *100);
+          done = true;
+
+        }
+       }
+
+    }
+    window.addEventListener('resize' ,function(){
+      elms().youtube.height = window.innerHeight;
+      elms().youtube.width = window.innerWidth;
+    });
+
+    let electron = require('electron');
+    let {ipcRenderer} = electron.remote;
+    function sendEvent(event){
+      ipcRenderer.send(event);
+    }
     </script>
+
   </body>
 </html>
