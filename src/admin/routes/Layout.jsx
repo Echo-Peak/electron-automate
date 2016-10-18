@@ -9,6 +9,7 @@ import ActionInfo from 'material-ui/svg-icons/action/info';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Computer from 'material-ui/svg-icons/hardware/computer';
+import Equalizer from 'material-ui/svg-icons/av/equalizer';
 
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -18,6 +19,7 @@ import File from 'material-ui/svg-icons/file/file-download';
 import Paper from 'material-ui/Paper';
 import {withRouter} from 'react-router';
 import WindowSettings from '../ui/browser-window';
+import PlayerSettingsDialog from '../player/dialog-ui';
 
 
 
@@ -40,6 +42,13 @@ const styles = {
     bottom:0,
     zIndex:8000,
     right:0
+  },
+  player:{
+    margin:10,
+    position:'fixed',
+    bottom:0,
+    zIndex:8000,
+    right:80
   }
 };
 
@@ -51,7 +60,8 @@ class Layout extends Component {
       open: false,
       msg: '',
       selectedIndex:2,
-      settings:false
+      settings:false,
+      player:false
     };
   }
   componentDidMount() {
@@ -111,12 +121,26 @@ class Layout extends Component {
         </BottomNavigation>
         </Paper>
 
-      <Wrapper store={this.props.stores}>{props.children}</Wrapper>
+      <Wrapper store={this.props.store.browserWindow}>{props.children}</Wrapper>
 
-      <FloatingActionButton secondary={true} style={styles.button} title='window settings' onTouchTap={e => this.setState({settings:true})}>
+    <FloatingActionButton secondary={true} style={styles.player} title='Player' onTouchTap={e => this.setState({player:true})}>
+      <Equalizer />
+    </FloatingActionButton>
+
+    <FloatingActionButton secondary={true} style={styles.button} title='window settings' onTouchTap={e => this.setState({settings:true})}>
       <Computer />
     </FloatingActionButton>
-    <WindowSettings store={this.props.store} show={this.state.settings} close={e => this.setState({settings:false})}></WindowSettings>
+
+    <WindowSettings
+      store={this.props.store.browserWindow}
+      show={this.state.settings}
+      close={e => this.setState({settings:false})}>
+    </WindowSettings>
+
+    <PlayerSettingsDialog
+      store={this.props.store.audio}
+      show={this.state.player}
+      close={e => this.setState({player:false})}></PlayerSettingsDialog>
       </div>
     )
   }
