@@ -27,8 +27,8 @@ module.exports = class socket_electron{
     socket.on('error' ,function(e){
       Sockets.logger.broadcast.emit('fatal' ,{error:e.toString()});
     });
-    socket.on('create-browser-window',this.createBrowserWindow.bind(this));
-    socket.on('destroy-browser-window',this.destroyBrowserWindow.bind(this));
+    //socket.on('create-browser-window',this.createBrowserWindow.bind(this)); //deprecated
+    //socket.on('destroy-browser-window',this.destroyBrowserWindow.bind(this));  //deprecated
     socket.on('create-audio-buffer', this.createAudioBuffer.bind(this));
 
 
