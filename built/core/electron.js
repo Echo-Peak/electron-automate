@@ -3,7 +3,7 @@ const app = electron.app;
 let path = require('path');
 let browserWindowConfig = require('./browser-window');
 let socketIOClient = require('socket.io-client');
-let dynamicWindow = path.resolve(__dirname,`../data/gen/test-dynamic-window.html`);
+let dynamicWindow = path.resolve(__dirname,`../data/gen/dynamic-window.html`);
 const os = require('os');
 let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
 let config = require('../config');
@@ -57,7 +57,7 @@ if(flags.dev){
       win.loadURL(`http://localhost:${config.ports.main}/home?ip=${IP}&port=${config.ports.main}`);
       win.on('closed' ,function(){
 
-        System.emit('quit');
+        //System.emit('quit');
       });
       win.setTitle('entry into electron-automate (dev only)');
       win.setPosition(0,0);
