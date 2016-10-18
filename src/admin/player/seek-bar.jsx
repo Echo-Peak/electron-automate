@@ -30,38 +30,18 @@ export default class SeekBar extends Component{
   componentWillMount(){
 
   }
-  seekStart(ev , value){
-    let current = this.props.xStore.elasped;
-    let input = parseInt(this.refs.slider.refs.input.value);
-      //let nextValue  = parseInt();
-
-      if(current === input){
-        return
-      }
-
-      console.log(input);
-
-
-
-  }
-  seekStop(ev , nextValue){
-
-  }
   seeking(ev ,nextValue){
     if(nextValue === this.props.xStore.elasped){
       return
     }
-    console.log(nextValue);
+    //console.log(nextValue);
     this.props.xStore.setElapsed(nextValue);
-    sockets.Electron.emit('seek-audio',nextValue);
+    sockets.Dynamic.emit('seek',nextValue);
   }
   render(){
     let duration = this.props.duration;
     let ifTrackLength  = duration > 1 ? Math.floor(duration) : 1;
 
-    console.log('seek!!!!' , this.props.seek ,ifTrackLength)
-  //  onDragStart={this.seekStart.bind(this)}
-    //onDragStop={this.seekStop.bind(this)}
     return (<div style={styles.container} className={this.props.className}>
 
         <Slider disabled={!this.props.isPlaying}

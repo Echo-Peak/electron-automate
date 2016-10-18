@@ -140,6 +140,7 @@ export default class AudioStore{
     this.reset();
     console.log("creating!!!!!" ,filename);
     sockets.Electron.emit('create-audio-buffer' ,filename);
+
     this.current = filename;
     if(!~this.history.indexOf(filename)){
       this.history.unshift(filename);
@@ -160,7 +161,17 @@ export default class AudioStore{
     this.config = new windowConfig();
     sockets.Electron.on('audio-buffer', (binaryString)=>{
       let element = this.elementREF;
-      sockets.Electron.emit('create-browser-window' ,uuid() , 'audio' ,this.config.build('audio'));
+      let config = {
+        type:'audio',
+        src:this.current,
+        config:{
+          volume:this.volume,
+          autoplay:this.autoplay,
+          repeat:this.repeat,
+          mute:this.mute
+        }
+      }
+      sockets.Dynamic.emit('media-change' ,config);
       let buffer = new Uint8Array(binaryString.length);
 
       for(var i= 0; i< binaryString.length; i++){
