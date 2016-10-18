@@ -8,11 +8,11 @@ import Layout from '../routes/layout';
 import Snackbar from 'material-ui/Snackbar';
 import Admin from '../routes/admin';
 import System from '../routes/system';
-import BrowserWindows from '../create-window';
+//import BrowserWindows from '../create-window';
 import Shell from '../shell';
 import Keyboard from '../routes/keyboard';
 import Logs from '../routes/logs';
-import Audio from '../routes/audio';
+//import Audio from '../routes/audio';
 import Scripts from '../routes/Scripts';
 import Mouse from '../routes/Mouse';
 import FileSystem from '../routes/file-system';
@@ -23,7 +23,7 @@ import AppActions from '../routes/app';
 import {Stores} from '../store';
 import uuid from '../util/uuid';
 import WindowPreview from '../routes/browser-window-preview';
-
+import Media from '../media';
 //debugging purposes
 window.STORES = Stores;
 
@@ -40,11 +40,12 @@ class App extends React.Component{
     }
     render(){
       let routes = [
+        {route:'media',store:Stores, elm:Logs},
         {route:'logs',store:null, elm:Logs},
         {route:'system',store:null, elm:System},
-        {route:'windows',store:Stores.window, elm:BrowserWindows},
+      //  {route:'windows',store:Stores.window, elm:BrowserWindows},
         {route:'shell',store:Stores.shell, elm:Shell},
-        {route:'audio',store:Stores.audio, elm:Audio},
+      //  {route:'audio',store:Stores.audio, elm:Audio},
         {route:'keyboard',store:null, elm:Keyboard},
         {route:'mouse',store:Stores.browserWindow, elm:Mouse},
         {route:'tasker',store:null, elm:Tasker},
@@ -60,7 +61,7 @@ class App extends React.Component{
         <MuiThemeProvider>
         <Router history={hashHistory}>
 
-            <Route path ='/' name='home' component={(props) => <Layout _props={props} store={Stores.browserWindow}/>}>
+            <Route path ='/' name='home' component={(props) => <Layout _props={props} store={Stores}/>}>
 
                 <IndexRoute component={Admin}></IndexRoute>
                 {routes.map(e => (
