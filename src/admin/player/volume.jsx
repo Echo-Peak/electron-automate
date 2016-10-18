@@ -25,7 +25,7 @@ export default class Volume extends Component{
 changeVolume(ev ,value){
   this.props.xStore.setVolume(value);
 
-  sockets.Electron.emit('change-volume' ,this.props.xStore.volume);
+  sockets.Dynamic.emit('volume-change' ,this.props.xStore.volume);
 }
   render(){
     let {xStore , value}  = this.props;

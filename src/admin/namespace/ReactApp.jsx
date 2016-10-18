@@ -40,7 +40,7 @@ class App extends React.Component{
     }
     render(){
       let routes = [
-        {route:'media',store:Stores, elm:Logs},
+        {route:'media',store:Stores, elm:Media},
         {route:'logs',store:null, elm:Logs},
         {route:'system',store:null, elm:System},
       //  {route:'windows',store:Stores.window, elm:BrowserWindows},

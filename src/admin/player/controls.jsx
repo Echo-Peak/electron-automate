@@ -65,16 +65,19 @@ export default class Controls extends Component{
 
   }
   mute(){
-    this.props.xStore.setMute(!this.props.xStore.mute)
+    this.props.xStore.setMute(!this.props.xStore.mute);
+    sockets.Dynamic.emit('audio-mute' ,this.props.xStore.mute);
   }
   repeat(){
     if(this.props.xStore.current){
 
       this.props.xStore.setRepeat(!this.props.xStore.repeat);
+      sockets.Dynamic.emit('repeat' ,this.props.xStore.repeat )
     }
   }
   next(){
-    this.props.xStore.next()
+    this.props.xStore.next();
+    //sockets.Dynamic.emit('audio-mute' ,this.props.xStore.mute);
   }
   previous(){
 
@@ -85,8 +88,9 @@ export default class Controls extends Component{
     if(this.props.xStore.isPlaying){
       this.props.element.play();
       this.props.startclock();
-
+      sockets.Dynamic.emit('playback-toggle' ,false);
     }else{
+      sockets.Dynamic.emit('playback-toggle' ,true);
       this.props.element.pause();
       this.props.stopclock();
     }
@@ -98,8 +102,8 @@ export default class Controls extends Component{
   }
   stop(){
     this.props.xStore.reset();
-
-    sockets.Electron.emit('destroy-browser-window' ,this.props.xStore.currentID);
+    sockets.Dynamic.emit('playback-stop');
+    //sockets.Electron.emit('destroy-browser-window' ,this.props.xStore.currentID);
   }
   internalPlayback(){
     if(this.props.xStore.internalPlayback){

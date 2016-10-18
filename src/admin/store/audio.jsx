@@ -161,6 +161,7 @@ export default class AudioStore{
     this.config = new windowConfig();
     sockets.Electron.on('audio-buffer', (binaryString)=>{
       let element = this.elementREF;
+      console.log('got it');
       let config = {
         type:'audio',
         src:this.current,

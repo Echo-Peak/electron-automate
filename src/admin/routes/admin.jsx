@@ -74,9 +74,9 @@ class Admin extends Component {
         'system':phonelink,
        'Mouse':mouse,
        'Keyboard':gamepad ,
-       'audio':movie,
+
         'scripts':security,
-        'windows':pictureInPicture,
+        'media':pictureInPicture,
         'tasker':build
       }
 
