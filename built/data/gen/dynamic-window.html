@@ -148,6 +148,9 @@
       elms().audio.onerror = function(){
         socket.emit('media-error',{event:'audio' ,value:0});
       }
+      elms().audio.onended = function(){
+        window.Player.audio.playing = false;
+      }
       elms().audio.onloadeddata = function(){
         let elm = elms().audio;
         elm.volume = config.volume || 1;
@@ -166,15 +169,17 @@
           },
           togglePlayback(bool){
             bool ? elm.pause() : elm.play();
+            window.Player.audio = bool;
           },
           stop(){
             elm.pause();
+            window.Player.audio.playing = false;
           },
           volume(volume){
             elms().audio.volume = volume;
           }
         };
-
+        config.autoplay && (window.Player.audio.playing = true)
       }
     }
     function loadPicture(file){
@@ -217,6 +222,9 @@
       elms().video.onerror = function(){
         socket.emit('media-error',{event:'video error'});
       }
+      elms().video.onended = function(){
+        window.Player.video.playing = false;
+      }
       elms().video.onloadeddata = function(){
         let elm = elms().video;
         elm.volume = config.volume || 1;
@@ -235,21 +243,24 @@
           },
           togglePlayback(bool){
             bool ? elm.pause() : elm.play();
+            window.Player.video = bool;
           },
           stop(){
             elm.pause();
             elm.style.display = 'none';
+            window.Player.video.playing = false;
           },
           volume(volume){
             elms().video.volume = volume;
           }
         };
+        config.autoplay && (window.Player.video.playing = true)
 
       }
     }
     socket.on('media-change' ,function(mediaType){
       console.log(mediaType)
-      if(window.Player){
+      if(window.Player[mediaType.type] && window.Player[mediaType.type].playing){
         socket.emit('media-error' ,{event:'media is playing / shown' })
 
       }
@@ -257,7 +268,8 @@
        if(mediaType.override){
         socket.emit('media-error' ,{event:'overridding!' ,mediaType})
         stopEverything();
-      }else if(window.Player && !mediaType.override){
+      }else if(window.Player[mediaType.type] && !mediaType.override){
+        console.log('nope')
         return
       }
 
@@ -355,17 +367,19 @@
                 }});
 
 
-
+      config.autoplay && (window.Player.YT.playing = true)
       window.Player.YT._stop = function(){
         Player.YT.stopVideo();
         isItReady = false;
         elms().youtube.style.display ='none';
+        window.Player.YT.playing = false;
       }
       window.Player.YT._seek = function(seekTo){
         Player.YT.seekTo(seekTo)
       }
       window.Player.YT.togglePlayback = function(bool){
         bool ? Player.YT.pauseVideo() : Player.YT.playVideo();
+        window.Player.YT.playing = bool;
       }
       window.Player.YT._volume = function(volume){
          Player.YT.setVolume(volume * 100)
