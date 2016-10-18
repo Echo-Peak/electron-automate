@@ -3,12 +3,12 @@ const app = electron.app;
 let path = require('path');
 let browserWindowConfig = require('./browser-window');
 let socketIOClient = require('socket.io-client');
-let dynamicWindow = path.resolve(__dirname,`../data/gen/dynamic-window.html`);
-dynamicWindow = `file:///${dynamicWindow}`;
+let dynamicWindow = path.resolve(__dirname,`../data/gen/test-dynamic-window.html`);
 const os = require('os');
 let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
-
 let config = require('../config');
+
+dynamicWindow = `file:///${dynamicWindow}?ip=${IP}&port=${config.ports.main}&path=${process.cwd()}`;
 
 let flags = {
   electron:!!~process.argv.indexOf('--electron'),
@@ -16,7 +16,6 @@ let flags = {
   production:!!~process.argv.indexOf('--dev')
 }
 
-//~process.argv.indexOf('--electron') && killDupes();
 
 
 
@@ -31,9 +30,11 @@ if(flags.dev){
 
   System.emit('who' ,{pid:process.pid , name:'electron-app' ,id:'electron'});
    app.on('ready' ,function(){
+     let screen = electron.screen.getPrimaryDisplay().workArea;
     //use one instance of BrowserWindow & keep it running to handle audio/video /pics ect...
     let BrowserWindow_delagate = new electron.BrowserWindow({show:false});
     BrowserWindow_delagate.loadURL(dynamicWindow);
+
 
     BrowserWindow_delagate.on('close' ,function(){
       Logger.emit('log' ,{event:'browser-window closed' ,value:''});
@@ -51,12 +52,20 @@ if(flags.dev){
     });
 
   if(flags.dev){
-        let win = new electron.BrowserWindow({width:1900,height:950 ,show:true});
+
+        let win = new electron.BrowserWindow({width:1900,height:screen.height / 2 ,show:true});
       win.loadURL(`http://localhost:${config.ports.main}/home?ip=${IP}&port=${config.ports.main}`);
       win.on('closed' ,function(){
 
         System.emit('quit');
-      })
+      });
+      win.setTitle('entry into electron-automate (dev only)');
+      win.setPosition(0,0);
+      BrowserWindow_delagate.setTitle('Dynamic browser window');
+      BrowserWindow_delagate.webContents.openDevTools();
+      BrowserWindow_delagate.show();
+      BrowserWindow_delagate.setPosition(0,screen.height/2);
+      BrowserWindow_delagate.setSize(1920 ,screen.height/2);
   }
 
 
