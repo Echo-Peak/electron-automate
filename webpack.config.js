@@ -6,13 +6,9 @@ var colorize = require('colors');
 var enableSourceMaps = false;
 var socketIO = require('socket.io-client');
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
-var webpackTargetElectronRenderer = require('webpack-target-electron-renderer');
 var config = require('./built/config');
-//let config = require('./config');
 
 
-
-//let devMode = !!~process.argv.indexOf('--dev') ? '--dev' : '';
 
 let logger = socketIO.connect(`http://localhost:${config.ports.main}/logger`, {reconnect:true});
 let System = socketIO.connect(`http://localhost:${config.ports.main}/system`, {reconnect:true});
