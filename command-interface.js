@@ -295,7 +295,6 @@ let extraArgs = key.match(regex);
     case 'test':loadMocha(extraArgs);break;
     case 'build':build(extraArgs);break;
     case 'help':help();break;
-    case 'force-kill':forceKill();break;
     default:{
 
       console.log(`'${command}' not found. type 'help' to list available commands`)
