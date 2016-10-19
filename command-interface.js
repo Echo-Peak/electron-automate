@@ -123,7 +123,7 @@ function loadElectron(args){
   let startWith = args.shell ? 'start cmd /k electron' : 'electron';
   let _args = args.args && args.args.split(',').join(' ') || '';
 
-  !args.dev && console.log('did you mean to pass dev:true?.');
+  !~args.args.indexOf('--dev') && console.log('did you mean to pass dev:true?.');
   let x = child_process.exec(`${startWith} ./built/core/electron.js --electron ${_args}`);
   args.stdout  && !args.shell && x.stdout.on('data' , function(data){
     console.log('electron',data)
