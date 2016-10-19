@@ -194,36 +194,37 @@ function killRobotClient(){
     console.log("killed robot client".green.bold);
   }
 }
-function kill(done){
-  if(subProcess.length < 1){
-    let _subProcess = [];
 
-    let flags = ['webpack' ,'electron' ,'mocha','MAIN' ,'robot'];
-    let regex = flags.map(e => `\\b(${e})\\b`).join('|');
-    let command = ['cmd' ,'node' ,'electron' ,config.alias.nodejs];
-    command = command.map(e => `(\\b${e}\\b)`).join('|');
+function forceKill(done){
+  console.log('force-killing!'.yellow.bold)
+  let flags = ['webpack' ,'electron' ,'mocha','MAIN' ,'robot'];
+  let regex = flags.map(e => `\-\-${e}`).join('|');
+  let command = ['cmd' ,'node' ,'electron' ,config.alias.nodejs];
+  command = command.map(e => `${e}`).join('|');
 
-    ps.lookup({command:new RegExp(command, 'ig') , arguments:regex} ,(err ,list) =>{
-      console.log("lokking");
-      list.forEach(function(item){
-        console.log('killing' ,item.pid)
-        try{
+  ps.lookup({command:command , arguments:regex} ,(err ,list) =>{
+    list.forEach(function(item){
+      try{
 
-          child_process.execSync(`taskkill /pid ${item.pid} /f`)
-        }catch(err){
-
-        }
-      });
-      done();
+        child_process.execSync(`taskkill /pid ${item.pid} /f`)
+      }catch(err){}
     });
+    done();
+  });
+}
 
-    //return
+function kill(done){
+
+  if(subProcess.length){
+    killElectron();
+    killWebpack();
+    killMocha();
+    killRobotClient();
+    done();
+  }else{
+    forceKill(done);
   }
-  killElectron();
-  killWebpack();
-  killMocha();
-  killRobotClient();
-  done();
+
 }
 
 function killScript(args){
@@ -294,6 +295,7 @@ let extraArgs = key.match(regex);
     case 'test':loadMocha(extraArgs);break;
     case 'build':build(extraArgs);break;
     case 'help':help();break;
+    case 'force-kill':forceKill();break;
     default:{
 
       console.log(`'${command}' not found. type 'help' to list available commands`)
@@ -301,20 +303,13 @@ let extraArgs = key.match(regex);
   }
 });
 
-let isKilling = false;
+
+//let isKilling = false;
 process.on('SIGINT', function(){
-
   console.log("killing build process".red.bold);
-  if(isKilling){
 
-    return
-  }
-    setTimeout(function(){
-        kill(function(){
-          isKilling = true;
-      process.exit()
+    kill(function(){
+      console.log("build process killed!".cyan.bold);
+     process.exit();
     });
-  },800)
-
-  //process.exit();
 });
