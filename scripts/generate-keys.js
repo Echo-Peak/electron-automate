@@ -14,7 +14,7 @@ let accounts = ['admin' ,'user'].forEach(function(role){
   keyGen.emmiter.on('seed' ,function(seedText){
    config.security.roles[role] = {}
    config.security.roles[role].key = seedText.trim();
-   config.security.roles[role].permissions = [;]
+   config.security.roles[role].permissions = [];
 
    fs.writeFile('./built/config.json' , JSON.stringify(config ,null ,2))
   });
