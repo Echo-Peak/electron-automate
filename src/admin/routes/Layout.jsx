@@ -7,9 +7,6 @@ import ContentSend from 'material-ui/svg-icons/content/send';
 import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import ActionInfo from 'material-ui/svg-icons/action/info';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import Computer from 'material-ui/svg-icons/hardware/computer';
-import Equalizer from 'material-ui/svg-icons/av/equalizer';
 
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
@@ -18,9 +15,7 @@ import History from 'material-ui/svg-icons/action/history';
 import File from 'material-ui/svg-icons/file/file-download';
 import Paper from 'material-ui/Paper';
 import {withRouter} from 'react-router';
-import WindowSettings from '../ui/browser-window';
-import PlayerSettingsDialog from '../player/dialog-ui';
-
+import Settings from '../settings';
 
 
 class Wrapper extends Component{
@@ -61,7 +56,9 @@ class Layout extends Component {
       msg: '',
       selectedIndex:2,
       settings:false,
-      player:false
+      player:false,
+      anchorEl:null,
+      popover:false
     };
   }
   componentDidMount() {
@@ -88,6 +85,15 @@ class Layout extends Component {
   render() {
     let {state} = this;
     let props = this.props._props;
+
+    // <FloatingActionButton secondary={true} style={styles.player} title='Player' onTouchTap={e => this.setState({player:true})}>
+    //   <Equalizer />
+    // </FloatingActionButton>
+    //
+    // <FloatingActionButton secondary={true} style={styles.button} title='window settings' onTouchTap={e => this.setState({settings:true})}>
+    //   <Computer />
+    // </FloatingActionButton>
+
     return (
       <div className='Layout'>
 
@@ -113,34 +119,11 @@ class Layout extends Component {
             icon={<File style={{display:'inline-block'}}/>}
             onTouchTap={() => this.select(3)}
           />
-          <BottomNavigationItem
-            label="APP"
-            icon={<File style={{display:'inline-block'}}/>}
-            onTouchTap={() => this.select(4)}
-          />
         </BottomNavigation>
         </Paper>
 
       <Wrapper store={this.props.store.browserWindow}>{props.children}</Wrapper>
-
-    <FloatingActionButton secondary={true} style={styles.player} title='Player' onTouchTap={e => this.setState({player:true})}>
-      <Equalizer />
-    </FloatingActionButton>
-
-    <FloatingActionButton secondary={true} style={styles.button} title='window settings' onTouchTap={e => this.setState({settings:true})}>
-      <Computer />
-    </FloatingActionButton>
-
-    <WindowSettings
-      store={this.props.store.browserWindow}
-      show={this.state.settings}
-      close={e => this.setState({settings:false})}>
-    </WindowSettings>
-
-    <PlayerSettingsDialog
-      store={this.props.store.audio}
-      show={this.state.player}
-      close={e => this.setState({player:false})}></PlayerSettingsDialog>
+      <Settings store={this.props.store}></Settings>
       </div>
     )
   }
