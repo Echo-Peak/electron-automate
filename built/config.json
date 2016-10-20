@@ -2,6 +2,7 @@
   "name": "electron-automate",
   "ports": {
     "main": 7200,
+    "app":7210,
     "dev": 7201
   },
   "routeLength": 8,
