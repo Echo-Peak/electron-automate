@@ -3,7 +3,7 @@ const os = require('os');
 let IP = os.networkInterfaces()['Wireless Network Connection'][1].address;
 let config = require('../config');
 let History = require('./history');
-
+let Process_Handler = require('./process');
 let child_process = require('child_process');
 
 module.exports = class DynamicRoute{
@@ -47,16 +47,8 @@ module.exports = class DynamicRoute{
       this.Sockets.system.emit('update-history' , this.history.get());
       this.Sockets.system.broadcast.emit('update-history' , this.history.get());
 
-      //TODO: seperate into another sub process handleing module
-      let robot = `"${this.nodePath}" "${this.robotPath}" ${config.ports.main} ${IP} ${config.alias.nodejs.name} --robot`;
+      Process_Handler.emit('restart-robot');
 
-      child_process.exec(robot ,(stderr ,stdout)=>{
-        if(stderr){
-          this.Sockets.logger.broadcast.emit('fail' ,{event:`error closing ${config.alias.nodejs.name} shell `, value:stderr.toString()});
-        }else{
-          this.Sockets.logger.broadcast.emit('log' ,{event:`Closed ${config.alias.nodejs.name} shell Successfully`, value:stdout.toString()});
-        }
-      });
       res.render(view ,viewConfig)
     });
     this.delayDestroy(id);
@@ -92,6 +84,7 @@ module.exports = class DynamicRoute{
           self.openRoutes = [];
 
           self.Sockets.emit('kill-robot');
+          Process_Handler.emit('kill-robot');
         }
       }
 
