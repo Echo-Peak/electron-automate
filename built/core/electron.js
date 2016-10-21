@@ -1,7 +1,7 @@
 const electron = require('electron');
 const app = electron.app;
 let path = require('path');
-let browserWindowConfig = require('./browser-window');
+let BrowserWindow_config = require('./browser-window');
 let socketIOClient = require('socket.io-client');
 let dynamicWindow = path.resolve(__dirname,`../data/gen/dynamic-window.html`);
 const os = require('os');
@@ -35,21 +35,21 @@ if(flags.dev){
     let BrowserWindow_delagate = new electron.BrowserWindow({show:false});
     BrowserWindow_delagate.loadURL(dynamicWindow);
 
-
-    BrowserWindow_delagate.on('close' ,function(){
-      Logger.emit('log' ,{event:'browser-window closed' ,value:''});
-      BrowserWindow_delagate.hide();
-    });
-
-    //this configures BrowserWindow at runtime. ect postion & size
-    Dynamic.on('update-browser-window' ,function(prop ,settings){
-      Logger.emit('log' ,{event:'updateing browser window' ,prop ,settings});
-      BrowserWindow_delagate[prop] && BrowserWindow_delagate[props](...settings);
-    });
-    Dynamic.on('close-browser-window' ,function(){
-      Logger.emit('log' ,{event:'browser-window closeing' ,value:''});
-      BrowserWindow_delagate.hide();
-    });
+    new BrowserWindow_config(BrowserWindow_delagate ,Dynamic , {logger:Logger , system:System} );
+    // BrowserWindow_delagate.on('close' ,function(){
+    //   Logger.emit('log' ,{event:'browser-window closed' ,value:''});
+    //   BrowserWindow_delagate.hide();
+    // });
+    //
+    // //this configures BrowserWindow at runtime. ect postion & size
+    // Dynamic.on('update-browser-window' ,function(prop ,settings){
+    //   Logger.emit('log' ,{event:'updateing browser window' ,prop ,settings});
+    //   BrowserWindow_delagate[prop] && BrowserWindow_delagate[props](...settings);
+    // });
+    // Dynamic.on('close-browser-window' ,function(){
+    //   Logger.emit('log' ,{event:'browser-window closeing' ,value:''});
+    //   BrowserWindow_delagate.hide();
+    //});
 
   if(flags.dev){
 
