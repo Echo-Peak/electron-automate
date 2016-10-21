@@ -1,6 +1,6 @@
 let ps = require('ps-node');
 let WMI = require('node-wmi');
-
+let events = require('events');
 let config = require('../config');
 let child_process = require('child_process');
 const os = require('os');
@@ -13,6 +13,9 @@ let flags = {
   logging:!!~process.argv.indexOf('--logging'),
   electron:!!~process.argv.indexOf('--electron')
 }
+
+class EventEmitter extends events{}
+const emitter = new EventEmitter();
 function kill(list){
   switch(process.platform){
     case 'win32':{
@@ -46,6 +49,9 @@ function exists(query , callback){
 
 //module to handle terminating & exec sub processes
 class Process_Handler{
+  static emitter(){
+    return emitter
+  }
   static check(){
       if(flags.electron && !flags.dev){
         //used when application is packaged.
@@ -59,12 +65,16 @@ class Process_Handler{
     this.robotPath = path.resolve(__dirname ,'robot.js');
     this.system = System;
     this.std = this.std.bind(this);
+
     System.on('system-restart-robot' ,this.restartRobot.bind(this));
     System.on('system-kill-robot' ,this.killRobot.bind(this));
 
 
     System.on('system-restart' ,this.restart.bind(this));
     System.on('system-terminate' ,this.terminate.bind(this));
+
+    emitter.on('restart-robot' ,this.restartRobot.bind(this)); // dynamic routes.js
+    emitter.on('kill-robot' ,this.killRobot.bind(this)); // dynamic routes.js
   }
   killRobot(){
     exists({name:config.alias.nodejs.name ,flagID:'--robot'} ,(bool , list)=>{
@@ -76,10 +86,10 @@ class Process_Handler{
     });
   }
   terminate(){
-    //cluster
+    //TODO: requires seperate instance of node.js/alias. not electron
   }
   restart(){
-    //cluster
+    //TODO: requires seperate instance of node.js/alias. not electron
   }
   restartRobot(){
 
@@ -111,13 +121,17 @@ class Process_Handler{
 }
 
 let cached;
+let watchers = [];
 module.exports = {
   check:Process_Handler.check,
+  emitter,
+  emit: (event , args) => emitter.emit(event ,args),
   init(System , Logger){
     if(cached){
       return cached
     }else{
       cached = new Process_Handler(System ,Logger);
+      watchers.map(fn => fn(cached));
     }
   }
 }

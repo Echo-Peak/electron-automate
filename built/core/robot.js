@@ -11,6 +11,7 @@ let port = process.argv[2];
 let ip = process.argv[3];
 let internalName = process.argv[4];
 
+//kills duplicates of this process
 if(process.platform === 'win32'){
     WMI.Query().class('Win32_Process').properties(['caption' ,'processid','commandline'])
   .where(`name='${internalName}.exe'`).exec(function(err, list) {
