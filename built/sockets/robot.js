@@ -21,7 +21,10 @@ module.exports = class socket_robot{
       socket.broadcast.emit('stop');
       socket.emit('stop');
     });
-
+    socket.on('get-pid' ,function(){
+      socket.broadcast.emit('get-pid');
+      socket.emit('get-pid');
+    });
     socket.on('get-robot-screen' ,function(){
       Sockets.logger.emit('log' ,{event:'get-robot-screen' ,value:''})
       socket.broadcast.emit('get-robot-screen');
