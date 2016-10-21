@@ -3,6 +3,7 @@ let path = require('path');
 let fs = require('fs-extra');
 let ps = require('ps-node');
 let history = require('../core/history');
+let config = require('../config');
 
 let isDev = !!~process.argv.indexOf('--dev');
 
@@ -29,6 +30,7 @@ module.exports = class socket_system {
         let History = history(app);
         this.socket = socket;
         this.Sockets = Sockets;
+        this.cached_robot_pid =  null;
         this.scriptsPath = path.resolve(__dirname ,'../data/scripts');
         this.packagePath = path.resolve(__dirname ,'../package.json'); // package.json for application
         this.npmPath = path.resolve(__dirname ,'../exec/node/npm.cmd');
@@ -38,6 +40,7 @@ module.exports = class socket_system {
           // ps.lookup({pid:who.pid} , function(err ,list){
           //   console.log(list , who)
           // });
+
           console.log(`${who.name} - PID: ${who.pid} connected`);
           socket.emit('who' , who);
           socket.broadcast.emit('who' , who);
@@ -81,11 +84,12 @@ module.exports = class socket_system {
           Sockets.logger.broadcast.emit('log' ,{event:'destorying route' ,value:id});
           Sockets.emit('destroy-route' ,id);
         });
-        socket.on('robot-pid', function(pid) {
+        socket.on('robot-pid', (pid)=> {
             socket.emit('robot-pid', pid);
             socket.broadcast.emit('robot-pid', pid);
-            Sockets.emit('robot-pid', pid);
+            Sockets.emit('robot-pid', pid); //emits it to server instance
             Sockets.logger.broadcast.emit('log' ,{event:'robot pid' ,value:pid});
+            this.cached_robot_pid = pid;
         });
         socket.on('robot-screen', function(screen) {
             socket.emit('robot-screen', screen);
@@ -119,7 +123,27 @@ module.exports = class socket_system {
             }
           })
         });
+        socket.on('system-restart-robot' ,()=>{
 
+          socket.broadcast.emit('system-restart-robot');
+        });
+        socket.on('system-restart' ,()=>{
+
+          socket.broadcast.emit('system-restart');
+        });
+        socket.on('system-kill-robot' ,()=>{
+          socket.broadcast.emit('system-kill-robot');
+          socket.emit('system-kill-robot');
+        });
+        socket.on('system-terminate' ,()=>{
+          socket.broadcast.emit('system-terminate');
+          socket.emit('system-terminate');
+        });
+        socket.on('get-cached-robot-pid' ,()=>{
+          Sockets.robot.emit('get-pid');
+          socket.broadcast.emit('get-cached-robot-pid' ,this.cached_robot_pid);
+          socket.emit('get-cached-robot-pid' ,this.cached_robot_pid);
+        });
 
     }
     npmUninstall(_package){
