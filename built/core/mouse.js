@@ -1,35 +1,38 @@
 let robot = require('robotjs');
+let events = require('events');
 
+class Emmiter extends events{}
 class MouseFunctions{
   constructor(Robot){
-    // this.pollrate = poll; //50ms
-    // this.duration = dur; //100s
-    // this.options = options;
-    // this.poller = this.timeout.bind(this);
-    // this.refs = {
-    //   poll,
-    //   dur,
-    //   options
-    // }
-    // this[type]();
+    this.events =  new Emmiter();
+    this.isActive = false;
+    this.pollrate = 30;  //ms
+    //using setInterval since robotjs dont have callbacks
+    this.intervalChecker = null;
 
   }
-  random(){}
+  stop(){
+    this.events.emit('stop');
+  }
+
   sine(){
-    this.elipse = this.pollrate; //ms
-    this.action(function(){
-        var twoPI = Math.PI * 2.0;
-        var screenSize = robot.getScreenSize();
-        var height = (screenSize.height / 2) - 10;
-        var width = screenSize.width;
+    // this.elipse = this.pollrate; //ms
+    // this.action(function(){
+    //     var twoPI = Math.PI * 2.0;
+    //     var screenSize = robot.getScreenSize();
+    //     var height = (screenSize.height / 2) - 10;
+    //     var width = screenSize.width;
+    //
+    //     for (var x = 0; x < width; x++){
+    //         y = height * Math.sin((twoPI * x) / width) + height;
+    //         robot.moveMouse(x, y);
+    //     }
+    //   this.elipse += this.pollrate;
+    // });
 
-        for (var x = 0; x < width; x++){
-            y = height * Math.sin((twoPI * x) / width) + height;
-            robot.moveMouse(x, y);
-        }
-      this.elipse += this.pollrate;
+    this.events.on('stop' ,function(){
+      clearInterval(x);
     });
-
 
   }
   sineX(varsObj){
@@ -40,9 +43,7 @@ class MouseFunctions{
     var height = (screenSize.height / 2) - 10;
     var width = screenSize.width;
 
-    setTimeout(function(){
-      throw new Error('ad');
-    },2000);
+
       for (var x = 0; x < width; x++){
           var y = height * Math.sin((twoPI * x) / width) + height;
           robot.moveMouse(x, y);
@@ -69,6 +70,9 @@ class MouseFunctions{
       clearInterval(x);
     },varsObj.delay || 100);
 
+    this.events.on('stop' ,function(){
+      clearInterval(x);
+    });
   }
   circle(varsObj){
     let radius = varsObj.radius;
@@ -93,13 +97,13 @@ class MouseFunctions{
       let x = cx + radius * Math.cos(angle);
       let y = cy + radius * Math.sin(angle);
       robot.moveMouse(x, y);
-    },40)
+    },40);
 
+    this.events.on('stop' ,function(){
+      clearInterval(x);
+    });
   }
-  triangle(){}
-  shaky(){
 
-  }
   randomVector(varsObj){
     var screenSize = robot.getScreenSize();
     var cx = screenSize.width;
@@ -143,7 +147,10 @@ class MouseFunctions{
     y += dy;
 
       robot.moveMouse(x, y);
-    },20)
+    },20);
+    this.events.on('stop' ,function(){
+      clearInterval(interval);
+    });
 
   }
   leftEdgeSliding(varsObj){
@@ -169,7 +176,12 @@ class MouseFunctions{
      let x = cx * Math.tan(angle);
      let y = cy + radius * Math.tan(angle);
       robot.moveMouse(x, y);
-    },40)
+    },40);
+
+    this.events.on('stop' ,function(){
+      clearInterval(x);
+    });
+
   }
   taskbarSliding(varsObj){
     let radius = varsObj.radius;
@@ -194,8 +206,10 @@ class MouseFunctions{
       let x = cx * Math.cos(angle);
       let y = cy + radius * Math.tan(angle);
       robot.moveMouse(x, y);
-    },40)
-
+    },40);
+    this.events.on('stop' ,function(){
+      clearInterval(x);
+    });
   }
   bounce(varsObj){
     var angle = 3 * Math.PI / 180;
@@ -231,7 +245,11 @@ class MouseFunctions{
       x += dx;
       y += dy;
 
-    },40)
+    },40);
+
+    this.events.on('stop' ,function(){
+      clearInterval(interval);
+    });
 
   }
 }
