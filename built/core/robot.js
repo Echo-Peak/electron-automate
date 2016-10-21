@@ -4,25 +4,27 @@
 let robot = require('robotjs');
 let io = require('socket.io-client');
 let child_process = require('child_process');
-let ps = require('ps-node');
+let WMI = require('node-wmi');
 let mouseFunctions;
 let Mouse;
 let port = process.argv[2];
 let ip = process.argv[3];
 let internalName = process.argv[4];
 
-ps.lookup({
-    command: internalName,
-    arguments: '--robot',
-    }, function(err, resultList ) {
-    if (err) {
-        //process.exit()
+if(process.platform === 'win32'){
+    WMI.Query().class('Win32_Process').properties(['caption' ,'processid','commandline'])
+  .where(`name='${internalName}.exe'`).exec(function(err, list) {
+    if(list && list.length){
+      list.filter(e => e.ProcessId !== process.pid)
+      .forEach(e => child_process.execSync(`taskkill /pid ${e.ProcessId} /f`));
     }
+  });
+}else if(process.platform === 'darwin'){
 
-    if(resultList.length > 1){
-      process.exit();
-    }
-});
+}else{
+  //linux
+}
+
 
 
 let System = io.connect(`http://${ip}:${port}/system` ,{reconnect:true});
