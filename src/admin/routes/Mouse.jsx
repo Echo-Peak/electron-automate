@@ -53,7 +53,6 @@ export default class Mouse extends Component{
     super();
     this.state = {
         slideIndex:0,
-        mouseFunctions:[],
         waiting:true
 
     };
@@ -62,12 +61,6 @@ export default class Mouse extends Component{
   componentDidMount(){
     let self = this;
 
-    sockets.Robot.on('mouse-functions' ,(fn)=>{
-      console.log(JSON.parse(fn))
-      this.setState({mouseFunctions:JSON.parse(fn)});
-    });
-
-    sockets.Robot.emit('get-mouse-functions');
 
   }
   mover(ev){
@@ -92,10 +85,7 @@ export default class Mouse extends Component{
   handleChange(value) {
     this.setState({slideIndex: value})
   }
-  execCommand(item){
-    //console.log(item);
-    sockets.Robot.emit('execute-mouse-function' ,item);
-  }
+
   mouseClick(leftRight){
 
     sockets.Robot.emit('mouse-click' ,leftRight)
@@ -119,22 +109,10 @@ export default class Mouse extends Component{
           </div>
 
           <Tabs onChange={this.handleChange.bind(this)} value={this.state.slideIndex}>
-            <Tab label="functions" value={0}/>
-            <Tab label="record input" value={1}/>
-            <Tab label="raw input" value={2}/>
+            <Tab label="record input" value={0}/>
+            <Tab label="raw input" value={1}/>
           </Tabs>
           <SwipeableViews index={this.state.slideIndex} onChangeIndex={this.handleChange.bind(this)}>
-            <div style={styles.slide}>
-              <List>
-                {this.state.mouseFunctions.map((e ,index) => (
-                  <ListItem key={uuid()}
-                    primaryText={e.title}
-                    secondaryText={e.desp}
-                    onTouchTap={this.execCommand.bind(this ,e)}>
-
-              </ListItem>))}
-            </List>
-            </div>
             <div style={styles.slide}>
               <RecordPad store={this.props.store}></RecordPad>
 
