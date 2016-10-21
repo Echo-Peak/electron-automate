@@ -1,4 +1,6 @@
-require('./core/process')();
+let Process_Handler = require('./core/process');
+Process_Handler.check();
+
 let express = require('express');
 let path = require('path');
 let config = require('./config');
@@ -30,6 +32,7 @@ let System = socketIOClient.connect(`http://localhost:${config.ports.main}/syste
 let Dynamic = socketIOClient.connect(`http://localhost:${config.ports.main}/dynamic` ,{reconnect:true});
 let Logger = socketIOClient.connect(`http://localhost:${config.ports.main}/logger` ,{reconnect:true});
 
+Process_Handler.init(System,  Logger);
 
 System.emit('who' ,{pid:process.pid , name:'express-app' ,id:'express'});
 
