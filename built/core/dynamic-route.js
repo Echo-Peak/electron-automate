@@ -46,6 +46,8 @@ module.exports = class DynamicRoute{
 
       this.Sockets.system.emit('update-history' , this.history.get());
       this.Sockets.system.broadcast.emit('update-history' , this.history.get());
+
+      //TODO: seperate into another sub process handleing module
       let robot = `"${this.nodePath}" "${this.robotPath}" ${config.ports.main} ${IP} ${config.alias.nodejs.name} --robot`;
 
       child_process.exec(robot ,(stderr ,stdout)=>{
