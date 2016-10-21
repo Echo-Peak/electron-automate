@@ -244,14 +244,17 @@ function killScript(args){
 
 function help(){
   console.log(`
-    Type:
-    ${'webpack'.green} -  use:<subapp> shell:<optional(boolean | false)> stdout:<optional(boolean | true)>
-    ${'test'.green} -   shell:<optional(boolean:false)> stdout:<optional(boolean | true)> watch:<optional(boolean | false)>
-    reporter:(optional(string | 'spec'))
-    ${'build'.green} -   out:<optional(string | ./)>  msi:<optional(boolean | false)>
-    ${'restart'.green} -   no args
+    Run script inside of another shell: use --shell
+    Run script inside of parent shell & use parent stdout: use --stdout
+    Pass arguments to a script: args:arg1, arg2, --flag
+
+    Scripts:
+    ${'webpack'.green} -  use:<subapp> ...args
+    ${'test'.green} - ...args
+    ${'electron-packager'.green} -   out:<optional(string | ./)>  msi:<optional(boolean | false)> ...args
+    ${'restart'.green}
     ${'kill'.green} - script:<script-name>
-    ${'electron'.green} - no args
+    ${'electron'.green} - ...args
 
     `);
 }
@@ -284,6 +287,8 @@ let extraArgs = key.match(regex);
 },{});
 
 
+  extraArgs.shell = key.includes('--shell');
+  extraArgs.stdout = key.includes('--stdout');
 
   let command = key.replace(regex , '').trim();
 
