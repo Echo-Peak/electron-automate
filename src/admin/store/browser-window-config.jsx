@@ -1,5 +1,6 @@
 import {observable , action ,computed} from 'mobx';
 import uuid from '../util/uuid';
+import debounce from '../util/debounce';
 
 export default class BrowserWindowConfig{
   @observable width = 1;
@@ -52,12 +53,16 @@ export default class BrowserWindowConfig{
   }
   @action setProp(prop ,value){
     this[prop] = value;
+    this.delayAction(prop ,value);
   }
   @action setScreen(width ,height){
     this.screenWidth = width;
     this.screenHeight = height;
   }
   constructor(){
-
+    this.delayAction = debounce(this.setAction ,1000);
+  }
+  setAction(prop ,action){
+    //sockets.Dynamic.emit('update-browser-window' ,prop ,action)
   }
 }
