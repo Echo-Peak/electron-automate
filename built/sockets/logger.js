@@ -16,5 +16,9 @@ module.exports = class socket_logger{
       logging && socket.emit('fatal', error);
       logging && socket.broadcast.emit('warn', error);
     });
+    socket.on('re-broadcast' ,(type ,payload){
+      logging && socket.emit(type, payload);
+      logging && socket.broadcast.emit(type, payload);
+    })
   }
 }
