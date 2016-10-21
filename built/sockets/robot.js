@@ -54,11 +54,7 @@ module.exports = class socket_robot{
       Sockets.logger.emit('log' ,{event:'mouse-click' ,value:leftRight});
     });
 
-    socket.on('execute-mouse-function' ,function(item){
-      Sockets.logger.emit('log' ,{event:'execute-mouse-function' ,value:item});
-      socket.emit('execute-mouse-function' ,item);
-      socket.broadcast.emit('execute-mouse-function' ,item);
-    });
+
 
     socket.on('robot-prep-keyboard-shortcuts' ,(shortcuts)=>{
       Sockets.logger.emit('log' ,{event:'robot-prep-keyboard-shortcuts' ,value:shortcuts})
@@ -78,18 +74,6 @@ module.exports = class socket_robot{
       Sockets.logger.emit('log' ,{event:'robot-typeString' ,value:key})
       socket.broadcast.emit('robot-typeString',key);
     });
-    socket.on('get-mouse-functions' ,()=>{
-
-      fs.readFile(mousePath ,(err ,res)=>{
-        if(err){
-          Sockets.logger.broadcast.emit('fail' ,{event:'get-mouse-functions ERROR' ,value:err.toString()});
-        }else{
-          socket.emit('mouse-functions' ,res.toString());
-          socket.broadcast.emit('mouse-functions' ,res.toString());
-          Sockets.logger.broadcast.emit('log' ,{event:'get-mouse-functions SUCCESS' ,value:res.toString()});
-        }
-      })
-    })
 
   }
 }
