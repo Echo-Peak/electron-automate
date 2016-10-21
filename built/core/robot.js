@@ -5,8 +5,7 @@ let robot = require('robotjs');
 let io = require('socket.io-client');
 let child_process = require('child_process');
 let WMI = require('node-wmi');
-let mouseFunctions;
-let Mouse;
+
 let port = process.argv[2];
 let ip = process.argv[3];
 let internalName = process.argv[4];
@@ -51,12 +50,6 @@ process.on('uncaughtException' ,function(err){
 });
 
 
-try {
-   mouseFunctions = require('./mouse');
-  Mouse = new mouseFunctions(Robot);
-} catch (err){
-  Logger.emit('fail' ,{event:'ROBOT client ERROR loading' ,val:err.toString()});
-}
 
 Robot.on('get-pid' ,function(){
   Logger.emit('log' ,{event:'getting robot pid' ,val:process.pid});
@@ -115,17 +108,7 @@ Robot.on('robot-typeString' ,function(data){
 
 });
 //
-Robot.on('execute-mouse-function',function(fn){
-  try{
-  //Mouse[fn['call-function']](fn.vars);
-  throw 'Mouse functions disabled.'
-  Logger.emit('log' ,{event:'mouse-function executing' ,val:fn});
-}catch(err){
-  Logger.emit('log' ,{event:'mouse-function ERROR' ,val:err.toString() , got:fn});
 
-}
-
-});
 
 Robot.on('get-robot-screen',function(){
 
