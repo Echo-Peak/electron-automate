@@ -31,14 +31,17 @@ let Logger = io.connect(`http://${ip}:${port}/logger` ,{reconnect:true});
 
 Robot.on('connect' ,function(){
   Robot.emit('robot-screen' ,robot.getScreenSize());
+  System.emit('robot-pid' ,process.pid);
 });
 System.emit('who' ,{name:'robot' ,pid:process.pid , id:'robot'})
 System.on('connect' ,function(){
   System.emit('robot-screen' ,robot.getScreenSize());
 });
 
-System.emit('robot-pid' ,process.pid);
+
 System.emit('robot-screen' ,robot.getScreenSize());
+System.emit('robot-pid' ,process.pid);
+
 
 process.on('uncaughtException' ,function(err){
   Logger.emit('fail' ,{event:'ROBOT client ERROR' ,val:err.toString()});
@@ -52,7 +55,10 @@ try {
   Logger.emit('fail' ,{event:'ROBOT client ERROR loading' ,val:err.toString()});
 }
 
-
+Robot.on('get-pid' ,function(){
+  Logger.emit('log' ,{event:'getting robot pid' ,val:process.pid});
+  System.emit('robot-pid' ,process.pid);
+});
 
 Robot.on('robot-keyTap' ,function(key){
   try{
