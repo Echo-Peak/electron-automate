@@ -36,7 +36,7 @@
     "mobx-react": "^3.5.8",
     "morgan": "*",
     "node-json-db": "*",
-    "ps-node": "*",
+    "node-wmi": "*",
     "react": "*",
     "react-dom": "*",
     "react-motion": "*",
@@ -64,7 +64,7 @@
     "webpack": "*",
     "mocha": "*",
     "chai": "*",
-    "ps-node": "*",
+    "node-wmi": "*",
     "colors": "*",
     "concurrently": "*",
     "mkdirp": "*"
