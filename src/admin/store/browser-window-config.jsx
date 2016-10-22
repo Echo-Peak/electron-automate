@@ -62,7 +62,41 @@ export default class BrowserWindowConfig{
   constructor(){
     this.delayAction = debounce(this.setAction ,1000);
   }
-  setAction(prop ,action){
-    //sockets.Dynamic.emit('update-browser-window' ,prop ,action)
+  setAction(prop){
+    let bw = {
+      prop:'',
+      args:[]
+    }
+    //temp code! will be done on the backend!
+    console.log('setting' ,prop)
+    switch(prop){
+      case 'x':{
+        bw.prop = 'setPosition';
+        bw.args = [this.x , this.y]
+      };break;
+      case 'y':{
+        bw.prop = 'setPosition';
+        bw.args = [this.x , this.y]
+      }break;
+      case 'show':{
+        this.show ? (bw.prop = 'show') : (bw.prop = 'hide');
+
+      }break;
+      case 'width':{
+        bw.prop = 'setSize';
+        bw.args = [this.width , this.height]
+
+      }break;
+      case 'height':{
+        bw.prop = 'setSize';
+        bw.args = [this.width , this.height]
+
+      }break;
+
+    }
+    if(bw.prop && bw.args){
+
+      sockets.Dynamic.emit('update-browser-window' ,bw.prop ,bw.args)
+    }
   }
 }
