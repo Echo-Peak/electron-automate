@@ -6,13 +6,15 @@ class BrowserWindow_config{
     this.Sockets = Sockets;
     this.socket = socket;
     this.screen = electron.screen.getPrimaryDisplay().workArea;
+    socket.on('update-browser-window' ,this.update.bind(this))
   }
   update(prop ,args){
     //window properties that can be changed at runtime
-    let props = ['show' ,'hide'];
+    console.log("UPADATING WINDOW");
+    let props = ['show' ,'hide' ,'setPosition' ,'setSize'];
     if(props.includes(prop)){
       this.Sockets.logger.emit('re-broadcast' ,{type:'log' ,event:'updateing BrowserWindow prop' ,value:prop});
-      window[prop](...args);
+      this.window[prop](...args);
 
     }else{
       this.Sockets.logger.emit('re-broadcast' ,{type:'fail' ,event:'can not update BrowserWindow prop' ,value:prop})
