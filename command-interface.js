@@ -175,7 +175,7 @@ function build(args) {
 
 
 function killRobotClient(){
-  let alias = config.alias.nodejs;
+  let alias = config.alias.nodejs.name;
 
   let getClients = subProcess.filter(e => e.name ==='robot');
   if(getClients.length){
