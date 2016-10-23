@@ -43,10 +43,14 @@ function expressApp(){
   app.set('views', __dirname+ '/views');
   app.set('view engine', 'jade');
 
+  app.get('/favicon.ico' ,function(req ,res){
+    res.send(200);
+  });
 
   app.get('/home' ,function(req , res){
   let ip = req.headers['x-real-ip'] || req.connection.remoteAddress;
   let allowedRoles = Object.keys(config.security.roles);
+  console.log(ip ,connectionType(ip) )
   if(connectionType(ip)){
         res.render('home' ,{
       port:config.ports.main,

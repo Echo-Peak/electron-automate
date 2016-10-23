@@ -36,20 +36,6 @@ if(flags.dev){
     BrowserWindow_delagate.loadURL(dynamicWindow);
 
     new BrowserWindow_config(BrowserWindow_delagate ,Dynamic , {logger:Logger , system:System} );
-    // BrowserWindow_delagate.on('close' ,function(){
-    //   Logger.emit('log' ,{event:'browser-window closed' ,value:''});
-    //   BrowserWindow_delagate.hide();
-    // });
-    //
-    // //this configures BrowserWindow at runtime. ect postion & size
-    // Dynamic.on('update-browser-window' ,function(prop ,settings){
-    //   Logger.emit('log' ,{event:'updateing browser window' ,prop ,settings});
-    //   BrowserWindow_delagate[prop] && BrowserWindow_delagate[props](...settings);
-    // });
-    // Dynamic.on('close-browser-window' ,function(){
-    //   Logger.emit('log' ,{event:'browser-window closeing' ,value:''});
-    //   BrowserWindow_delagate.hide();
-    //});
 
   if(flags.dev){
 
