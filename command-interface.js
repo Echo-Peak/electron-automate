@@ -8,6 +8,7 @@ const subProcess = [];
 const packager = require('electron-packager');
 const socketIO = require('socket.io-client');
 const ps = require('ps-node');
+const Process = require('./scripts/process'); //this is different than /built/core/process.js
 //let installer = require('electron-installer-windows');
 
 let webpackApps = ['home' ,'admin' ,'user' ,'guest'];
@@ -121,7 +122,7 @@ function loadMocha(args){
 function loadElectron(args){
   console.log("starting electron".green.bold);
   let startWith = args.shell ? 'start cmd /k electron' : 'electron';
-  let _args = args.args && args.args.split(',').join(' ') || '';
+  let _args = args.args && args.args.join(' ') || '';
 
   !~args.args.indexOf('--dev') && console.log('did you mean to pass dev:true?.');
   let x = child_process.exec(`${startWith} ./built/core/electron.js --electron ${_args}`);
@@ -176,41 +177,55 @@ function build(args) {
 
 function killRobotClient(){
   let alias = config.alias.nodejs.name;
+  console.log("killing robot client".red.bold);
 
   let getClients = subProcess.filter(e => e.name ==='robot');
-  if(getClients.length){
-    console.log("killing robot client".red.bold);
 
-    try{
-      child_process.execSync(`taskkill /pid ${ps.pid} /f`);
-    }catch(err){
+  getClients = getClients.length ? getClients : alias;
+  Process.exists(getClients ,function(bool ,list){
+    console.log(bool ,list)
+    bool && Process.kill(list).then(function(){
+      console.log("killed robot client".green.bold);
+    });
+  })
 
-    }
-    try{
-      child_process.execSync(`taskkill /im ${alias}.exe /f`);
-    }catch(err){
 
-    }
-    console.log("killed robot client".green.bold);
-  }
+
+
 }
 
 function forceKill(done){
   console.log('force-killing!'.yellow.bold)
-  let flags = ['webpack' ,'electron' ,'mocha','MAIN' ,'robot'];
-  let regex = flags.map(e => `\-\-${e}`).join('|');
-  let command = ['cmd' ,'node' ,'electron' ,config.alias.nodejs];
-  command = command.map(e => `${e}`).join('|');
 
-  ps.lookup({command:command , arguments:regex} ,(err ,list) =>{
-    list.forEach(function(item){
-      try{
+  //later to be customizable...in a config or package.json
+  let scripts = [
+    {name:'webpack' ,flag:'--webpack' , use:'node'},
+    {name:'electron' ,flag:'--electron' , use:'electron'},
+    {name:'mocha' ,flag:'--mocha' , use:'node'},
+    {name:'robot' ,flag:'--robot' , use:config.alias.nodjs.name}
+  ];
 
-        child_process.execSync(`taskkill /pid ${item.pid} /f`)
-      }catch(err){}
-    });
-    done();
+  let status = 0;
+  commands.forEach(function(cmd, index, arr) {
+
+      Process.exists(cmd, function(bool, list) {
+          status += 1;
+
+          if (bool) {
+              Process.kill(list).then(function() {
+                  if (status === arr.length) {
+                      done();
+                  }
+              });
+          } else {
+              if (status === arr.length) {
+                  done();
+              }
+          }
+      });
+
   });
+
 }
 
 function kill(done){
@@ -265,33 +280,44 @@ stdin.resume();
 
 let regex = /(([a-z0-9]+)\:(\[?([a-z0-9\-,"']+\b))\]?)/gi;
 stdin.on('data',function(key){
+let extraArgs;
+let args = key.match(regex);
 
-let extraArgs = key.match(regex);
+  if(args){
+    extraArgs = args.reduce(function(start ,item){
 
-  extraArgs = extraArgs && extraArgs.reduce(function(start ,item){
-  let i = item.split(':');
+      let i = item.split(':');
 
-  if(i[1] === 'true' || i[1] === 'false'){
-    start[i[0]] = JSON.parse(i[1]);
+      if(i[1] === 'true' || i[1] === 'false'){
+        start[i[0]] = JSON.parse(i[1]);
+      }
+      if(i[1].match(/,/g)){
+        start[i[0]] = i[1].split(',');
+      }
+      if(i[1].match(/\d+/g)){
+        start[i[0]] = parseInt(i[1]);
+      }
+
+      start[i[0]] = i[1];
+
+      return start
+    },{});
+  }else{
+    extraArgs = {}
   }
-  if(i[1].match(/,/g)){
-    start[i[0]] = i[1].split(',');
-  }
-  if(i[1].match(/\d+/g)){
-    start[i[0]] = parseInt(i[1]);
-  }
-
-  start[i[0]] = i[1];
-
-  return start
-},{});
-
 
   extraArgs.shell = key.includes('--shell');
   extraArgs.stdout = key.includes('--stdout');
+  extraArgs.args = key.match(/\[(.+)\]/gi);
+  extraArgs.args = extraArgs.args ? extraArgs.args[0]
+  .replace(/\]|\[/g ,'')
+  .split(',')
+  .map(e => e.trim())
+  .filter(e => e.length) : {};
 
-  let command = key.replace(regex , '').trim();
-
+  let command = key.match(/^[a-z\-]+/i);
+  command = command ? command[0] : false;
+  console.log(command);
   switch(command){
     case 'webpack':loadWebpack(extraArgs);break;
     case 'restart':restartElectron();break;
@@ -302,7 +328,7 @@ let extraArgs = key.match(regex);
     case 'help':help();break;
     default:{
 
-      console.log(`'${command}' not found. type 'help' to list available commands`)
+      console.log(`'${(command.toString()).yellow.bold}' not found. type 'help' to list available commands`)
     }
   }
 });
