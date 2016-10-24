@@ -84,7 +84,8 @@ function restartElectron(){
 }
 
 function loadWebpack(args){
-  let _args = args.args && args.args.split(',').join(' ') || '';
+
+  let _args = args.args && args.args.join(' ') || '';
   if(!args.use || !~webpackApps.indexOf(args.use)){
     console.log(`${args.use} not found. [${webpackApps}]`);
     return
@@ -202,22 +203,24 @@ function forceKill(done){
     {name:'webpack' ,flag:'--webpack' , use:'node'},
     {name:'electron' ,flag:'--electron' , use:'electron'},
     {name:'mocha' ,flag:'--mocha' , use:'node'},
-    {name:'robot' ,flag:'--robot' , use:config.alias.nodjs.name}
+    {name:'robot' ,flag:'--robot' , use:config.alias.nodejs.name}
   ];
 
   let status = 0;
-  commands.forEach(function(cmd, index, arr) {
+  scripts.forEach(function(cmd, index, arr) {
 
-      Process.exists(cmd, function(bool, list) {
-          status += 1;
+      Process.exists(cmd.use,[cmd.flag], function(bool, list) {
+
 
           if (bool) {
               Process.kill(list).then(function() {
+                status += 1;
                   if (status === arr.length) {
                       done();
                   }
               });
           } else {
+              status += 1;
               if (status === arr.length) {
                   done();
               }
@@ -238,6 +241,7 @@ function kill(done){
     done();
   }else{
     forceKill(done);
+
   }
 
 }
@@ -313,7 +317,7 @@ let args = key.match(regex);
   .replace(/\]|\[/g ,'')
   .split(',')
   .map(e => e.trim())
-  .filter(e => e.length) : {};
+  .filter(e => e.length) : [];
 
   let command = key.match(/^[a-z\-]+/i);
   command = command ? command[0] : false;
