@@ -99,14 +99,18 @@ class Process {
 
             if(list && lookfor_flags && lookfor_flags.length){
               let newList = list.filter( item =>  lookfor_flags.some(e => item.CommandLine.includes(e)) );
+              console.log(newList);
               newList.length && exec(err , newList);
-              !newList.length && list.forEach(e =>
-                console.log(`${e.Caption} found. but invaild flags. got ${lookfor_flags.join(',').cyan.bold}`));
+
+              if(!newList.length){
+                exec('no matched' , []);
+              }
             }else if(list && list.length){
 
               exec(err , list);
 
             }else{
+              console.log('cal')
               exec('not found' , []);
 
             }
@@ -123,17 +127,50 @@ class Process {
 let cache_process;
 if(require.main === module){
   cache_process = new Process();
+
 }else{
   module.exports = new Process();
 }
 
+
 //EXAMPLES
 
-// cache_process.exists('chrome' ,['--self'],function(bool ,list){
-//   bool && cache_process.kill(list).then(function(){
-//
-//   });
-// });
+
+  // function callback(){
+  //   console.log('done');
+  // }
+  // let scripts = [
+  //   {name:'foobar' ,flag:'--foo' ,use:'node'},
+  //   {name:'robot' ,flag:'--robot' ,use:'node'},
+  //   {name:'mocha' ,flag:'--mocha' ,use:'node'},
+  // ];
+  // let c = 0;
+  // scripts.forEach(function(item,i, arr){
+  //   debugger;
+  //   cache_process.exists(item.use, [item.flag],function(bool ,list){
+  //
+  //     if(bool){
+  //
+  //          cache_process.kill(list).then(function(){
+  //     c+= 1;
+  //   //  console.log(list);
+  //     if(c === arr.length){
+  //       callback();
+  //
+  //     }
+  //   });
+  //     }else{
+  //       c+= 1;
+  //       if(c === arr.length){
+  //         callback();
+  //
+  //       }
+  //     }
+  //   //  console.log(bool , list);
+  //
+  //
+  //   });
+  // })
 //
 // cache_process.exists([{pid:1234} ,{pid:4567} , {pid:8987}] ,function(bool ,list){
 //   bool && cache_process.kill(list).then(function(){
