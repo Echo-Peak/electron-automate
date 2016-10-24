@@ -6,15 +6,13 @@
     "dev": 7201
   },
   "routeLength": 8,
+  "logging":true,
+
   "alias": {
     "nodejs": {
       "rename": false,
       "name": "foo"
     }
-  },
-  "firebase": {
-    "api_key": "AIzaSyBEm-Y-Oo8wpj0v6twZt4Z6ylYo2agC5A",
-    "database": "https://electron-4cb5b.firebaseio.com"
   },
   "security": {
     "enable": true,
