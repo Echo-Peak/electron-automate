@@ -66,7 +66,8 @@ class Process {
 
     let exec = function(err ,list){
       list = list.filter(e => e && e);
-        if(list.length){
+
+        if(list.length && !err){
             callback(true , list);
           }else{
             callback(false);
@@ -101,9 +102,13 @@ class Process {
               newList.length && exec(err , newList);
               !newList.length && list.forEach(e =>
                 console.log(`${e.Caption} found. but invaild flags. got ${lookfor_flags.join(',').cyan.bold}`));
-            }else{
+            }else if(list && list.length){
 
-              list && exec(err , list);
+              exec(err , list);
+
+            }else{
+              exec('not found' , []);
+
             }
 
 
