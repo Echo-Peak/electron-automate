@@ -64,10 +64,6 @@ webpackJsonp([1],{
 
 	var _layout2 = _interopRequireDefault(_layout);
 
-	var _Snackbar = __webpack_require__(106);
-
-	var _Snackbar2 = _interopRequireDefault(_Snackbar);
-
 	var _login = __webpack_require__(257);
 
 	var _login2 = _interopRequireDefault(_login);
@@ -193,10 +189,10 @@ webpackJsonp([1],{
 	    transform: ''
 	  },
 	  messaages: {
-	    height: 500,
-	    overflowY: 'scroll',
-	    width: '100%'
+	    height: 200,
+	    overflowY: 'scroll'
 	  },
+	  //width:'100%'
 	  inputField: {
 	    height: 100
 
@@ -287,16 +283,15 @@ webpackJsonp([1],{
 	        _react2.default.createElement(
 	          'div',
 	          null,
-	          _react2.default.createElement(_RaisedButton2.default, { label: 'open chat', secondary: true, onTouchTap: this.toggleChatUI.bind(this, true) }),
+	          _react2.default.createElement(_FlatButton2.default, { backgroundColor: '#EF5350', style: { color: 'white' }, label: 'open chat', secondary: true, onTouchTap: this.toggleChatUI.bind(this, true) }),
 	          _react2.default.createElement(
 	            _Dialog2.default,
 	            {
+	              className: 'chat-dialog',
 	              title: 'Chat',
 	              actions: actions,
 	              modal: true,
-	              style: { position: 'absolute', top: '-2%' },
-	              autoDetectWindowHeight: false,
-	              bodyStyle: { height: '100%', transform: '' },
+	              autoDetectWindowHeight: true,
 	              contentStyle: styles.dialog,
 	              onRequestClose: this.toggleChatUI.bind(this, false),
 	              open: this.state.open },
@@ -463,6 +458,7 @@ webpackJsonp([1],{
 	      var actions = [_react2.default.createElement(_FlatButton2.default, {
 	        label: 'close',
 	        primary: true,
+
 	        onTouchTap: this.toggleHistory.bind(this, false)
 	      })];
 
@@ -472,7 +468,7 @@ webpackJsonp([1],{
 	        _react2.default.createElement(
 	          'div',
 	          null,
-	          _react2.default.createElement(_RaisedButton2.default, { label: 'open History', secondary: true, onTouchTap: this.toggleHistory.bind(this, true) }),
+	          _react2.default.createElement(_FlatButton2.default, { backgroundColor: '#EF5350', style: { color: 'white' }, label: 'open History', onTouchTap: this.toggleHistory.bind(this, true) }),
 	          _react2.default.createElement(
 	            _Dialog2.default,
 	            {
@@ -517,44 +513,6 @@ webpackJsonp([1],{
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Snackbar = __webpack_require__(106);
-
-	var _Snackbar2 = _interopRequireDefault(_Snackbar);
-
-	var _inbox = __webpack_require__(485);
-
-	var _inbox2 = _interopRequireDefault(_inbox);
-
-	var _grade = __webpack_require__(479);
-
-	var _grade2 = _interopRequireDefault(_grade);
-
-	var _send = __webpack_require__(486);
-
-	var _send2 = _interopRequireDefault(_send);
-
-	var _drafts = __webpack_require__(484);
-
-	var _drafts2 = _interopRequireDefault(_drafts);
-
-	var _info = __webpack_require__(480);
-
-	var _info2 = _interopRequireDefault(_info);
-
-	var _BottomNavigation = __webpack_require__(302);
-
-	var _FontIcon = __webpack_require__(69);
-
-	var _FontIcon2 = _interopRequireDefault(_FontIcon);
-
-	var _locationOn = __webpack_require__(483);
-
-	var _locationOn2 = _interopRequireDefault(_locationOn);
-
-	var _Paper = __webpack_require__(17);
-
-	var _Paper2 = _interopRequireDefault(_Paper);
-
 	var _reactRouter = __webpack_require__(82);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -566,55 +524,6 @@ webpackJsonp([1],{
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var Component = _react2.default.Component;
-
-	var recentsIcon = _react2.default.createElement(
-	  _FontIcon2.default,
-	  { className: 'material-icons' },
-	  'restore'
-	);
-	var favoritesIcon = _react2.default.createElement(
-	  _FontIcon2.default,
-	  { className: 'material-icons' },
-	  'favorite'
-	);
-	var nearbyIcon = _react2.default.createElement(_locationOn2.default, null);
-
-
-	var styles = {
-
-	  bottomBar: {
-	    //position:'absolute',
-	    position: 'absol',
-	    bottom: 0,
-	    left: 0,
-	    width: '100%'
-	  }
-	};
-
-	// <Paper zDepth={1} style={styles.bottomBar}>
-	// <BottomNavigation selectedIndex={this.state.selectedIndex}>
-	//   <BottomNavigationItem
-	//     label="Recent"
-	//     icon={recentsIcon}
-	//     onTouchTap={() => this.select(0)}
-	//   />
-	//   <BottomNavigationItem
-	//     label="Open debugger"
-	//     icon={favoritesIcon}
-	//     onTouchTap={() => this.select(1)}
-	//   />
-	//   <BottomNavigationItem
-	//     label="Shell"
-	//     icon={nearbyIcon}
-	//     onTouchTap={() => this.select(2)}
-	//   />
-	//   <BottomNavigationItem
-	//     label="logs"
-	//     icon={nearbyIcon}
-	//     onTouchTap={() => this.select(3)}
-	//   />
-	// </BottomNavigation>
-	// </Paper>
 
 	var Layout = function (_Component) {
 	  _inherits(Layout, _Component);
@@ -629,10 +538,6 @@ webpackJsonp([1],{
 	      msg: '',
 	      selectedIndex: 2
 	    };
-	    // setInterval(function(){
-	    //   console.log(process.env)
-	    //
-	    // })
 	    return _this;
 	  }
 
@@ -643,30 +548,6 @@ webpackJsonp([1],{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {}
 	  }, {
-	    key: 'handleRequestClose',
-	    value: function handleRequestClose() {
-	      this.setState({ open: false });
-	    }
-	  }, {
-	    key: 'select',
-	    value: function select(index) {
-	      switch (index) {
-	        case 0:
-	          this.props.router.push('');break;
-	        case 2:
-	          this.props.router.push('shell');break;
-	        case 3:
-	          this.props.router.push('logs');break;
-	      }
-	      this.setState({ selectedIndex: index });
-	    }
-	  }, {
-	    key: 'onBack',
-	    value: function onBack() {
-	      this.select(0);
-	      this.props.router.push('admin');
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var state = this.state;
@@ -674,7 +555,7 @@ webpackJsonp([1],{
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'container-fluid background', style: { height: '150%' } },
+	        { className: 'layout' },
 	        this.props.children
 	      );
 	    }
@@ -783,17 +664,6 @@ webpackJsonp([1],{
 	  }
 	};
 
-	// function deleteAllCookies() {
-	//     var cookies = document.cookie.split(";");
-	//
-	//     for (var i = 0; i < cookies.length; i++) {
-	//     	var cookie = cookies[i];
-	//     	var eqPos = cookie.indexOf("=");
-	//     	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-	//     	document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-	//     }
-	// }
-
 	var Login = function (_Component) {
 	  _inherits(Login, _Component);
 
@@ -825,12 +695,8 @@ webpackJsonp([1],{
 	      console.log(spawnUrl);
 	    });
 	    sockets.Crypto.on('status', function (status) {
-	      //deleteAllCookies()
-	      //document.cookie = `u=${status.who.displayName};path=/`;
-	      console.log(status);
-	      if (status.status) {
-	        console.log(status);
-	      } else {
+
+	      if (status.status) {} else {
 	        console.log(status);
 	        alert('rejected');
 	      }
@@ -848,20 +714,20 @@ webpackJsonp([1],{
 
 	        return _react2.default.createElement(
 	          'div',
-	          { className: 'col-sm-3 container-fluid', key: (0, _uuid2.default)(), style: { padding: 2 } },
+	          { className: 'user', key: (0, _uuid2.default)(), onTouchTap: _this2.setWho.bind(_this2, user) },
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-sm-12 col-md-12 text-center', style: { background: '#EF5350' } },
+	            { className: 'icon-button' },
 	            _react2.default.createElement(
 	              _IconButton2.default,
 	              { iconStyle: styles.largeIcon, style: styles.large },
 	              randIcon[Math.floor(Math.random() * randIcon.length)]
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'center-block' },
-	              _react2.default.createElement(_FlatButton2.default, { label: user, style: { color: 'white' }, onTouchTap: _this2.setWho.bind(_this2, user) })
 	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'button' },
+	            _react2.default.createElement(_FlatButton2.default, { label: user, style: { color: 'white' } })
 	          )
 	        );
 	      });
@@ -904,7 +770,7 @@ webpackJsonp([1],{
 	          if (count === arr.length) {
 	            if (done.secret && done.key) {
 	              sockets.Crypto.emit('check', done.secret, done.key, self.state.who);
-	              console.log(0, done);
+
 	              e.target.value = '';
 	            } else {
 	              //e.target.value = '';
@@ -923,23 +789,22 @@ webpackJsonp([1],{
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      //<input accept='.txt' multiple type='file' style={{color:'white' ,display:'inline-block'}} onChange={this.handleFile.bind(this)}
+
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'container-fluid' },
+	        { className: 'login-container' },
 	        _react2.default.createElement(
 	          'div',
-	          { className: 'container-fluid' },
+	          { className: 'inner-container' },
 	          _react2.default.createElement(
 	            'div',
-	            { style: { margin: 'auto 0', width: '100%', height: 'auto', padding: 10 } },
+	            { className: 'user-container' },
 	            this.state.users
 	          ),
 	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(
 	            'div',
-	            { className: 'col-xs-12 col-sm-12 col-md-12 text-center',
-	              style: { position: 'relative', padding: 4, background: 'rgba(0,0,0,0.3)' } },
+	            { className: 'info' },
 	            _react2.default.createElement(
 	              'label',
 	              { style: { color: 'white' } },
@@ -961,8 +826,12 @@ webpackJsonp([1],{
 	            this.state.who.name && _react2.default.createElement(_flatInput2.default, { accept: '.txt', multiple: true, type: 'file', onChange: this.handleFile.bind(this) })
 	          )
 	        ),
-	        _react2.default.createElement(_chat2.default, null),
-	        _react2.default.createElement(_history2.default, null)
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'bottom' },
+	          _react2.default.createElement(_chat2.default, null),
+	          _react2.default.createElement(_history2.default, null)
+	        )
 	      );
 	    }
 	  }]);
@@ -1176,235 +1045,6 @@ webpackJsonp([1],{
 
 /***/ },
 
-/***/ 300:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _simpleAssign = __webpack_require__(3);
-
-	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	function getStyles(props, context) {
-	  var bottomNavigation = context.muiTheme.bottomNavigation;
-
-
-	  var styles = {
-	    root: {
-	      position: 'relative',
-	      width: '100%',
-	      display: 'flex',
-	      justifyContent: 'center',
-	      backgroundColor: bottomNavigation.backgroundColor,
-	      height: bottomNavigation.height
-	    },
-	    item: {
-	      flex: '1'
-	    }
-	  };
-
-	  return styles;
-	}
-
-	var BottomNavigation = function BottomNavigation(props, context) {
-	  var children = props.children;
-	  var style = props.style;
-	  var selectedIndex = props.selectedIndex;
-
-	  var other = _objectWithoutProperties(props, ['children', 'style', 'selectedIndex']);
-
-	  var prepareStyles = context.muiTheme.prepareStyles;
-
-	  var styles = getStyles(props, context);
-
-	  var preparedChildren = _react.Children.map(children, function (child, index) {
-	    return (0, _react.cloneElement)(child, {
-	      style: (0, _simpleAssign2.default)({}, styles.item, child.props.style),
-	      selected: index === selectedIndex
-	    });
-	  });
-
-	  return _react2.default.createElement(
-	    'div',
-	    _extends({}, other, { style: prepareStyles((0, _simpleAssign2.default)({}, styles.root, style)) }),
-	    preparedChildren
-	  );
-	};
-
-	BottomNavigation.propTypes = {
-	  /**
-	   * The `BottomNavigationItem`s to populate the element with.
-	   */
-	  children: _react.PropTypes.node,
-	  /**
-	   * The index of the currently selected navigation item.
-	   */
-	  selectedIndex: _react.PropTypes.number,
-	  /**
-	   * @ignore
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react.PropTypes.object
-	};
-
-	BottomNavigation.contextTypes = {
-	  muiTheme: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = BottomNavigation;
-
-/***/ },
-
-/***/ 301:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _simpleAssign = __webpack_require__(3);
-
-	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _EnhancedButton = __webpack_require__(23);
-
-	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-	function getStyles(props, context) {
-	  var selected = props.selected;
-	  var bottomNavigation = context.muiTheme.bottomNavigation;
-
-
-	  var color = selected ? bottomNavigation.selectedColor : bottomNavigation.unselectedColor;
-
-	  var styles = {
-	    root: {
-	      transition: 'padding-top 0.3s',
-	      paddingTop: selected ? 6 : 8,
-	      paddingBottom: 10,
-	      paddingLeft: 12,
-	      paddingRight: 12,
-	      minWidth: 80,
-	      maxWidth: 168
-	    },
-	    label: {
-	      fontSize: selected ? bottomNavigation.selectedFontSize : bottomNavigation.unselectedFontSize,
-	      transition: 'color 0.3s, font-size 0.3s',
-	      color: color,
-	      margin: 'auto'
-	    },
-	    icon: {
-	      display: 'block'
-	    },
-	    iconColor: color
-	  };
-
-	  return styles;
-	}
-
-	var BottomNavigationItem = function BottomNavigationItem(props, context) {
-	  var label = props.label;
-	  var icon = props.icon;
-	  var style = props.style;
-
-	  var other = _objectWithoutProperties(props, ['label', 'icon', 'style']);
-
-	  var prepareStyles = context.muiTheme.prepareStyles;
-
-	  var styles = getStyles(props, context);
-
-	  var styledIcon = (0, _react.cloneElement)(icon, {
-	    style: (0, _simpleAssign2.default)({}, styles.icon, icon.props.style),
-	    color: icon.props.color || styles.iconColor
-	  });
-
-	  return _react2.default.createElement(
-	    _EnhancedButton2.default,
-	    _extends({}, other, { style: (0, _simpleAssign2.default)({}, styles.root, style) }),
-	    styledIcon,
-	    _react2.default.createElement(
-	      'div',
-	      { style: prepareStyles(styles.label) },
-	      label
-	    )
-	  );
-	};
-
-	BottomNavigationItem.propTypes = {
-	  /**
-	   * Set the icon representing the view for this item.
-	   */
-	  icon: _react.PropTypes.node,
-	  /**
-	   * Set the label describing the view for this item.
-	   */
-	  label: _react.PropTypes.node,
-	  /**
-	   * @ignore
-	   * Override the inline-styles of the root element.
-	   */
-	  style: _react.PropTypes.object
-	};
-
-	BottomNavigationItem.contextTypes = {
-	  muiTheme: _react.PropTypes.object.isRequired
-	};
-
-	exports.default = BottomNavigationItem;
-
-/***/ },
-
-/***/ 302:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.BottomNavigationItem = exports.BottomNavigation = undefined;
-
-	var _BottomNavigation2 = __webpack_require__(300);
-
-	var _BottomNavigation3 = _interopRequireDefault(_BottomNavigation2);
-
-	var _BottomNavigationItem2 = __webpack_require__(301);
-
-	var _BottomNavigationItem3 = _interopRequireDefault(_BottomNavigationItem2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.BottomNavigation = _BottomNavigation3.default;
-	exports.BottomNavigationItem = _BottomNavigationItem3.default;
-
-/***/ },
-
 /***/ 477:
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1440,82 +1080,6 @@ webpackJsonp([1],{
 	ActionAccountCircle.muiName = 'SvgIcon';
 
 	exports.default = ActionAccountCircle;
-
-/***/ },
-
-/***/ 479:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(9);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(8);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ActionGrade = function ActionGrade(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z' })
-	  );
-	};
-	ActionGrade = (0, _pure2.default)(ActionGrade);
-	ActionGrade.displayName = 'ActionGrade';
-	ActionGrade.muiName = 'SvgIcon';
-
-	exports.default = ActionGrade;
-
-/***/ },
-
-/***/ 480:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(9);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(8);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ActionInfo = function ActionInfo(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z' })
-	  );
-	};
-	ActionInfo = (0, _pure2.default)(ActionInfo);
-	ActionInfo.displayName = 'ActionInfo';
-	ActionInfo.muiName = 'SvgIcon';
-
-	exports.default = ActionInfo;
 
 /***/ },
 
@@ -1596,158 +1160,6 @@ webpackJsonp([1],{
 	ActionSupervisorAccount.muiName = 'SvgIcon';
 
 	exports.default = ActionSupervisorAccount;
-
-/***/ },
-
-/***/ 483:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(9);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(8);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var CommunicationLocationOn = function CommunicationLocationOn(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z' })
-	  );
-	};
-	CommunicationLocationOn = (0, _pure2.default)(CommunicationLocationOn);
-	CommunicationLocationOn.displayName = 'CommunicationLocationOn';
-	CommunicationLocationOn.muiName = 'SvgIcon';
-
-	exports.default = CommunicationLocationOn;
-
-/***/ },
-
-/***/ 484:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(9);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(8);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ContentDrafts = function ContentDrafts(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M21.99 8c0-.72-.37-1.35-.94-1.7L12 1 2.95 6.3C2.38 6.65 2 7.28 2 8v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2l-.01-10zM12 13L3.74 7.84 12 3l8.26 4.84L12 13z' })
-	  );
-	};
-	ContentDrafts = (0, _pure2.default)(ContentDrafts);
-	ContentDrafts.displayName = 'ContentDrafts';
-	ContentDrafts.muiName = 'SvgIcon';
-
-	exports.default = ContentDrafts;
-
-/***/ },
-
-/***/ 485:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(9);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(8);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ContentInbox = function ContentInbox(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M19 3H4.99c-1.11 0-1.98.89-1.98 2L3 19c0 1.1.88 2 1.99 2H19c1.1 0 2-.9 2-2V5c0-1.11-.9-2-2-2zm0 12h-4c0 1.66-1.35 3-3 3s-3-1.34-3-3H4.99V5H19v10z' })
-	  );
-	};
-	ContentInbox = (0, _pure2.default)(ContentInbox);
-	ContentInbox.displayName = 'ContentInbox';
-	ContentInbox.muiName = 'SvgIcon';
-
-	exports.default = ContentInbox;
-
-/***/ },
-
-/***/ 486:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _pure = __webpack_require__(9);
-
-	var _pure2 = _interopRequireDefault(_pure);
-
-	var _SvgIcon = __webpack_require__(8);
-
-	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ContentSend = function ContentSend(props) {
-	  return _react2.default.createElement(
-	    _SvgIcon2.default,
-	    props,
-	    _react2.default.createElement('path', { d: 'M2.01 21L23 12 2.01 3 2 10l15 2-15 2z' })
-	  );
-	};
-	ContentSend = (0, _pure2.default)(ContentSend);
-	ContentSend.displayName = 'ContentSend';
-	ContentSend.muiName = 'SvgIcon';
-
-	exports.default = ContentSend;
 
 /***/ },
 

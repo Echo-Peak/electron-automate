@@ -6,6 +6,8 @@ import SwipeableViews from 'react-swipeable-views';
 import {List, ListItem} from 'material-ui/List';
 import uuid from '../util/uuid';
 import RaisedButton from 'material-ui/RaisedButton';
+import Create from './create';
+
 
 let styles = {
   slide:{
@@ -64,6 +66,7 @@ export default class Tasker extends Component{
     confirm && sockets.fs.emit('delete-task' ,filename)
   }
   render(){
+    //let store = this.props.store;
     return (
       <div>
         <Tabs onChange={this.handleChange.bind(this)} value={this.state.slideIndex}>
@@ -95,6 +98,7 @@ export default class Tasker extends Component{
           </List>
           </div>
           <div style={styles.slide}>
+            <Create></Create>
           </div>
           <div style={styles.slide}>
           </div>
