@@ -16,9 +16,9 @@ const styles = {
     transform:''
   },
   messaages:{
-    height:500,
+    height:200,
     overflowY:'scroll',
-    width:'100%'
+    //width:'100%'
   },
   inputField:{
     height:100,
@@ -93,14 +93,13 @@ export default class Chat extends Component{
     ];
     return (<div style={styles.container}>
         <div>
-       <RaisedButton label="open chat" secondary={true} onTouchTap={this.toggleChatUI.bind(this ,true)} />
+       <FlatButton backgroundColor='#EF5350' style={{color:'white'}} label="open chat" secondary={true} onTouchTap={this.toggleChatUI.bind(this ,true)} />
        <Dialog
+         className='chat-dialog'
          title="Chat"
          actions={actions}
          modal={true}
-         style={{position:'absolute' , top:'-2%'}}
-         autoDetectWindowHeight={false}
-         bodyStyle={{height:'100%' ,transform:''}}
+         autoDetectWindowHeight={true}
          contentStyle={styles.dialog}
          onRequestClose={this.toggleChatUI.bind(this ,false)}
          open={this.state.open}>

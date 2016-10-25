@@ -36,16 +36,6 @@ const styles = {
   }
 };
 
-// function deleteAllCookies() {
-//     var cookies = document.cookie.split(";");
-//
-//     for (var i = 0; i < cookies.length; i++) {
-//     	var cookie = cookies[i];
-//     	var eqPos = cookie.indexOf("=");
-//     	var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-//     	document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-//     }
-// }
 
 class Login extends Component {
   constructor(props) {
@@ -73,11 +63,9 @@ class Login extends Component {
       console.log(spawnUrl);
     });
     sockets.Crypto.on('status' ,function(status){
-      //deleteAllCookies()
-      //document.cookie = `u=${status.who.displayName};path=/`;
-      console.log(status)
+
       if(status.status){
-        console.log(status)
+
       }else{
         console.log(status);
         alert('rejected')
@@ -89,16 +77,18 @@ class Login extends Component {
     let users = window.host.roles.split(',').map((user)=>{
 
       return (
-        <div className='col-sm-3 container-fluid' key={uuid()} style={{padding:2}}>
-      <div className='col-sm-12 col-md-12 text-center' style={{background:'#EF5350'}}>
-        <IconButton iconStyle={styles.largeIcon} style={styles.large}>
+        <div className='user' key={uuid()} onTouchTap={this.setWho.bind(this,user)}>
+          <div className='icon-button'>
+                <IconButton iconStyle={styles.largeIcon} style={styles.large}>
           {randIcon[Math.floor(Math.random()*randIcon.length)]}
         </IconButton>
-        <div className='center-block'>
-          <FlatButton label={user} style={{color:'white'}} onTouchTap={this.setWho.bind(this,user)}/>
+          </div>
 
+
+        <div className='button'>
+          <FlatButton label={user} style={{color:'white'}} />
         </div>
-      </div>
+
 
     </div>
       )
@@ -132,7 +122,7 @@ class Login extends Component {
         if(count === arr.length){
           if(done.secret && done.key){
             sockets.Crypto.emit('check', done.secret , done.key,self.state.who );
-            console.log(0,done)
+
             e.target.value = '';
           }else{
             //e.target.value = '';
@@ -150,12 +140,12 @@ class Login extends Component {
   }
 
   render() {
-//<input accept='.txt' multiple type='file' style={{color:'white' ,display:'inline-block'}} onChange={this.handleFile.bind(this)}
-    return (
-      <div className='container-fluid'>
 
-        <div className='container-fluid'>
-          <div  style={{margin:'auto 0' , width:'100%' , height:'auto', padding:10}}>
+    return (
+      <div className='login-container'>
+
+        <div className='inner-container'>
+          <div  className='user-container'>
 
           {this.state.users}
 
@@ -164,8 +154,7 @@ class Login extends Component {
         <br></br>
 
 
-        <div className ='col-xs-12 col-sm-12 col-md-12 text-center'
-           style={{ position:'relative' ,padding:4, background:'rgba(0,0,0,0.3)'}}>
+        <div className ='info'>
           <label style={{color:'white'}}>Add key file</label>
           <h3 style={{color:'white', textAlign:'center'}}>{this.state.who.name} {this.state.who.ip}</h3>
 
@@ -180,9 +169,11 @@ class Login extends Component {
 
         </div>
 
+        <div className='bottom'>
+          <Chat></Chat>
+          <History></History>
+        </div>
 
-        <Chat></Chat>
-        <History></History>
       </div>
     )
   }

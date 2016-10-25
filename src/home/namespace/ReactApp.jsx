@@ -5,7 +5,6 @@ injectTapEventPlugin();
 import ReactRouter ,{ hashHistory , Route , Router ,IndexRoute} from 'react-router';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Layout from '../routes/layout';
-import Snackbar from 'material-ui/Snackbar';
 import Login from '../routes/login';
 
 class App extends React.Component{
@@ -24,14 +23,10 @@ class App extends React.Component{
         <MuiThemeProvider>
           <div>
           <Router history={hashHistory}>
-
             <Route path ='/' name='home' component={Layout}>
               <IndexRoute component={Login}></IndexRoute>
-
             </Route>
-
           </Router>
-
           </div>
 
         </MuiThemeProvider>

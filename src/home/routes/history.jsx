@@ -74,13 +74,14 @@ export default class History extends Component{
        <FlatButton
         label="close"
         primary={true}
+
         onTouchTap={this.toggleHistory.bind(this ,false)}
       />
     ];
 
     return (<div style={styles.container}>
         <div>
-       <RaisedButton label="open History" secondary={true} onTouchTap={this.toggleHistory.bind(this ,true)} />
+       <FlatButton backgroundColor='#EF5350' style={{color:'white'}} label="open History"  onTouchTap={this.toggleHistory.bind(this ,true)} />
        <Dialog
          title="History"
          actions={actions}
