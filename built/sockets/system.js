@@ -4,25 +4,18 @@ let fs = require('fs-extra');
 let ps = require('ps-node');
 let history = require('../core/history');
 let config = require('../config');
+let Stdout_filters = require('../core/stdout-filters');
+
+let platfom = (function(){
+  let p = {
+    win32:'windows',
+    darwin:'mac',
+    linux:'linux'
+  }
+  return p[process.platfom];
+})();
 
 let isDev = !!~process.argv.indexOf('--dev');
-
-        let netstat = function(input) {
-            var k = input.split(/\n/);
-            k.splice(0, 4);
-            k = k.map(e => e.trim()).map(function(f) {
-                let b = f.split(/\s{2}/).filter(m => m.length);
-
-                //console.log(b);
-                return {
-                    state: b[3],
-                    local: b[1],
-                    protocal: b[0],
-                    ext: b[2]
-                }
-            });
-            return k
-        }
 
 module.exports = class socket_system {
     constructor(socket, db, Sockets ,app) {
@@ -104,7 +97,7 @@ module.exports = class socket_system {
               Sockets.logger.broadcast.emit('fail' ,{event:'netstat error' ,value:stderr.toString()});
               Sockets.logger.emit('fail' ,{event:'netstat error' ,value:stderr.toString()});
             }else{
-              socket.emit('got-netstat' ,netstat(stdout));
+              socket.emit('got-netstat' ,Stdout_filters[platfom].net(stdout));
               Sockets.logger.broadcast.emit('log' ,{event:'netstat success' ,value:stdout.toString()});
               Sockets.logger.emit('log' ,{event:'netstat success' ,value:stdout.toString()});
             }
@@ -228,33 +221,15 @@ module.exports = class socket_system {
     }
     getProcesses(){
       let {socket , Sockets} = this;
-      let filterProcesses = function(input){
-      var k = input.substr(250 ,input.length).split(/\n/).map(e => e.trim())
-    .map(function(item){
-      let segs = item.split(/\s{2}/g).filter( ss => ss.length)
-      try{
-          let o = segs[1].split(' ').filter(kk => kk.length);
 
-      return{
-        name:segs[0],
-        pid:o[0],
-        user:o[1],
-        memory:segs[3]
-      }
-      }catch(e){
-        return false
-      }
-    });
-      k.splice(0,1);
-      return k
-    }
 
     child_process.exec('tasklist' ,function(stderr ,stdout){
       if(stderr){
         socket.emit('got-processes',stderr.toString());
         Sockets.logger.broadcast.emit('log' ,{event:'got-processes error' ,value:stderr.toString()});
       }else{
-        let done = filterProcesses(stdout);
+        let done = Stdout_filters[platfom].processes(stdout);
+
         socket.emit('got-processes',done);
         Sockets.logger.broadcast.emit('log' ,{event:'got-processes success' ,value:stdout.toString()});
       }
@@ -265,26 +240,13 @@ module.exports = class socket_system {
     }
     getServices(){
       let {socket , Sockets} = this;
-      let filterServices = function(input){
-        var k = input.split(/\n/).map(function(item){
-        let name = item.match(/^([a-z0-9\-\!\._]+\s?)*/ig);
-        let striped = item.replace(name[0] ,'').trim();
-        striped = striped.match(/^([a-z0-9\-\!\.\\]+\s?)*/ig);
-        return {
-        name:name[0],
-        user:striped[0]
-        }
-        });
-        k.splice(0,1);
-        return k
-      }
 
       child_process.exec('wmic service where started=true get  name, startname' ,function(stderr ,stdout){
         if(stderr){
           socket.emit('got-services',stderr.toString());
           Sockets.logger.broadcast.emit('log' ,{event:'got-services error' ,value:stderr.toString()});
         }else{
-          let done = filterServices(stdout);
+          let done = Stdout_filters[platfom].services(stdout);
           socket.emit('got-services',done);
           Sockets.logger.broadcast.emit('log' ,{event:'got-services success' ,value:stdout.toString()});
         }

@@ -8,7 +8,6 @@ import uuid from '../util/uuid';
 import RaisedButton from 'material-ui/RaisedButton';
 import Create from './create';
 
-
 let styles = {
   slide:{
     height:900
