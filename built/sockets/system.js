@@ -6,7 +6,7 @@ let history = require('../core/history');
 let config = require('../config');
 let Stdout_filters = require('../core/stdout-filters');
 
-let platfom = (function(){
+let platform = (function(){
   let p = {
     win32:'windows',
     darwin:'mac',
