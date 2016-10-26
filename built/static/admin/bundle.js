@@ -2138,7 +2138,7 @@ webpackJsonp([1],{
 
 	var _admin2 = _interopRequireDefault(_admin);
 
-	var _system = __webpack_require__(304);
+	var _system = __webpack_require__(721);
 
 	var _system2 = _interopRequireDefault(_system);
 
@@ -2844,7 +2844,8 @@ webpackJsonp([1],{
 	    _this.state = {
 	      slideIndex: 0,
 	      netstat: [],
-	      waiting: true
+	      waiting: true,
+	      env: []
 	    };
 	    _this.interval = null;
 	    return _this;
@@ -2858,10 +2859,15 @@ webpackJsonp([1],{
 	      var self = this;
 
 	      sockets.System.on('got-netstat', function (list) {
-	        console.log(list);
 	        _this2.setState({ netstat: list, waiting: false });
 	      });
+
+	      sockets.System.on('got-environment', function (list) {
+	        _this2.setState({ env: list });
+	      });
+
 	      sockets.System.emit('get-netstat');
+	      sockets.System.emit('get-environment');
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
@@ -2875,12 +2881,23 @@ webpackJsonp([1],{
 	      this.setState({ slideIndex: value });
 	    }
 	  }, {
+	    key: 'env',
+	    value: function env() {
+	      return _react2.default.createElement(
+	        _List.List,
+	        null,
+	        this.state.env.map(function (e) {
+	          return _react2.default.createElement(_List.ListItem, { key: (0, _uuid2.default)(), primaryText: e.key, secondaryText: e.value });
+	        })
+	      );
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'intros' },
+	        null,
 	        _react2.default.createElement(
 	          'div',
 	          null,
@@ -2888,7 +2905,7 @@ webpackJsonp([1],{
 	            _Tabs.Tabs,
 	            { onChange: this.handleChange.bind(this), value: this.state.slideIndex },
 	            _react2.default.createElement(_Tabs.Tab, { label: 'network', value: 0 }),
-	            _react2.default.createElement(_Tabs.Tab, { label: 'other', value: 1 })
+	            _react2.default.createElement(_Tabs.Tab, { label: 'environment ', value: 1 })
 	          ),
 	          _react2.default.createElement(
 	            _reactSwipeableViews2.default,
@@ -2909,7 +2926,11 @@ webpackJsonp([1],{
 	                })
 	              )
 	            ),
-	            _react2.default.createElement('div', { style: styles.slide })
+	            _react2.default.createElement(
+	              'div',
+	              { style: styles.slide },
+	              this.state.env.length ? this.env.call(this) : 'Cant get environment data'
+	            )
 	          )
 	        )
 	      );
@@ -5185,293 +5206,6 @@ webpackJsonp([1],{
 	}(Component);
 
 	exports.default = npmUI;
-
-/***/ },
-
-/***/ 304:
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(57);
-
-	var _FlatButton = __webpack_require__(12);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-	var _IconButton = __webpack_require__(28);
-
-	var _IconButton2 = _interopRequireDefault(_IconButton);
-
-	var _supervisorAccount = __webpack_require__(136);
-
-	var _supervisorAccount2 = _interopRequireDefault(_supervisorAccount);
-
-	var _accountCircle = __webpack_require__(134);
-
-	var _accountCircle2 = _interopRequireDefault(_accountCircle);
-
-	var _pets = __webpack_require__(135);
-
-	var _pets2 = _interopRequireDefault(_pets);
-
-	var _FontIcon = __webpack_require__(72);
-
-	var _FontIcon2 = _interopRequireDefault(_FontIcon);
-
-	var _locationOn = __webpack_require__(137);
-
-	var _locationOn2 = _interopRequireDefault(_locationOn);
-
-	var _Paper = __webpack_require__(16);
-
-	var _Paper2 = _interopRequireDefault(_Paper);
-
-	var _Tabs = __webpack_require__(37);
-
-	var _reactSwipeableViews = __webpack_require__(50);
-
-	var _reactSwipeableViews2 = _interopRequireDefault(_reactSwipeableViews);
-
-	var _List = __webpack_require__(21);
-
-	var _inbox = __webpack_require__(235);
-
-	var _inbox2 = _interopRequireDefault(_inbox);
-
-	var _grade = __webpack_require__(232);
-
-	var _grade2 = _interopRequireDefault(_grade);
-
-	var _send = __webpack_require__(236);
-
-	var _send2 = _interopRequireDefault(_send);
-
-	var _drafts = __webpack_require__(234);
-
-	var _drafts2 = _interopRequireDefault(_drafts);
-
-	var _Divider = __webpack_require__(36);
-
-	var _Divider2 = _interopRequireDefault(_Divider);
-
-	var _info = __webpack_require__(233);
-
-	var _info2 = _interopRequireDefault(_info);
-
-	var _uuid = __webpack_require__(13);
-
-	var _uuid2 = _interopRequireDefault(_uuid);
-
-	var _TextField = __webpack_require__(22);
-
-	var _TextField2 = _interopRequireDefault(_TextField);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Component = _react2.default.Component;
-
-
-	var styles = {
-	  largeIcon: {
-	    width: 60,
-	    height: 60,
-	    color: 'white'
-	  },
-	  button: {
-	    position: 'absolute',
-	    right: 0,
-	    top: 0,
-	    height: '100%',
-	    width: 150,
-	    fontWeight: 'bold'
-	  },
-	  div: {
-	    position: 'relative'
-	  },
-	  large: {
-	    width: 120,
-	    height: 120,
-	    padding: 30
-	  },
-	  bottomBar: {
-	    position: 'absolute',
-	    bottom: 0,
-	    width: '100%'
-	  }
-	};
-
-	var System = function (_Component) {
-	  _inherits(System, _Component);
-
-	  function System(props) {
-	    _classCallCheck(this, System);
-
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(System).call(this));
-
-	    _this.state = {
-	      slideIndex: 0,
-	      filtered: [],
-	      system: [{ name: 'Shutdown', cmd: 'Shutdown.exe -s -t 00' }, { name: 'Lock', cmd: 'Rundll32.exe User32.dll,LockWorkStation' }, { name: 'Sleep', cmd: 'rundll32.exe powrprof.dll,SetSuspendState 0,1,0' }, { name: 'Restart', cmd: 'Shutdown.exe -r -t 00' }],
-	      services: [],
-	      processes: []
-	    };
-	    return _this;
-	  }
-
-	  _createClass(System, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var self = this;
-	      sockets.System.on('got-services', function (list) {
-	        //console.log(list);
-	        self.setState({ services: list });
-	      });
-	      sockets.System.on('got-processes', function (list) {
-	        //  console.log(list);
-	        self.setState({ processes: list, filtered: list });
-	      });
-	      sockets.System.emit('get-services');
-	      sockets.System.emit('get-processes');
-	    }
-	  }, {
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {}
-	  }, {
-	    key: 'handleChange',
-	    value: function handleChange(value) {
-	      this.setState({ slideIndex: value });
-	    }
-	  }, {
-	    key: 'select',
-	    value: function select(index) {
-	      this.setState({ selectedIndex: index });
-	    }
-	  }, {
-	    key: 'setFilter',
-	    value: function setFilter(e) {
-	      var _this2 = this;
-
-	      var value = e.target.value;
-
-	      if (!value.length) {
-	        this.setState({ filtered: this.state.processes });
-	      } else {
-	        (function () {
-	          var regex = new RegExp('^' + value, 'ig');
-	          var filtered = _this2.state.processes.filter(function (e) {
-	            return regex.test(e.name);
-	          });
-	          _this2.setState({ filtered: filtered });
-	        })();
-	      }
-	    }
-	  }, {
-	    key: 'execCommand',
-	    value: function execCommand(type, cmd) {
-	      console.log(type, cmd);
-	      switch (type) {
-	        case 'system':
-	          {
-	            sockets.System.emit('system-power', cmd.cmd);
-	          }break;
-	        case 'services':
-	          {}break;
-	        case 'processes':
-	          {
-	            var confirm = window.confirm('kill ' + cmd.name + '?');
-	            if (confirm) {
-	              sockets.System.emit('taskkill', cmd.name);
-	            }
-	          }break;
-
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this3 = this;
-
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'system-action' },
-	        _react2.default.createElement(
-	          'div',
-	          null,
-	          _react2.default.createElement(
-	            _Tabs.Tabs,
-	            { onChange: this.handleChange.bind(this), value: this.state.slideIndex },
-	            _react2.default.createElement(_Tabs.Tab, { label: 'power', value: 0 }),
-	            _react2.default.createElement(_Tabs.Tab, { label: 'active-services', value: 1 }),
-	            _react2.default.createElement(_Tabs.Tab, { label: 'processes', value: 2 })
-	          ),
-	          _react2.default.createElement(
-	            _reactSwipeableViews2.default,
-	            { index: this.state.slideIndex, onChangeIndex: this.handleChange.bind(this) },
-	            _react2.default.createElement(
-	              'div',
-	              { style: styles.slide },
-	              _react2.default.createElement(
-	                _List.List,
-	                null,
-	                this.state.system.map(function (e) {
-	                  return _react2.default.createElement(_List.ListItem, { key: (0, _uuid2.default)(), primaryText: e.name, onTouchTap: _this3.execCommand.bind(_this3, 'system', e) });
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { style: styles.slide },
-	              _react2.default.createElement(
-	                _List.List,
-	                null,
-	                this.state.services.map(function (e) {
-	                  return _react2.default.createElement(_List.ListItem, { key: (0, _uuid2.default)(), primaryText: e.name, secondaryText: e.user, onTouchTap: _this3.execCommand.bind(_this3, 'services', e) });
-	                })
-	              )
-	            ),
-	            _react2.default.createElement(
-	              'div',
-	              { style: styles.slide },
-	              _react2.default.createElement(_TextField2.default, { hintText: 'Search process', onChange: this.setFilter.bind(this) }),
-	              _react2.default.createElement('br', null),
-	              this.state.filtered.map(function (e, index) {
-	                return _react2.default.createElement(
-	                  'div',
-	                  { key: (0, _uuid2.default)(), style: styles.div },
-	                  _react2.default.createElement(_List.ListItem, {
-	                    primaryText: e.name + ' - ' + e.pid,
-	                    secondaryText: 'User: ' + e.user + ', Memory: ' + e.memory }),
-	                  _react2.default.createElement(_FlatButton2.default, { style: styles.button, secondary: true, label: 'kill', onTouchTap: _this3.execCommand.bind(_this3, 'processes', e) })
-	                );
-	              })
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-
-	  return System;
-	}(Component);
-
-	exports.default = (0, _reactRouter.withRouter)(System);
 
 /***/ },
 
@@ -11031,6 +10765,580 @@ webpackJsonp([1],{
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+
+/***/ },
+
+/***/ 721:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRouter = __webpack_require__(57);
+
+	var _FlatButton = __webpack_require__(12);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _IconButton = __webpack_require__(28);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
+	var _supervisorAccount = __webpack_require__(136);
+
+	var _supervisorAccount2 = _interopRequireDefault(_supervisorAccount);
+
+	var _accountCircle = __webpack_require__(134);
+
+	var _accountCircle2 = _interopRequireDefault(_accountCircle);
+
+	var _pets = __webpack_require__(135);
+
+	var _pets2 = _interopRequireDefault(_pets);
+
+	var _FontIcon = __webpack_require__(72);
+
+	var _FontIcon2 = _interopRequireDefault(_FontIcon);
+
+	var _locationOn = __webpack_require__(137);
+
+	var _locationOn2 = _interopRequireDefault(_locationOn);
+
+	var _Paper = __webpack_require__(16);
+
+	var _Paper2 = _interopRequireDefault(_Paper);
+
+	var _Tabs = __webpack_require__(37);
+
+	var _reactSwipeableViews = __webpack_require__(50);
+
+	var _reactSwipeableViews2 = _interopRequireDefault(_reactSwipeableViews);
+
+	var _List = __webpack_require__(21);
+
+	var _inbox = __webpack_require__(235);
+
+	var _inbox2 = _interopRequireDefault(_inbox);
+
+	var _grade = __webpack_require__(232);
+
+	var _grade2 = _interopRequireDefault(_grade);
+
+	var _send = __webpack_require__(236);
+
+	var _send2 = _interopRequireDefault(_send);
+
+	var _drafts = __webpack_require__(234);
+
+	var _drafts2 = _interopRequireDefault(_drafts);
+
+	var _Divider = __webpack_require__(36);
+
+	var _Divider2 = _interopRequireDefault(_Divider);
+
+	var _info = __webpack_require__(233);
+
+	var _info2 = _interopRequireDefault(_info);
+
+	var _uuid = __webpack_require__(13);
+
+	var _uuid2 = _interopRequireDefault(_uuid);
+
+	var _TextField = __webpack_require__(22);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	var _power = __webpack_require__(722);
+
+	var _power2 = _interopRequireDefault(_power);
+
+	var _services = __webpack_require__(724);
+
+	var _services2 = _interopRequireDefault(_services);
+
+	var _processes = __webpack_require__(723);
+
+	var _processes2 = _interopRequireDefault(_processes);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Component = _react2.default.Component;
+
+	var styles = {
+	  largeIcon: {
+	    width: 60,
+	    height: 60,
+	    color: 'white'
+	  },
+	  button: {
+	    position: 'absolute',
+	    right: 0,
+	    top: 0,
+	    height: '100%',
+	    width: 150,
+	    fontWeight: 'bold'
+	  },
+	  div: {
+	    position: 'relative'
+	  },
+	  large: {
+	    width: 120,
+	    height: 120,
+	    padding: 30
+	  },
+	  bottomBar: {
+	    position: 'absolute',
+	    bottom: 0,
+	    width: '100%'
+	  }
+	};
+
+	var System = function (_Component) {
+	  _inherits(System, _Component);
+
+	  function System(props) {
+	    _classCallCheck(this, System);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(System).call(this));
+
+	    _this.state = {
+	      slideIndex: 0,
+	      filtered: [],
+	      system: [{ name: 'Shutdown', cmd: 'Shutdown.exe -s -t 00' }, { name: 'Lock', cmd: 'Rundll32.exe User32.dll,LockWorkStation' }, { name: 'Sleep', cmd: 'rundll32.exe powrprof.dll,SetSuspendState 0,1,0' }, { name: 'Restart', cmd: 'Shutdown.exe -r -t 00' }],
+	      services: [],
+	      processes: []
+	    };
+	    return _this;
+	  }
+
+	  _createClass(System, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {}
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {}
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(value) {
+	      this.setState({ slideIndex: value });
+	    }
+	  }, {
+	    key: 'select',
+	    value: function select(index) {
+	      this.setState({ selectedIndex: index });
+	    }
+	  }, {
+	    key: 'setFilter',
+	    value: function setFilter(e) {
+	      var _this2 = this;
+
+	      var value = e.target.value;
+
+	      if (!value.length) {
+	        this.setState({ filtered: this.state.processes });
+	      } else {
+	        (function () {
+	          var regex = new RegExp('^' + value, 'ig');
+	          var filtered = _this2.state.processes.filter(function (e) {
+	            return regex.test(e.name);
+	          });
+	          _this2.setState({ filtered: filtered });
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'execCommand',
+	    value: function execCommand(type, cmd) {
+	      console.log(type, cmd);
+	      switch (type) {
+	        case 'system':
+	          {
+	            sockets.System.emit('system-power', cmd.cmd);
+	          }break;
+	        case 'services':
+	          {}break;
+	        case 'processes':
+	          {
+	            var confirm = window.confirm('kill ' + cmd.name + '?');
+	            if (confirm) {
+	              sockets.System.emit('taskkill', cmd.name);
+	            }
+	          }break;
+
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'system-action' },
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            _Tabs.Tabs,
+	            { onChange: this.handleChange.bind(this), value: this.state.slideIndex },
+	            _react2.default.createElement(_Tabs.Tab, { label: 'power', value: 0 }),
+	            _react2.default.createElement(_Tabs.Tab, { label: 'active-services', value: 1 }),
+	            _react2.default.createElement(_Tabs.Tab, { label: 'processes', value: 2 })
+	          ),
+	          _react2.default.createElement(
+	            _reactSwipeableViews2.default,
+	            { index: this.state.slideIndex, onChangeIndex: this.handleChange.bind(this) },
+	            _react2.default.createElement(
+	              'div',
+	              { style: styles.slide },
+	              _react2.default.createElement(_power2.default, null)
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { style: styles.slide },
+	              _react2.default.createElement(_services2.default, { slide: this.state.slideIndex })
+	            ),
+	            _react2.default.createElement(
+	              'div',
+	              { style: styles.slide },
+	              _react2.default.createElement(_processes2.default, { slide: this.state.slideIndex })
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return System;
+	}(Component);
+
+	exports.default = (0, _reactRouter.withRouter)(System);
+
+/***/ },
+
+/***/ 722:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _uuid = __webpack_require__(13);
+
+	var _uuid2 = _interopRequireDefault(_uuid);
+
+	var _List = __webpack_require__(21);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Component = _react2.default.Component;
+
+	var Power = function (_Component) {
+	  _inherits(Power, _Component);
+
+	  function Power(props) {
+	    _classCallCheck(this, Power);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Power).call(this));
+
+	    _this.state = {
+	      options: ['sleep', 'lock', 'sleep', 'restart']
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Power, [{
+	    key: 'execCommand',
+	    value: function execCommand(cmd) {
+	      sockets.System.emit('power-' + cmd);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _List.List,
+	          null,
+	          this.state.options.map(function (e) {
+	            return _react2.default.createElement(_List.ListItem, { key: (0, _uuid2.default)(), primaryText: e.name, onTouchTap: _this2.execCommand.bind(_this2, e) });
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Power;
+	}(Component);
+
+	exports.default = Power;
+
+/***/ },
+
+/***/ 723:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _List = __webpack_require__(21);
+
+	var _uuid = __webpack_require__(13);
+
+	var _uuid2 = _interopRequireDefault(_uuid);
+
+	var _FlatButton = __webpack_require__(12);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _TextField = __webpack_require__(22);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Component = _react2.default.Component;
+
+
+	var styles = {
+	  button: {
+	    position: 'absolute',
+	    right: 0,
+	    top: 0,
+	    height: '100%',
+	    width: 150,
+	    fontWeight: 'bold'
+	  },
+	  div: {
+	    position: 'relative'
+	  }
+	};
+
+	var Processes = function (_Component) {
+	  _inherits(Processes, _Component);
+
+	  function Processes(props) {
+	    _classCallCheck(this, Processes);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Processes).call(this));
+
+	    _this.state = {
+	      ps: [],
+	      filtered: []
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Processes, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      sockets.System.on('got-processes', function (list) {
+	        _this2.setState({ ps: list, filtered: list });
+	      });
+	      sockets.System.emit('get-processes');
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {}
+	  }, {
+	    key: 'setFilter',
+	    value: function setFilter(e) {
+	      var _this3 = this;
+
+	      var value = e.target.value;
+
+	      if (!value.length) {
+	        this.setState({ filtered: this.state.processes });
+	      } else {
+	        (function () {
+	          var regex = new RegExp('^' + value, 'ig');
+	          var filtered = _this3.state.processes.filter(function (e) {
+	            return regex.test(e.name);
+	          });
+	          _this3.setState({ filtered: filtered });
+	        })();
+	      }
+	    }
+	  }, {
+	    key: 'kill',
+	    value: function kill(cmd) {
+	      sockets.System.emit('taskkill', cmd.name);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this4 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_TextField2.default, { hintText: 'Search process', onChange: this.setFilter.bind(this) }),
+	        this.state.ps.map(function (e, index) {
+	          return _react2.default.createElement(
+	            'div',
+	            { key: (0, _uuid2.default)(), style: styles.div },
+	            _react2.default.createElement(_List.ListItem, {
+	              primaryText: e.name + ' - ' + e.pid,
+	              secondaryText: 'User: ' + e.user + ', Memory: ' + e.memory }),
+	            _react2.default.createElement(_FlatButton2.default, { style: styles.button, secondary: true, label: 'kill', onTouchTap: _this4.kill.bind(_this4, e) })
+	          );
+	        })
+	      );
+	    }
+	  }]);
+
+	  return Processes;
+	}(Component);
+
+	exports.default = Processes;
+
+/***/ },
+
+/***/ 724:
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _List = __webpack_require__(21);
+
+	var _uuid = __webpack_require__(13);
+
+	var _uuid2 = _interopRequireDefault(_uuid);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Component = _react2.default.Component;
+
+	var Services = function (_Component) {
+	  _inherits(Services, _Component);
+
+	  function Services(props) {
+	    _classCallCheck(this, Services);
+
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Services).call(this));
+
+	    _this.state = {
+	      srv: [],
+	      filtered: []
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Services, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      sockets.System.on('got-services', function (list) {
+
+	        _this2.setState({ srv: list, filtered: list });
+	      });
+	      sockets.System.emit('get-services');
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {}
+	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {}
+	  }, {
+	    key: 'execCommand',
+	    value: function execCommand() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          _List.List,
+	          null,
+	          this.state.srv.map(function (e) {
+	            return _react2.default.createElement(_List.ListItem, { key: (0, _uuid2.default)(),
+	              primaryText: e.name, secondaryText: e.user,
+	              onTouchTap: _this3.execCommand.bind(_this3, e) });
+	          })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Services;
+	}(Component);
+
+	exports.default = Services;
 
 /***/ }
 

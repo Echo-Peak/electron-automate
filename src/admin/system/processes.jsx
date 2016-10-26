@@ -29,7 +29,7 @@ export default class Processes extends Component{
   }
   componentDidMount(){
     sockets.System.on('got-processes' ,(list)=>{
-      this.setState({processes:list ,filtered:list})
+      this.setState({ps:list ,filtered:list})
     });
     sockets.System.emit('get-processes');
   }

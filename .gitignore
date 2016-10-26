@@ -40,3 +40,4 @@ built/data/audio/*.mp3
 built/data/pictures/*.*
 built/data/video/*.mp4
 built/data/scripts/*.*
+built/static/*.*

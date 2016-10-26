@@ -13,7 +13,7 @@ export default class Services extends Component{
   componentDidMount(){
     sockets.System.on('got-services' ,(list)=>{
 
-      this.setState({services:list , filtered:list});
+      this.setState({srv:list , filtered:list});
     });
     sockets.System.emit('get-services');
   }

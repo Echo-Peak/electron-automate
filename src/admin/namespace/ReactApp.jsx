@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Layout from '../routes/layout';
 import Snackbar from 'material-ui/Snackbar';
 import Admin from '../routes/admin';
-import System from '../routes/system';
+import System from '../system';
 //import BrowserWindows from '../create-window';
 import Shell from '../shell';
 import Keyboard from '../routes/keyboard';
