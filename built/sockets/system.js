@@ -54,7 +54,7 @@ module.exports = class socket_system {
           isDev && socket.emit('restart');
           isDev && socket.broadcast.emit('restart');
         });
-
+        socket.on('get-environment' ,this.getEnv.bind(this));
         socket.on('get-packageJSON' ,this.getPackageJSON.bind(this))
         socket.on('npm-install' ,this.npmInstall.bind(this));
         socket.on('npm-uninstall' ,this.npmUninstall.bind(this));
@@ -268,5 +268,13 @@ module.exports = class socket_system {
 
         }
       })
+    }
+    getEnv(){
+      let {socket ,Sockets} = this;
+      let env = Object.assign({} ,process.env);
+      let done = Object.keys(env).map(e => ({key:e , value:env[e]}));
+      Sockets.logger.broadcast.emit('log' ,{event:'getting environment' ,value:done.length ,platform});
+      socket.emit('got-environment',done);
+
     }
 }
