@@ -37,7 +37,8 @@ export default class Info extends Component{
     this.state = {
         slideIndex:0,
         netstat:[],
-        waiting:true
+        waiting:true,
+        env:[]
     };
     this.interval = null;
   }
@@ -46,10 +47,15 @@ export default class Info extends Component{
         let self = this;
 
       sockets.System.on('got-netstat' ,(list)=>{
-        console.log(list);
         this.setState({netstat:list ,waiting:false});
       });
-      sockets.System.emit('get-netstat')
+
+      sockets.System.on('got-environment' ,(list)=>{
+        this.setState({env:list});
+      });
+
+      sockets.System.emit('get-netstat');
+      sockets.System.emit('get-environment');
   }
   componentWillUnmount(){
 
@@ -63,16 +69,21 @@ export default class Info extends Component{
   }
 
 
-
+  env(){
+    return (<List>
+    {this.state.env.map(e => (
+      <ListItem key={uuid()} primaryText={e.key} secondaryText={e.value}></ListItem>
+    ))}
+  </List>)
+  }
   render(){
 
 
-    return (  <div className='intros'>
+    return (  <div>
         <div>
           <Tabs onChange={this.handleChange.bind(this)} value={this.state.slideIndex}>
             <Tab label="network" value={0}/>
-            <Tab label="other" value={1}/>
-
+            <Tab label="environment " value={1}/>
           </Tabs>
           <SwipeableViews index={this.state.slideIndex} onChangeIndex={this.handleChange.bind(this)}>
             <div style={styles.slide}>
@@ -84,7 +95,7 @@ export default class Info extends Component{
               </List>
             </div>
             <div style={styles.slide}>
-
+              {this.state.env.length ? this.env.call(this) : 'Cant get environment data'}
 
 
             </div>
