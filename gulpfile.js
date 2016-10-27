@@ -16,6 +16,12 @@ let config = require('./built/config');
 let commandInterface = require('./command-interface');
 
 
+let flags = {
+  dev:!!~process.argv.indexOf('--dev'),
+  logging:!!~process.argv.indexOf('--logging'),
+  chrome:!!~process.argv.indexOf('--chrome'),
+  electron:!!~process.argv.indexOf('--electron')
+}
 let appClients = {};
 
 let chrome_path  = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
@@ -25,8 +31,7 @@ let System = socketIOClient.connect(`http://localhost:${config.ports.main}/syste
 System.emit('who' ,{name:'MAIN' ,id:'MAIN' ,pid:process.pid});
 
 
-let launchChrome= !!~process.argv.indexOf('--chrome') &&
-child_process.execFile(chrome_path ,[`http://localhost:${config.ports.main}`]);
+flags.chrome && child_process.execFile(chrome_path ,[`http://localhost:${config.ports.main}`]);
 
 let electron = !!~process.argv.indexOf('--electron');
 let devMode = !!~process.argv.indexOf('--dev') ? '--dev' : '';
@@ -97,13 +102,29 @@ function server(done){
 
 
 
+
+function stdoutColorify(msg){
+  let id = msg.match(/^([\[A-Z\-\]]+)|^[A-Z\-]+/);
+  id = id ? id[0] : '[MAIN]';
+
+  let map = {
+    '[MAIN]':colors.cyan.bold,
+    LOG:colors.yellow.bold,
+    FATAL:colors.red.bold,
+    'SYSTEM-HANDLER':colors.magenta.bold,
+    SYSTEM:colors.cyan.bold
+  }
+
+  return msg.replace(id ,map[id](id));
+
+}
 function startApp(done){
 
     appClients['main'] = child_process.fork('./built/index.js' ,process.argv.slice(2),{stdio:'pipe' ,silent:true});
     appClients['main'].stdout.setEncoding('utf8');
     appClients['main'].stderr.setEncoding('utf8');
     appClients['main'].stdout.on('data',function(msg){
-      console.log('[MAIN]'.cyan.bold, msg);
+      console.log(stdoutColorify(msg));
 
     });
     appClients['main'].stderr.on('data',function(msg){

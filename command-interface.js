@@ -60,8 +60,20 @@ console.log('mocha' ,err);
     }
   });
     console.log("killed mocha".green.bold);
-
 }
+function killSystemHandler(){
+  let getClients = subProcess.filter(e => e.name ==='system-handler');
+  getClients.forEach(function(ps){
+    try{
+
+      child_process.exec(`taskkill /pid ${ps.pid} /f`);
+    }catch(err){
+      console.log('system-handler' ,err);
+    }
+  });
+    console.log("killed system-handler".green.bold);
+}
+
 function killElectron(){
   console.log("killing electron".red.bold);
   let getClients = subProcess.filter(e => e.name ==='electron-app');
@@ -200,10 +212,11 @@ function forceKill(done){
 
   //later to be customizable...in a config or package.json
   let scripts = [
-    {name:'webpack' ,flag:'--webpack' , use:'node'},
-    {name:'electron' ,flag:'--electron' , use:'electron'},
-    {name:'mocha' ,flag:'--mocha' , use:'node'},
-    {name:'robot' ,flag:'--robot' , use:config.alias.nodejs.name}
+    {name:'webpack' ,flag:config.flags.webpack , use:'node'},
+    {name:'electron' ,flag:config.flags.electron , use:'electron'},
+    {name:'mocha' ,flag:config.flags.mocha , use:'node'},
+    {name:'robot' ,flag:config.flags.robot , use:config.alias.nodejs.name},
+    {name:'system-handler' ,flag:config.flags.systemHandler , use:config.alias.nodejs.name}
   ];
 
   let status = 0;
@@ -238,6 +251,7 @@ function kill(done){
     killWebpack();
     killMocha();
     killRobotClient();
+    killSystemHandler();
     done();
   }else{
     forceKill(done);
