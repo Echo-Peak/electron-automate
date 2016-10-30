@@ -115,7 +115,7 @@ function stdoutColorify(msg){
     SYSTEM:colors.cyan.bold
   }
 
-  return msg.replace(id ,map[id](id));
+  return msg.replace(id ,map[id](id.bold));
 
 }
 function startApp(done){
