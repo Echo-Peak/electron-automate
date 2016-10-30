@@ -5,6 +5,14 @@
     "app":7210,
     "dev": 7201
   },
+  "flags":{
+    "systemHandler":"--system-handler",
+    "robot":"--robot",
+    "webpack":"--webpack",
+    "mocha":"--mocha",
+    "electron":"--electron",
+    "express":"--express-only"
+  },
   "routeLength": 8,
   "logging":true,
 
