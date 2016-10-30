@@ -215,6 +215,10 @@ function help(){
     Run script inside of parent shell & use parent stdout: use --stdout
     Pass arguments to a script: args:arg1, arg2, --flag
 
+    Type:
+    clear - to clear console
+    scripts  - to show list of scripts to run
+    
     Scripts:
     ${'run'.green} -  use:<subapp> ...args
     ${'test'.green} - ...args
