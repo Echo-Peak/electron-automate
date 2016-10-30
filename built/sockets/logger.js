@@ -19,6 +19,9 @@ module.exports = class socket_logger{
     socket.on('re-broadcast' ,(type ,payload)=>{
       logging && socket.emit(type, payload);
       logging && socket.broadcast.emit(type, payload);
-    })
+    });
+    socket.on('SYSTEM-HANDLER' ,(msg)=>{
+      console.log('SYSTEM-HANDLER',msg);
+    });
   }
 }
