@@ -32,9 +32,19 @@ let System = socketIOClient.connect(`http://localhost:${config.ports.main}/syste
 let Dynamic = socketIOClient.connect(`http://localhost:${config.ports.main}/dynamic` ,{reconnect:true});
 let Logger = socketIOClient.connect(`http://localhost:${config.ports.main}/logger` ,{reconnect:true});
 
-Process_Handler.init(System,  Logger);
+let ph = Process_Handler.init(System,  Logger);
+/*
+min arity 3
+@par1 {string} binary to run
+@par2 {string} script name to run
+@par3 {string} method of child_process module to use
+
+*/
+!flags.dev && ph.spawn_script('node','system-handler',config.flags.systemHandler, 'exec');
 
 System.emit('who' ,{pid:process.pid , name:'express-app' ,id:'express'});
+
+
 
 function expressApp(){
   flags.logging && app.use(logger('dev'));
