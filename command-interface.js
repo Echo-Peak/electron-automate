@@ -23,6 +23,7 @@ let electron_installer = Object.assign(_package.electron_installer ,{
   src:'./releases/packages/',
   dest:'./releases/installers'
 });
+let chrome_path  = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
 
 let System = socketIO.connect(`http://localhost:${config.ports.main}/system`);
 System.on('kill' ,kill);
@@ -63,7 +64,16 @@ let Scripts = {
     exec:'electron',
     bin:'electron',
     script:path.resolve(__dirname, `./built/core/electron.js`),
-    argID:config.flags.electron
+    argID:config.flags.electron,
+    shell:true
+  },
+  chrome:{
+    exec:chrome_path,
+    script:`http://localhost:${config.ports.main}`,
+    argID:'--chrome',
+    bin:'chrome',
+    shell:false
+
   }
 
 }
@@ -145,7 +155,10 @@ function runScript(script, args ,help){
     console.log(help || 'no extra arguments found');
     return
   }
-  let shell = platform_shell[process.platform].shell;
+  let shell = '';
+  if(Scripts[script].shell !== false){
+    shell = platform_shell[process.platform].shell;
+  }
   let cwd = Scripts[script].path ? Scripts[script].path : process.cwd();
   let specialFlags =  Scripts[script].special ? Scripts[script].special : '';
   let id = Scripts[script].argID;
@@ -159,14 +172,14 @@ function runScript(script, args ,help){
     console.log(`expected ${specialFlags.flag}:<string> to be passed`);
     return
   }
-  let safetyQoutes = Scripts[script].exec.match(/\\|\//g) && `${Scripts[script].exec}` || Scripts[script].exec;
+  let safetyQoutes = Scripts[script].exec.match(/\\|\//g) && `"${Scripts[script].exec}"` || Scripts[script].exec;
 
-  let startWith  = args.shell ? `${shell} ${safetyQoutes} ${scriptSpecificArgs}`: Scripts[script].exec;
+  let startWith  = args.shell ? `${shell} ${safetyQoutes} ${scriptSpecificArgs}`: `"${Scripts[script].exec}"`;
 
 
-  let EXEC = `${startWith} "${filename}" ${specialFlags} ${id} ${_args}`;
+  let EXEC = `${startWith} ${filename} ${specialFlags} ${id} ${_args}`;
 
-  console.log(`running ${script}`.green.bold);
+  console.log(`running ${script}`.green.bold );
   child_process.exec(EXEC ,{cwd} ,function(stderr ,stdout){
     args.stdout  && !args.shell && stderr ? console.log(stderr) : console.log(stdout);
 
