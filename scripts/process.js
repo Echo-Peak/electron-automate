@@ -99,7 +99,6 @@ class Process {
 
             if(list && lookfor_flags && lookfor_flags.length){
               let newList = list.filter( item =>  lookfor_flags.some(e => item.CommandLine.includes(e)) );
-              console.log(newList);
               newList.length && exec(err , newList);
 
               if(!newList.length){
@@ -110,7 +109,6 @@ class Process {
               exec(err , list);
 
             }else{
-              console.log('cal')
               exec('not found' , []);
 
             }
