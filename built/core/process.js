@@ -55,7 +55,7 @@ let status = 0;
   @param3 {function} callback - asynchronous callback
 */
 function exists(bin ,flagID, callback){
-
+console.log(bin ,flagID ,callback)
 if(arguments.length < 3){
   console.log(`expected 3 arguments got ${arguments.length}`)
 }
@@ -145,7 +145,7 @@ class Process_Handler{
 
     let System = this.system;
     let exec = `"${this.nodePath}" "${this.robotPath}" ${config.ports.main} ${IP} ${config.alias.nodejs.name} --robot`;
-    exists({name:config.alias.nodejs.name ,flagID:'--robot'} ,(bool , list)=>{
+    exists(config.alias.nodejs.name ,config.flags.robot, (bool , list)=>{
       if(bool){
         kill(list);
         System.emit('system-send-to-logger' ,'log', {event:'KILLED',value:''});
