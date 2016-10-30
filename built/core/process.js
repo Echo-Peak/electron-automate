@@ -56,13 +56,16 @@ let status = 0;
 */
 function exists(bin ,flagID, callback){
 
+if(arguments.length < 3){
+  console.log(`expected 3 arguments got ${arguments.length}`)
+}
   switch(process.platform){
     case 'win32':{
       WMI.Query().class('Win32_Process').properties(['caption','commandline' ,'ProcessId'])
       .where(`name='${bin}.exe'`).exec(function(err, list) {
 
         if(list){
-          let found = list.filter(e => e.CommandLine.includes(flagID) || e.ProcessId.includes(flagID));
+          let found = list.filter(e => e.CommandLine.includes(flagID));
           if(found.length){
             callback(true ,found)
           }else{
@@ -87,7 +90,7 @@ class Process_Handler{
   }
   static check(bin , flagID ,callback){
     if(arguments.length){
-      exists({name:bin ,flagID} ,function(bool , list){
+      exists(bin, flagID, function(bool , list){
 
           //system-handler.js will handle this calllback
           typeof callback === 'function' && callback(bool, list);
@@ -154,24 +157,24 @@ class Process_Handler{
     });
 
   }
-  spawn(bin, scriptName, method){
+  spawn_script(bin, scriptName, flagID, method){
     let self = this;
+
     if(arguments.length < 3){
       throw new Error('expected 3 arguments');
     }
 
     let cwd = path.resolve(__dirname);
-    exists({name:bin ,flagID:config.flags.systemHandler} ,(bool , list)=>{
+    exists(bin ,flagID ,(bool , list)=>{
 
       if(bool){
 
         !flags.dev && kill(list).then(function(){
-          child_process[method](`node ${scriptName}.js ${config.flags.systemHandler} ${process.argv.splice(1).join(' ')}`, {cwd} ,self.std);
+          child_process[method](`node ${scriptName}.js ${flagID} ${process.argv.splice(1).join(' ')}`, {cwd} ,self.std);
         });
 
       }else{
-
-        child_process[method](`node ${scriptName}.js ${config.flags.systemHandler} ${process.argv.splice(1).join(' ')}` ,{cwd},self.std);
+        child_process[method](`node ${scriptName}.js ${flagID} ${process.argv.splice(1).join(' ')}` ,{cwd},self.std);
       }
 
     });
