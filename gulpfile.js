@@ -106,26 +106,27 @@ function server(done){
 
 
 function stdoutColorify(msg){
-  let id = msg.match(/^([\[A-Z\-\]]+)|^[A-Z\-]+/);
-  id = id ? id[0] : '[MAIN]';
-
-
+  let id = msg.match(/^([\[A-Z\-\]]+)|^[A-Z\-]+/i); //must be case sensitive
+  let newId = id ? id[0] : null;
+  let ref = newId;
   let map = {
-    '[MAIN]':'cyan',
+    MAIN:'cyan',
     LOG:'green',
     FATAL:'red',
     'SYSTEM-HANDLER':'magenta',
     SYSTEM:'red'
   }
-  if(!id in map){
-    id = '[MAIN]'
+
+  if(!(newId in map) || newId === null){
+    newId = 'MAIN';
   }
+  let newStdout = (ref in map) ? `[${newId[map[newId]]}]` : `[${newId[map[newId]]}] ${ref}`;
 
-  return msg.replace(id ,id[map[id]]);
-
+  return msg.replace(ref ,newStdout);
 }
+
 function startApp(done){
-  
+
     appClients['main'] = child_process.fork('./built/index.js' ,process.argv.slice(2),{stdio:'pipe' ,silent:true});
     appClients['main'].stdout.setEncoding('utf8');
     appClients['main'].stderr.setEncoding('utf8');
