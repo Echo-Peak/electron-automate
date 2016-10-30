@@ -66,9 +66,11 @@ function plumberHandler(done){
     }
   }
 }
-~process.argv.indexOf('--electron') && child_process.exec(`electron ./built/index.js ${devMode && devMode}`);
-gulp.task('init' ,['scss','jadeify' ,'app','watches']);
+~process.argv.indexOf('--electron') &&
+child_process.exec(`electron ./built/index.js ${flags.dev && '--dev'}`);
 
+gulp.task('init' ,['scss','jadeify' ,'app','watches']);
+gulp.task('default' ,['scss','jadeify' ,'app','watches']);
 //gulp.task('server',serverCallback.init);
 gulp.task('scss',scss);
 gulp.task('jadeify',_jadeify);
@@ -107,19 +109,23 @@ function stdoutColorify(msg){
   let id = msg.match(/^([\[A-Z\-\]]+)|^[A-Z\-]+/);
   id = id ? id[0] : '[MAIN]';
 
+
   let map = {
-    '[MAIN]':colors.cyan.bold,
-    LOG:colors.yellow.bold,
-    FATAL:colors.red.bold,
-    'SYSTEM-HANDLER':colors.magenta.bold,
-    SYSTEM:colors.cyan.bold
+    '[MAIN]':'cyan',
+    LOG:'green',
+    FATAL:'red',
+    'SYSTEM-HANDLER':'magenta',
+    SYSTEM:'red'
+  }
+  if(!id in map){
+    id = '[MAIN]'
   }
 
-  return msg.replace(id ,map[id](id.bold));
+  return msg.replace(id ,id[map[id]]);
 
 }
 function startApp(done){
-
+  
     appClients['main'] = child_process.fork('./built/index.js' ,process.argv.slice(2),{stdio:'pipe' ,silent:true});
     appClients['main'].stdout.setEncoding('utf8');
     appClients['main'].stderr.setEncoding('utf8');
