@@ -8,9 +8,11 @@ const subProcess = [];
 const packager = require('electron-packager');
 const socketIO = require('socket.io-client');
 const ps = require('ps-node');
+const path = require('path');
 const Process = require('./scripts/process'); //this is different than /built/core/process.js
 //let installer = require('electron-installer-windows');
 
+console.log("Interface Loaded.".cyan.bold , 'Type "help" to see available commans');
 let webpackApps = ['home' ,'admin' ,'user' ,'guest'];
 
 let electron_packager = Object.assign(_package.electron_packager ,{
@@ -23,129 +25,12 @@ let electron_installer = Object.assign(_package.electron_installer ,{
   dest:'./releases/installers'
 });
 
+//foo bin:webpack --shell use:admin script:webpack.config path:~ args:--use,--admin
 let System = socketIO.connect(`http://localhost:${config.ports.main}/system`);
 
-System.on('who' , function(psObj){
-  subProcess.push(psObj);
-});
+
 System.on('kill' ,kill);
 
-let subProcess_use_stdout = ~process.argv.indexOf('--stdout');
-let subProcess_use_stderr = ~process.argv.indexOf('--stderr');
-let subProcess_use_shell = ~process.argv.indexOf('--shell');
-
-function killWebpack(){
-  console.log("killing all webpack clients".red.bold);
-  let getClients = subProcess.filter(e => e.name ==='webpack');
-  getClients.forEach(function(ps){
-    try{
-      child_process.exec(`taskkill /pid ${ps.pid} /f`);
-    }catch(err){
-      console.log('webpack' ,err)
-    }
-  });
-    console.log("killed webpack clients".green.bold);
-
-}
-
-function killMocha(){
-  console.log("killing mocha".red.bold);
-  let getClients = subProcess.filter(e => e.name ==='mocha');
-  getClients.forEach(function(ps){
-    try{
-
-      child_process.exec(`taskkill /pid ${ps.pid} /f`);
-    }catch(err){
-console.log('mocha' ,err);
-    }
-  });
-    console.log("killed mocha".green.bold);
-}
-function killSystemHandler(){
-  let getClients = subProcess.filter(e => e.name ==='system-handler');
-  getClients.forEach(function(ps){
-    try{
-
-      child_process.exec(`taskkill /pid ${ps.pid} /f`);
-    }catch(err){
-      console.log('system-handler' ,err);
-    }
-  });
-    console.log("killed system-handler".green.bold);
-}
-
-function killElectron(){
-  console.log("killing electron".red.bold);
-  let getClients = subProcess.filter(e => e.name ==='electron-app');
-  //console.log(getClients);
-  getClients.forEach(function(ps){
-    try{
-      child_process.exec(`taskkill /pid ${ps.pid} /f`);
-    }catch(err){
-
-    }
-  });
-    console.log("killed electron".green.bold);
-}
-
-
-function restartElectron(){
-  console.log("restarting electron".yellow.bold);
-  killElectron();
-  loadElectron();
-}
-
-function loadWebpack(args){
-
-  let _args = args.args && args.args.join(' ') || '';
-  if(!args.use || !~webpackApps.indexOf(args.use)){
-    console.log(`${args.use} not found. [${webpackApps}]`);
-    return
-  }
-  console.log("starting webpack".green.bold);
-  let startWith = args.shell ? 'start cmd /c webpack' : 'webpack';
-
-  let x = child_process.exec(`${startWith} --use ${args.use} --webpack ${_args}`);
-  args.stdout && !args.shell && x.stdout.on('data' , function(data){
-    console.log(data)
-  });
-  args.stdout && !args.shell &&  x.stderr.on('data' , function(err){
-    console.log(err)
-  });
-
-}
-function loadMocha(args){
-  console.log("starting mocha".green.bold);
-  let _args = args.args && args.args.split(',').join(' ') || '';
-
-  let useExternalShell = args.shell ? 'start cmd /k mocha' : 'mocha';
-  let watch  = args.watch ? '-w' : '';
-  let reporter  = args.reporter ? `--reporter ${args.reporter}` : '';
-  args.watch && console.log('Mocha watching'.cyan.bold);
-
-  let x = child_process.exec(`${useExternalShell} ./tests/index.js --mocha ${watch} -c ${reporter} ${_args}`);
-  args.stdout && !args.shell && x.stdout.on('data' , function(data){
-    console.log('mocha' , data)
-  });
-  args.stdout &&  !args.shell && x.stderr.on('data' , function(err){
-    console.log('mocha error',err)
-  });
-}
-
-function loadElectron(args){
-  console.log("starting electron".green.bold);
-  let startWith = args.shell ? 'start cmd /k electron' : 'electron';
-  let _args = args.args && args.args.join(' ') || '';
-
-  !~args.args.indexOf('--dev') && console.log('did you mean to pass dev:true?.');
-  let x = child_process.exec(`${startWith} ./built/core/electron.js --electron ${_args}`);
-  args.stdout  && !args.shell && x.stdout.on('data' , function(data){
-    console.log('electron',data)
-  });
-  args.stdout && !args.shell &&  x.stderr.on('data' , function(err){
-    console.log('electron error',err)
-  });
-}
 
 function build(args) {
     console.log("Build app".green.bold);
@@ -187,93 +72,142 @@ function build(args) {
 }
 
 
-
-function killRobotClient(){
-  let alias = config.alias.nodejs.name;
-  console.log("killing robot client".red.bold);
-
-  let getClients = subProcess.filter(e => e.name ==='robot');
-
-  getClients = getClients.length ? getClients : alias;
-  Process.exists(getClients ,function(bool ,list){
-    console.log(bool ,list)
-    bool && Process.kill(list).then(function(){
-      console.log("killed robot client".green.bold);
-    });
-  })
-
-
-
+let Scripts = {
+  robot:{
+    bin:config.alias.nodejs.name,
+    exec:path.resolve(__dirname, `./built/exec/node/${config.alias.nodejs.name}.exe`),
+    script:path.resolve(__dirname, `./built/core/robot.js`),
+    argID:config.flags.robot
+  },
+  webpack:{
+    exec:'webpack',
+    bin:'node',
+    append:['--config'],
+    path:process.cwd(),
+    script:`./webpack.config.js`,
+    argID:config.flags.webpack,
+    special:{
+      flag:'use'
+    }
+  },
+  mocha:{
+    exec:'mocha',
+    bin:'node',
+    script:'./index.js',
+    path:path.resolve(__dirname, `./tests`),
+    argID:config.flags.mocha
+  },
+  systemHandler:{
+    exec:'node',
+    bin:'node',
+    script:path.resolve(__dirname, `./built/core/system-handler.js`),
+    argID:config.flags.systemHandler
+  },
+  electron:{
+    exec:'electron',
+    bin:'electron',
+    script:path.resolve(__dirname, `./built/core/electron.js`),
+    argID:config.flags.electron
+  }
 
 }
 
-function forceKill(done){
-  console.log('force-killing!'.yellow.bold)
+let platform_shell = {
+  win32:{
+    shell:'start cmd /k'
+  },
+  darwin:{
+    shell:''
+  },
+  linux:{
+    shell:''
+  }
+}
 
-  //later to be customizable...in a config or package.json
-  let scripts = [
-    {name:'webpack' ,flag:config.flags.webpack , use:'node'},
-    {name:'electron' ,flag:config.flags.electron , use:'electron'},
-    {name:'mocha' ,flag:config.flags.mocha , use:'node'},
-    {name:'robot' ,flag:config.flags.robot , use:config.alias.nodejs.name},
-    {name:'system-handler' ,flag:config.flags.systemHandler , use:config.alias.nodejs.name}
-  ];
+function runScript(script, args){
+  if(!script){
+    console.log('expected script');
+    return
+  }
+  script = script.replace(/\r\n$/,'');
+  if(!Scripts.hasOwnProperty(script)){
+    console.log(`Script not found.  available: ${Object.keys(Scripts).join(', ')}`);
+    return
+  }
+  let shell = platform_shell[process.platform].shell;
+  let cwd = Scripts[script].path ? Scripts[script].path : process.cwd();
+  let specialFlags =  Scripts[script].special ? Scripts[script].special : '';
+  let id = Scripts[script].argID;
+  let filename = Scripts[script].script ? Scripts[script].script : '';
+  let _args = args.args.join(' ') || '';
+  let scriptSpecificArgs = Scripts[script].append ? Scripts[script].append.join(' ') : '';
 
-  let status = 0;
-  scripts.forEach(function(cmd, index, arr) {
+  if(specialFlags && args[specialFlags.flag]){
+    specialFlags = `--${specialFlags.flag} ${args[specialFlags.flag]}`
+  }else if(!args[specialFlags.flag] && specialFlags.flag){
+    console.log(`expected ${specialFlags.flag}:<string> to be passed`);
+    return
+  }
+  let safetyQoutes = Scripts[script].exec.match(/\\|\//g) && `${Scripts[script].exec}` || Scripts[script].exec;
 
-      Process.exists(cmd.use,[cmd.flag], function(bool, list) {
+  let startWith  = args.shell ? `${shell} ${safetyQoutes} ${scriptSpecificArgs}`: Scripts[script].exec;
 
 
-          if (bool) {
-              Process.kill(list).then(function() {
-                status += 1;
-                  if (status === arr.length) {
-                      done();
-                  }
-              });
-          } else {
-              status += 1;
-              if (status === arr.length) {
-                  done();
-              }
-          }
-      });
+  let EXEC = `${startWith} "${filename}" ${specialFlags} ${id} ${_args}`;
+
+  console.log(`running ${script}`.green.bold);
+  child_process.exec(EXEC ,{cwd} ,function(stderr ,stdout){
+    args.stdout  && !args.shell && stderr ? console.log(stderr) : console.log(stdout);
 
   });
 
 }
 
+function killScript(script){
+
+  if(!script){
+    console.log('expected script name');
+    return
+  }
+  if(!script in Scripts){
+    console.log('script not found.');
+    return
+  }
+  let bin = Scripts[script].bin;
+  let id = Scripts[script].argID
+    Process.exists(bin ,[id],function(bool ,list){
+
+      bool && Process.kill(list).then(function(){
+        //console.log(list);
+        console.log(`killed ${list[0].Caption} - ${list[0].pid}`.green.bold);
+      });
+    });
+
+}
+
 function kill(done){
 
-  if(subProcess.length){
-    killElectron();
-    killWebpack();
-    killMocha();
-    killRobotClient();
-    killSystemHandler();
-    done();
-  }else{
-    forceKill(done);
+  let status = 0;
+  let keys = Object.keys(Scripts);
 
-  }
+  keys.forEach(function(item ,index ,arr){
+    //TODO: undifined case!!!!
+    Process.exists(Scripts[item].bin ,[Scripts[item].argID] ,(bool , list)=>{
 
-}
-
-function killScript(args){
-
-  if(args && args.script){
-    console.log('got it' ,args);
-    switch(args.script){
-      case 'mocha':killMocha();break;
-      case 'webpack':killWebpack();break;
-      case 'electron':killElectron();break;
-      case 'robot':killRobotClient();break;
-      case 'main':kill();break;
-    }
-  }
+      if(bool){
+        Process.kill(list).then(()=>{
+          status += 1;
+          status === arr.length && done();
+        });
+      }else{
+        status += 1;
+        status === arr.length && done()
+      }
+    })
+  });
 
 }
+
 
 function help(){
   console.log(`
@@ -282,7 +216,7 @@ function help(){
     Pass arguments to a script: args:arg1, arg2, --flag
 
     Scripts:
-    ${'webpack'.green} -  use:<subapp> ...args
+    ${'run'.green} -  use:<subapp> ...args
     ${'test'.green} - ...args
     ${'electron-packager'.green} -   out:<optional(string | ./)>  msi:<optional(boolean | false)> ...args
     ${'restart'.green}
@@ -291,13 +225,23 @@ function help(){
 
     `);
 }
+function clearConsole(){
+  process.stdout.write('\033c');
+  console.log('console cleared!'.green.bold);
+}
 let stdin = process.stdin;
 stdin.setEncoding('utf8');
 
 stdin.resume();
 
-let regex = /(([a-z0-9]+)\:(\[?([a-z0-9\-,"']+\b))\]?)/gi;
+function listScripts(){
+  let s = Object.keys(Scripts).map(e => e.cyan.bold).join(', ');
+  console.log(s)
+}
+
+let regex = /(([a-z0-9]+)\:(\[?([a-z0-9\-\.,"'\~]+))\]?)/gi;
 stdin.on('data',function(key){
+  key = key.replace(/\r\n/g,'');
 let extraArgs;
 let args = key.match(regex);
 
@@ -325,39 +269,54 @@ let args = key.match(regex);
   }
 
   extraArgs.shell = key.includes('--shell');
+
   extraArgs.stdout = key.includes('--stdout');
-  extraArgs.args = key.match(/\[(.+)\]/gi);
-  extraArgs.args = extraArgs.args ? extraArgs.args[0]
-  .replace(/\]|\[/g ,'')
-  .split(',')
+  extraArgs.args = extraArgs.args ? extraArgs.args.split(',')
   .map(e => e.trim())
   .filter(e => e.length) : [];
 
   let command = key.match(/^[a-z\-]+/i);
   command = command ? command[0] : false;
-  console.log(command);
+  let binary = extraArgs.bin;
+  let segments = key.split(' ');
+
+  switch(extraArgs.path){
+    case '~':extraArgs.path = process.cwd();break;
+  }
+
   switch(command){
-    case 'webpack':loadWebpack(extraArgs);break;
-    case 'restart':restartElectron();break;
-    case 'electron':loadElectron(extraArgs);break;
-    case 'kill':killScript(extraArgs);break;
+
+    case 'kill':killScript(segments[1]);break;
     case 'test':loadMocha(extraArgs);break;
     case 'build':build(extraArgs);break;
     case 'help':help();break;
+    case 'run':runScript(segments[1] ,extraArgs);break;
+    case 'clear':clearConsole();break;
+    case 'scripts':listScripts();break;
     default:{
-
       console.log(`'${(command.toString()).yellow.bold}' not found. type 'help' to list available commands`)
     }
   }
 });
 
 
-//let isKilling = false;
+let isKilling = false;
 process.on('SIGINT', function(){
-  console.log("killing build process".red.bold);
+  if(!isKilling){
+    isKilling = true;
+    console.log("killing build process".red.bold);
 
     kill(function(){
       console.log("build process killed!".cyan.bold);
      process.exit();
     });
+  }else{
+    console.log("waiting".yellow);
+  }
+
+  //temp
+  setTimeout(function(){
+    console.log("force quit");
+    process.exit();
+  },8000);
 });
