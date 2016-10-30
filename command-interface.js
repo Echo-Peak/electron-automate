@@ -12,8 +12,7 @@ const path = require('path');
 const Process = require('./scripts/process'); //this is different than /built/core/process.js
 //let installer = require('electron-installer-windows');
 
-console.log("Interface Loaded.".cyan.bold , 'Type "help" to see available commans');
-let webpackApps = ['home' ,'admin' ,'user' ,'guest'];
+console.log("Interface Loaded.".cyan.bold , 'Type "help" to see available commands');
 
 let electron_packager = Object.assign(_package.electron_packager ,{
   arch:process.arch,
@@ -25,7 +24,6 @@ let electron_installer = Object.assign(_package.electron_installer ,{
   dest:'./releases/installers'
 });
 
-//foo bin:webpack --shell use:admin script:webpack.config path:~ args:--use,--admin
 let System = socketIO.connect(`http://localhost:${config.ports.main}/system`);
 System.on('kill' ,kill);
 
@@ -44,7 +42,8 @@ let Scripts = {
     script:`./webpack.config.js`,
     argID:config.flags.webpack,
     special:{
-      flag:'use'
+      flag:'use',
+      apps:['home' ,'admin' ,'user' ,'guest' ,'dynamic']
     }
   },
   mocha:{
@@ -124,15 +123,26 @@ function build(args) {
     })
 }
 
-
-function runScript(script, args){
+/*
+  @param1 script {string} - name of script to choose from Scripts object
+  @param2 args{object} - object containing several properties including arguments to pass into the script
+  examples:
+  run webpack --shell use:admin args:--displayReasons
+  run electron args:--dev
+*/
+function runScript(script, args ,help){
   if(!script){
-    console.log('expected script');
+    console.log('expected script. type scripts to see available scripts');
     return
   }
   script = script.replace(/\r\n$/,'');
   if(!Scripts.hasOwnProperty(script)){
     console.log(`Script not found.  available: ${Object.keys(Scripts).join(', ')}`);
+    return
+  }
+  if(help){
+    let help = JSON.stringify(Scripts[script].special , null, 2);
+    console.log(help || 'no extra arguments found');
     return
   }
   let shell = platform_shell[process.platform].shell;
@@ -214,16 +224,17 @@ function help(){
   console.log(`
     Run script inside of another shell: use --shell
     Run script inside of parent shell & use parent stdout: use --stdout
-    Pass arguments to a script: args:arg1, arg2, --flag
+    Pass arguments to a script: args:[...arguments seperated by ',']
 
     Type:
-    clear - to clear console
-    scripts  - to show list of scripts to run
+    ${'clear'.green} - to clear console
+    ${'scripts or list'.green}  - to show list of scripts to run
+    ${'run <script-name> ? '.green}  - to show special properties
 
     Scripts:
-    ${'run'.green} -  use:<subapp> ...args
-    ${'test'.green} - ...args
-    ${'electron-packager'.green} -   out:<optional(string | ./)>  msi:<optional(boolean | false)> ...args
+    ${'run'.green} - <script-name>  ...args
+    ${'test'.green} - args
+    ${'electron-packager'.green} -  out:<optional(string)>  msi:<optional(boolean)> ...args
     ${'restart'.green}
     ${'kill'.green} - script:<script-name>
     ${'electron'.green} - ...args
@@ -288,6 +299,8 @@ let args = key.match(regex);
   switch(extraArgs.path){
     case '~':extraArgs.path = process.cwd();break;
   }
+  command.match(/quit|exit|stop|q/) && SIGKILL();
+  let questionMark = key.includes('?');
 
   switch(command){
 
@@ -295,9 +308,10 @@ let args = key.match(regex);
     case 'test':loadMocha(extraArgs);break;
     case 'build':build(extraArgs);break;
     case 'help':help();break;
-    case 'run':runScript(segments[1] ,extraArgs);break;
+    case 'run':runScript(segments[1] ,extraArgs ,questionMark);break;
     case 'clear':clearConsole();break;
-    case 'scripts':listScripts();break;
+    case 'scripts': // intentional fall through
+    case 'list':listScripts();break;
     default:{
       console.log(`'${(command.toString()).yellow.bold}' not found. type 'help' to list available commands`)
     }
@@ -306,8 +320,8 @@ let args = key.match(regex);
 
 
 let isKilling = false;
-process.on('SIGINT', function(){
-  if(!isKilling){
+function SIGKILL(){
+    if(!isKilling){
     isKilling = true;
     console.log("killing build process".red.bold);
 
@@ -324,4 +338,5 @@ process.on('SIGINT', function(){
     console.log("force quit");
     process.exit();
   },8000);
-});
+}
+process.on('SIGINT', SIGKILL);
