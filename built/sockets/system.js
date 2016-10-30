@@ -30,11 +30,7 @@ module.exports = class socket_system {
         this.nodeModulesPath = path.resolve(__dirname ,'../');
         this.self = this;
         socket.on('who' , function(who){
-          // ps.lookup({pid:who.pid} , function(err ,list){
-          //   console.log(list , who)
-          // });
 
-          console.log(`${who.name} - PID: ${who.pid} connected`);
           socket.emit('who' , who);
           socket.broadcast.emit('who' , who);
         });
