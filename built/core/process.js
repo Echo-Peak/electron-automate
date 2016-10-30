@@ -14,27 +14,60 @@ let flags = {
   electron:!!~process.argv.indexOf('--electron')
 }
 
+
 class EventEmitter extends events{}
 const emitter = new EventEmitter();
-function kill(list){
-  switch(process.platform){
+function kill(list ,pid){
+  let newList = list;
+  if(pid){
+    newList = newList.filter(e => e.ProcessId !== pid);
+  }
+let status = 0;
+  return new Promise(function(resolve ,reject){
+
+      let killAsync = function(command){
+        newList.forEach(e => {
+          child_process.exec(command.replace('{}',e.pid) ,function(){
+
+            status += 1;
+            if(status === newList.length){
+              resolve();
+            }
+          });
+
+        });
+      }
+      switch(process.platform){
     case 'win32':{
 
-      list.forEach(e => child_process.exec(`taskkill /pid ${e.ProcessId} /f`));
+      newList && newList.length && killAsync('taskkill /pid {} /f');
+      (!newList || !newList.length) && resolve();
     };break;
     case 'darwin':{};break;
     case 'linux':{};break;
   }
+  })
 }
-function exists(query , callback){
+
+/*  querys task list to find a process/list of process
+  @param1 {string} bin - binary for wmic.
+  @param2 {string} flagID -  command line argmuent unique to a script command line o prevent terminate unwanted processes
+  @param3 {function} callback - asynchronous callback
+*/
+function exists(bin ,flagID, callback){
 
   switch(process.platform){
     case 'win32':{
       WMI.Query().class('Win32_Process').properties(['caption','commandline' ,'ProcessId'])
-      .where(`name='${query.name}.exe'`).exec(function(err, list) {
+      .where(`name='${bin}.exe'`).exec(function(err, list) {
+
         if(list){
-          let found = list.filter(e => e.CommandLine.includes(query.flagID));
-          list ? callback(true ,found) : callback(false);
+          let found = list.filter(e => e.CommandLine.includes(flagID) || e.ProcessId.includes(flagID));
+          if(found.length){
+            callback(true ,found)
+          }else{
+            callback(false);
+          }
       }else{
         callback(false);
       }
@@ -52,7 +85,15 @@ class Process_Handler{
   static emitter(){
     return emitter
   }
-  static check(){
+  static check(bin , flagID ,callback){
+    if(arguments.length){
+      exists({name:bin ,flagID} ,function(bool , list){
+
+          //system-handler.js will handle this calllback
+          typeof callback === 'function' && callback(bool, list);
+
+      });
+    }
       if(flags.electron && !flags.dev){
         //used when application is packaged.
         exists({name:config.name ,flagID:'--electron'} ,function(bool , list){
@@ -60,12 +101,18 @@ class Process_Handler{
         });
       }
   }
+  static _kill(list ,pid){
+
+
+    return kill(list ,pid);
+  }
   constructor(System , Logger){
     this.nodePath = path.resolve(__dirname ,`../exec/node/${config.alias.nodejs.name}.exe`);
     this.robotPath = path.resolve(__dirname ,'robot.js');
     this.system = System;
+    this.logger = Logger;
+    this.spawn = this.spawn;
     this.std = this.std.bind(this);
-
     System.on('system-restart-robot' ,this.restartRobot.bind(this));
     System.on('system-kill-robot' ,this.killRobot.bind(this));
 
@@ -106,16 +153,39 @@ class Process_Handler{
 
     });
 
+  }
+  spawn(bin, scriptName, method){
+    let self = this;
+    if(arguments.length < 3){
+      throw new Error('expected 3 arguments');
+    }
+
+    let cwd = path.resolve(__dirname);
+    exists({name:bin ,flagID:config.flags.systemHandler} ,(bool , list)=>{
+
+      if(bool){
+
+        !flags.dev && kill(list).then(function(){
+          child_process[method](`node ${scriptName}.js ${config.flags.systemHandler} ${process.argv.splice(1).join(' ')}`, {cwd} ,self.std);
+        });
+
+      }else{
+
+        child_process[method](`node ${scriptName}.js ${config.flags.systemHandler} ${process.argv.splice(1).join(' ')}` ,{cwd},self.std);
+      }
+
+    });
 
 
   }
   std(stderr , stdout){
 
     if(stderr){
-      this.system.emit('system-send-to-logger' ,'fatal', {event:'std-err' ,value:stderr.toString()});
-
+      this.logger.emit('fatal', {event:'std-err' ,value:stderr.toString()});
+      console.log(stderr.toString());
     }else{
-      this.system.emit('system-send-to-logger' ,'log', {event:'std-out' ,value:stdout.toString()});
+      this.logger.emit('log', {event:'std-out' ,value:stdout.toString()});
+      console.log(stdout.toString());
     }
   }
 }
@@ -125,6 +195,7 @@ let watchers = [];
 module.exports = {
   check:Process_Handler.check,
   emitter,
+  kill:Process_Handler._kill,
   emit: (event , args) => emitter.emit(event ,args),
   init(System , Logger){
     if(cached){
@@ -132,6 +203,7 @@ module.exports = {
     }else{
       cached = new Process_Handler(System ,Logger);
       watchers.map(fn => fn(cached));
+      return cached
     }
   }
 }
