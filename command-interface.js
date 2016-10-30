@@ -27,50 +27,7 @@ let electron_installer = Object.assign(_package.electron_installer ,{
 
 //foo bin:webpack --shell use:admin script:webpack.config path:~ args:--use,--admin
 let System = socketIO.connect(`http://localhost:${config.ports.main}/system`);
-
-
 System.on('kill' ,kill);
-
-
-function build(args) {
-    console.log("Build app".green.bold);
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    args && args.out && (electron_packager.out = args.out);
-    let name = `${electron_packager.out}-${process.platform}-${process.arch}`;
-
-    electron_installer.src += '/'+name;
-
-    packager(electron_packager, function(err, done) {
-        if (err) {
-            console.log("err", err);
-            return
-        }
-        console.log(done);
-        rl.question('Make installer? ', (answer) => {
-
-            if (answer === 'yes') {
-
-                installer(electron_installer, function(err) {
-                    if (err) {
-                        console.error(err, err.stack)
-                        rl.close();
-                    }
-                    console.log('Successfully created package at ' + electron_installer.dest)
-                    rl.close();
-                })
-            } else {
-
-                rl.close();
-            }
-
-        });
-    })
-}
-
 
 let Scripts = {
   robot:{
@@ -123,6 +80,50 @@ let platform_shell = {
     shell:''
   }
 }
+
+function build(args) {
+    console.log("Building app...".green.bold);
+    const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    args && args.out && (electron_packager.out = args.out);
+    let name = `${electron_packager.out}-${process.platform}-${process.arch}`;
+
+    electron_installer.src += '/'+name;
+
+    packager(electron_packager, function(err, done) {
+        if (err) {
+            console.log('Is this shell evavated?'.cyan.bold, err);
+            rl.close();
+            process.stdin.resume();
+            return
+        }
+
+        rl.question('Make installer? ', (answer) => {
+
+            if (answer === 'yes') {
+
+                installer(electron_installer, function(err) {
+                    if (err) {
+                        console.error(err.toString())
+                        rl.close();
+                        process.stdin.resume();
+                    }
+                    console.log('Successfully created package at ' + electron_installer.dest)
+                    rl.close();
+                    process.stdin.resume();
+                })
+            } else {
+                rl.close();
+                process.stdin.resume();
+            }
+
+        });
+    })
+}
+
 
 function runScript(script, args){
   if(!script){
@@ -218,7 +219,7 @@ function help(){
     Type:
     clear - to clear console
     scripts  - to show list of scripts to run
-    
+
     Scripts:
     ${'run'.green} -  use:<subapp> ...args
     ${'test'.green} - ...args
@@ -280,7 +281,7 @@ let args = key.match(regex);
   .filter(e => e.length) : [];
 
   let command = key.match(/^[a-z\-]+/i);
-  command = command ? command[0] : false;
+  command = command ? command[0] : '';
   let binary = extraArgs.bin;
   let segments = key.split(' ');
 
